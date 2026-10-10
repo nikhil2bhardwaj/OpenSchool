@@ -5,20 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Image Formation by a Convex Lens — OpenSchool Virtual Lab</title>
 <link rel="stylesheet" href="../../assets/css/lab-theme.css" />
-<!--
-  OS-OPTICS-POLISH (presentation-only): osDpr/osFitCanvas HiDPI, brushed rail,
-  tick labels, rider shadows, glass lens / silver mirror / glass prism rendering,
-  brass rays with glow, osPhotonFlow dots, focal markers; deterministic bubbleT,
-  event-driven static frames (reduced-motion safe). Physics/controls/ids unchanged.
-  OS-PERF (presentation-only): static-layer offscreen cache per canvas (rebuild on
-  resize/DPR/element), ~80ms OSPerf.debounce on slider repaints with rAF fallback,
-  shadowBlur 0 on photons/grid/arrow/labels (glow kept: hero rays, lens edge baked
-  in cache, focal diamonds, graph curve+marker). Physics/controls/ids untouched.
--->
-<style>
-  .os-readout .row b{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
-  .os-table td.num{font-variant-numeric:tabular-nums}
-</style>
 </head>
 <body>
 <a class="os-skip-link" href="#main-content">Skip to main content</a>
@@ -224,7 +210,7 @@ const SPEC = {"controls":[{"id":"u","label":"Object distance u","min":20,"max":1
 const S = {};
 SPEC.controls.forEach(function (c) { S[c.id] = c.value; });
 let faultOn = false;
-let bubbleT = 0; /* OS-STATIC-PHOTONS: paint index, +1 per repaint (no time, no rAF loop) */
+let bubbleT = 0;
 
 function yFunc(expr, st) { return new Function("s", "return (" + expr + ")").call(null, st); }
 function clone(o) { const r = {}; for (const k in o) r[k] = o[k]; return r; }
@@ -243,205 +229,6 @@ function meanOf(rows, key) {
   return v.length ? v.reduce(function (a, b) { return a + b; }, 0) / v.length : NaN;
 }
 
-/* ---- OS-PERF: debounced repaint (presentation-only) ----------------------- */
-/* Slider `input` fires at pointer rate; canvas repaints go through a ~80ms
-   debounce with the existing rAF-throttled scheduleDraw as the flush path.
-   Readout text still updates synchronously in the listener. Guarded when
-   OSPerf is missing (falls back to scheduleDraw). */
-var osDrawDebounced = null;
-function osRequestDraw() {
-  try { updateReadout(); } catch (e) {}
-  try {
-    if (!osDrawDebounced) {
-      if (window.OSPerf && window.OSPerf.debounce) osDrawDebounced = window.OSPerf.debounce(function () { scheduleDraw(); }, 80);
-      else osDrawDebounced = function () { scheduleDraw(); };
-    }
-    osDrawDebounced();
-  } catch (e) { scheduleDraw(); }
-}
-
-/* ---- OS-PERF: static-layer caches (presentation-only) --------------------- */
-/* Unchanging bench/graph chrome is prerendered once to an offscreen canvas
-   and blitted per frame. Rebuilt only when W/H/DPR/element changes. */
-var __appStatic = null, __appStaticKey = "";
-var __stageStatic = null, __stageStaticKey = "";
-function osStaticCanvas(W, H) {
-  var dpr = osDpr();
-  var cv = document.createElement("canvas");
-  cv.width = Math.max(1, Math.round(W * dpr));
-  cv.height = Math.max(1, Math.round(H * dpr));
-  var c2 = cv.getContext("2d");
-  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { cv: cv, c: c2 };
-}
-function opticsGeom(W) {
-  var ay = 140, cx = W / 2;
-  var __xc = (typeof SPEC !== "undefined" && SPEC.controls) ? SPEC.controls.filter(function (cc) { return cc.id === SPEC.xControl; })[0] : null;
-  var __xMax = (__xc && isFinite(__xc.max)) ? __xc.max : NaN;
-  if (!isFinite(__xMax)) {
-    if (typeof SPEC !== "undefined" && SPEC.controls) SPEC.controls.forEach(function (cc) { if (isFinite(cc.max) && (!isFinite(__xMax) || cc.max > __xMax)) __xMax = cc.max; });
-    if (!isFinite(__xMax)) { for (var __k in S) { if (isFinite(S[__k]) && (!isFinite(__xMax) || S[__k] > __xMax)) __xMax = S[__k]; } }
-    if (!isFinite(__xMax) || __xMax <= 0) __xMax = 80;
-  }
-  return { ay: ay, cx: cx, xMax: __xMax, pxPerCm: (W / 2 - 120) / __xMax };
-}
-function opticsObjectX(W, g) {
-  var x = 120 + (g.xMax - (isFinite(S.u) ? S.u : g.xMax)) * g.pxPerCm;
-  return Math.max(100, Math.min(W / 2 - 30, x));
-}
-/* Paint only the unchanging bench chrome: bg grid, rail, ticks, axis,
-   lens/mirror/slab/prism glass body, static labels. No S.u/S.f dependence. */
-function buildAppStatic(W, H, sc) {
-  var layer = osStaticCanvas(W, H), c = layer.c;
-  var g = opticsGeom(W), ay = g.ay, cx = g.cx, pxPerCm = g.pxPerCm, __xMax = g.xMax;
-  apBg(c, W, H);
-  /* brushed-steel bench rail with top highlight (one-time shadow cost) */
-  var rail = c.createLinearGradient(0, ay + 4, 0, ay + 17);
-  rail.addColorStop(0, "#5a719f"); rail.addColorStop(0.5, "#22344f"); rail.addColorStop(1, "#0e1828");
-  c.save();
-  c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 8; c.shadowOffsetY = 3;
-  c.fillStyle = rail; c.fillRect(40, ay + 4, W - 80, 13);
-  c.restore();
-  c.save(); c.globalAlpha = 0.16; c.strokeStyle = "#c7d6f2"; c.lineWidth = 1;
-  c.beginPath(); c.moveTo(40, ay + 8); c.lineTo(W - 40, ay + 8); c.stroke();
-  c.beginPath(); c.moveTo(40, ay + 13); c.lineTo(W - 40, ay + 13); c.stroke();
-  c.restore();
-  c.save();
-  var hi = c.createLinearGradient(0, ay + 4, 0, ay + 7);
-  hi.addColorStop(0, "rgba(255,255,255,.55)"); hi.addColorStop(1, "rgba(255,255,255,0)");
-  c.fillStyle = hi; c.fillRect(40, ay + 4, W - 80, 3);
-  c.restore();
-  /* fixed schematic scale (control domain, never live S.u) */
-  c.save(); c.textAlign = "center";
-  for (var cm = 0; cm * pxPerCm <= W - 80 && cm <= __xMax; cm += 2) {
-    var major = cm % 10 === 0;
-    var tx = 120 + cm * pxPerCm;
-    if (tx > W - 40) break;
-    c.strokeStyle = major ? "#c7d6f2" : "rgba(199,214,242,.4)"; c.lineWidth = 1;
-    c.beginPath(); c.moveTo(tx, ay + 4); c.lineTo(tx, major ? ay - 3 : ay + 1); c.stroke();
-    if (major) { c.fillStyle = "#9fb0d0"; c.font = "10px Consolas, monospace"; c.fillText(cm, tx, ay + 30); }
-  }
-  c.restore();
-  /* principal axis (dashed, subtle; shadowBlur 0) */
-  c.save();
-  c.shadowBlur = 0;
-  c.strokeStyle = "rgba(159,176,208,.35)"; c.setLineDash([6, 6]); c.lineWidth = 1;
-  c.beginPath(); c.moveTo(40, ay); c.lineTo(W - 40, ay); c.stroke(); c.setLineDash([]);
-  c.restore();
-  apText(c, "principal axis", W - 44, ay - 8, "#7d9a93", "11px Segoe UI", "right");
-  /* glass body only — hero glow baked once into the cache */
-  if (sc.element === "slab") {
-    var sg = c.createLinearGradient(cx - 42, 0, cx + 42, 0);
-    sg.addColorStop(0, "rgba(180,220,255,.08)"); sg.addColorStop(0.5, "rgba(200,235,255,.40)"); sg.addColorStop(1, "rgba(180,220,255,.08)");
-    c.fillStyle = sg; c.fillRect(cx - 42, ay - 62, 84, 124);
-    c.save();
-    c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-    c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-    c.strokeRect(cx - 42, ay - 62, 84, 124);
-    c.restore();
-    c.save();
-    c.shadowBlur = 0;
-    c.strokeStyle = "rgba(255,255,255,.5)"; c.lineWidth = 3; c.lineCap = "round";
-    c.beginPath(); c.moveTo(cx - 24, ay - 40); c.lineTo(cx - 8, ay + 8); c.stroke();
-    c.restore();
-    apText(c, "glass slab", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
-  } else if (sc.element === "prism") {
-    var pg = c.createLinearGradient(cx - 50, 0, cx + 50, 0);
-    pg.addColorStop(0, "rgba(180,220,255,.10)"); pg.addColorStop(0.5, "rgba(200,235,255,.42)"); pg.addColorStop(1, "rgba(180,220,255,.10)");
-    c.beginPath(); c.moveTo(cx - 50, ay + 50); c.lineTo(cx + 50, ay + 50); c.lineTo(cx, ay - 50); c.closePath();
-    c.fillStyle = pg; c.fill();
-    c.save();
-    c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-    c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-    c.stroke();
-    c.restore();
-    c.save(); c.clip();
-    c.shadowBlur = 0;
-    c.strokeStyle = "rgba(255,255,255,.5)"; c.lineWidth = 3; c.lineCap = "round";
-    c.beginPath(); c.moveTo(cx - 22, ay + 30); c.lineTo(cx - 2, ay - 12); c.stroke();
-    c.restore();
-    apText(c, "prism  A = 60°", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
-  } else if (sc.element === "lens") {
-    var lg = c.createLinearGradient(cx - 18, 0, cx + 18, 0);
-    lg.addColorStop(0, "rgba(180,220,255,.08)"); lg.addColorStop(0.5, "rgba(200,235,255,.40)"); lg.addColorStop(1, "rgba(180,220,255,.08)");
-    c.beginPath();
-    c.moveTo(cx, ay - 62);
-    c.quadraticCurveTo(cx + 18, ay, cx, ay + 62);
-    c.quadraticCurveTo(cx - 18, ay, cx, ay - 62);
-    c.closePath();
-    c.fillStyle = lg; c.fill();
-    c.save();
-    c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-    c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-    c.stroke();
-    c.restore();
-    c.save(); c.clip();
-    c.shadowBlur = 0;
-    c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 3; c.lineCap = "round";
-    c.beginPath(); c.moveTo(cx - 7, ay - 44); c.lineTo(cx + 1, ay + 4); c.stroke();
-    c.restore();
-    apText(c, "convex lens", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
-  } else if (sc.element) {
-    var mx = sc.element === "concave_mirror" ? cx + 190 : cx - 190;
-    var a0 = sc.element === "concave_mirror" ? Math.PI * 0.7 : -Math.PI * 0.3;
-    var a1 = sc.element === "concave_mirror" ? Math.PI * 1.3 : Math.PI * 0.3;
-    c.save();
-    c.shadowBlur = 0;
-    c.strokeStyle = "rgba(159,176,208,.5)"; c.lineWidth = 1;
-    for (var hh = -2; hh <= 2; hh++) {
-      c.beginPath(); c.arc(mx, ay, 196 + hh * 3, a0, a1); c.stroke();
-    }
-    var mg = c.createLinearGradient(cx - 40, 0, cx + 40, 0);
-    mg.addColorStop(0, "#7d8aa0"); mg.addColorStop(0.5, "#f2f6ff"); mg.addColorStop(1, "#7d8aa0");
-    c.strokeStyle = mg; c.lineWidth = 6; c.lineCap = "round";
-    c.shadowColor = "rgba(220,235,255,.8)"; c.shadowBlur = 8;
-    c.beginPath(); c.arc(mx, ay, 190, a0, a1); c.stroke();
-    c.restore();
-    apText(c, sc.element === "convex_mirror" ? "convex mirror" : "concave mirror", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
-  }
-  apText(c, sc.label || "Optics", W - 14, H - 12, "#7d9a93", "11px Segoe UI", "right");
-  return layer.cv;
-}
-/* Graph chrome: bg gradient, grid (shadowBlur 0), axes, tick labels. */
-function stageGeom(w, h) {
-  var xc = SPEC.controls.filter(function (c) { return c.id === SPEC.xControl; })[0];
-  var ox = 70, oy = h - 46, aw = w - 130, ah = h - 92;
-  var xmin = xc.min, xmax = xc.max;
-  var ymin = SPEC.yDomain ? SPEC.yDomain[0] : 0, ymax = SPEC.yDomain ? SPEC.yDomain[1] : 1;
-  var pad = (ymax - ymin) * 0.1; ymax += pad; ymin -= pad;
-  return { ox: ox, oy: oy, aw: aw, ah: ah, xmin: xmin, xmax: xmax, ymin: ymin, ymax: ymax };
-}
-function buildStageStatic(w, h, g) {
-  var layer = osStaticCanvas(w, h), c = layer.c;
-  var grad = c.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, "#16233d"); grad.addColorStop(1, "#0d1626");
-  c.fillStyle = grad; c.fillRect(0, 0, w, h);
-  c.save();
-  c.shadowBlur = 0;
-  c.strokeStyle = "rgba(120,150,140,.10)"; c.lineWidth = 1;
-  for (var gx = 0; gx <= w; gx += 40) { c.beginPath(); c.moveTo(gx, 0); c.lineTo(gx, h); c.stroke(); }
-  for (var gy = 0; gy <= h; gy += 40) { c.beginPath(); c.moveTo(0, gy); c.lineTo(w, gy); c.stroke(); }
-  c.restore();
-  function px(x) { return g.ox + ((x - g.xmin) / (g.xmax - g.xmin)) * g.aw; }
-  function py(y) { return g.oy - ((y - g.ymin) / (g.ymax - g.ymin)) * g.ah; }
-  c.save();
-  c.shadowBlur = 0;
-  c.strokeStyle = "#7d9a93"; c.lineWidth = 1.4;
-  c.beginPath(); c.moveTo(g.ox, g.oy - g.ah); c.lineTo(g.ox, g.oy); c.lineTo(g.ox + g.aw, g.oy); c.stroke();
-  if (g.ymin < 0 && g.ymax > 0) { c.strokeStyle = "rgba(120,150,140,.35)"; c.beginPath(); c.moveTo(g.ox, py(0)); c.lineTo(g.ox + g.aw, py(0)); c.stroke(); }
-  c.restore();
-  c.fillStyle = "#9fb0d0"; c.font = "13px Segoe UI, sans-serif"; c.textAlign = "center";
-  c.fillText(SPEC.xLabel + (SPEC.xUnit ? " (" + SPEC.xUnit + ")" : ""), g.ox + g.aw / 2, h - 12);
-  c.save(); c.translate(18, g.oy - g.ah / 2); c.rotate(-Math.PI / 2);
-  c.fillText(SPEC.yLabel + (SPEC.yUnit ? " (" + SPEC.yUnit + ")" : ""), 0, 0); c.restore();
-  c.textAlign = "left"; c.fillStyle = "#7f93b8"; c.font = "11px Consolas, monospace";
-  c.fillText(g.ymax.toFixed(2), g.ox + 4, g.oy - g.ah + 12);
-  c.fillText(g.ymin.toFixed(2), g.ox + 4, g.oy - 4);
-  c.textAlign = "right"; c.fillText(g.xmin, g.ox, g.oy + 16);
-  c.textAlign = "left"; c.fillText(g.xmax, g.ox + g.aw, g.oy + 16);
-  return layer.cv;
-}
-
 /* ---- Controls ------------------------------------------------------------ */
 function buildControls() {
   const host = document.getElementById("controls");
@@ -457,8 +244,7 @@ function buildControls() {
     range.addEventListener("input", function (e) {
       S[c.id] = parseFloat(e.target.value);
       document.getElementById("cv_" + c.id).textContent = fmt(S[c.id], c.dp);
-      /* OS-PERF: immediate readout text, debounced canvas repaint. */
-      osRequestDraw();
+      scheduleDraw();
     });
   });
 }
@@ -483,76 +269,6 @@ const ctx = canvas.getContext("2d");
 /* ---- Apparatus scene library (per-experiment) ---------------------------- */
 const appCanvas = document.getElementById("apparatus");
 const actx = appCanvas.getContext("2d");
-/* ---- OS-OPTICS-POLISH helpers (presentation-only, deterministic) ---------- */
-var OS_REDUCED = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) || false;
-function osDpr() { var base = Math.min(2, window.devicePixelRatio || 1); if (window.__osDegraded) return Math.min(base, 1) * 0.75; return base; }
-function osFitCanvas(cv) {
-  const dpr = osDpr();
-  const lw = parseInt(cv.getAttribute("width"), 10) || 760;
-  const lh = parseInt(cv.getAttribute("height"), 10) || 250;
-  const bw = Math.round(lw * dpr), bh = Math.round(lh * dpr);
-  if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
-  const c2 = cv.getContext("2d");
-  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { W: lw, H: lh };
-}
-function osRiderShadow(c, x, y, r) {
-  c.save();
-  const g = c.createRadialGradient(x, y, 2, x, y, r || 26);
-  g.addColorStop(0, "rgba(0,0,0,.5)"); g.addColorStop(1, "rgba(0,0,0,0)");
-  c.fillStyle = g;
-  c.beginPath(); c.ellipse(x, y, r || 26, 7, 0, 0, Math.PI * 2); c.fill();
-  c.restore();
-}
-function osPhotonFlow(c, pts, n, color, size) {
-  if (OS_REDUCED) return; /* reduced-motion: static rays, no travelling dots */
-  if (window.__osDegraded || window.__osNoGlow) return; /* OS-PAINT-WATCHDOG: skip dots in perf mode */
-  const segs = []; let total = 0;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const dx = pts[i + 1][0] - pts[i][0], dy = pts[i + 1][1] - pts[i][1];
-    const len = Math.sqrt(dx * dx + dy * dy);
-    segs.push(len); total += len;
-  }
-  if (!total) return;
-  if (!isFinite(size) || !(size > 0)) return; /* OS-DIAG-TRAP: skip non-finite radius */
-  c.save();
-  /* OS-PERF: photon dots paint with shadowBlur 0 (glow kept only on hero rays). */
-  c.fillStyle = color; c.shadowBlur = 0;
-  for (let k = 0; k < n; k++) {
-    const d = ((bubbleT * 2.2 + (k * total) / n) % total + total) % total;
-    let acc = 0, x = pts[0][0], y = pts[0][1];
-    for (let s = 0; s < segs.length; s++) {
-      if (d <= acc + segs[s] || s === segs.length - 1) {
-        const t = segs[s] ? (d - acc) / segs[s] : 0;
-        x = pts[s][0] + (pts[s + 1][0] - pts[s][0]) * t;
-        y = pts[s][1] + (pts[s + 1][1] - pts[s][1]) * t;
-        break;
-      }
-      acc += segs[s];
-    }
-    if (!isFinite(x) || !isFinite(y)) continue; /* OS-DIAG-TRAP: skip non-finite dot */
-    c.beginPath(); c.arc(x, y, size, 0, Math.PI * 2); c.fill();
-  }
-  c.restore();
-}
-function osFocalDiamond(c, x, y, label) {
-  const pulse = OS_REDUCED ? 0 : Math.sin(bubbleT * 0.06);
-  const r = 4 + 1.5 * pulse;
-  c.save();
-  c.shadowColor = "rgba(232,179,75,.9)"; c.shadowBlur = window.__osNoGlow ? 0 : 8;
-  c.fillStyle = "#e8b34b";
-  c.beginPath();
-  c.moveTo(x, y - r - 5); c.lineTo(x + r, y - 5);
-  c.lineTo(x, y + r - 5); c.lineTo(x - r, y - 5);
-  c.closePath(); c.fill();
-  c.restore();
-  c.save();
-  c.fillStyle = "#e8b34b"; c.font = "bold 11px Segoe UI"; c.textAlign = "center";
-  /* OS-PERF: marker label paints with shadowBlur 0 (glow kept on diamond only). */
-  c.shadowBlur = 0;
-  c.fillText(label, x, y - 12 - r);
-  c.restore();
-}
 function apBg(c, W, H) {
   const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#0e1a18"); g.addColorStop(1, "#0b1413");
   c.fillStyle = g; c.fillRect(0, 0, W, H);
@@ -639,149 +355,34 @@ const SCENES = {
   optics: function (c, W, H, S, y, sc) {
     apBg(c, W, H);
     const ay = 140;
-    /* OS-OPTICS-POLISH: brushed-steel bench rail with top highlight */
-    const rail = c.createLinearGradient(0, ay + 4, 0, ay + 17);
-    rail.addColorStop(0, "#5a719f"); rail.addColorStop(0.5, "#22344f"); rail.addColorStop(1, "#0e1828");
-    c.save();
-    c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 8; c.shadowOffsetY = 3;
-    c.fillStyle = rail; c.fillRect(40, ay + 4, W - 80, 13);
-    c.restore();
-    c.save(); c.globalAlpha = 0.16; c.strokeStyle = "#c7d6f2"; c.lineWidth = 1;
-    c.beginPath(); c.moveTo(40, ay + 8); c.lineTo(W - 40, ay + 8); c.stroke();
-    c.beginPath(); c.moveTo(40, ay + 13); c.lineTo(W - 40, ay + 13); c.stroke();
-    c.restore();
-    c.save();
-    const hi = c.createLinearGradient(0, ay + 4, 0, ay + 7);
-    hi.addColorStop(0, "rgba(255,255,255,.55)"); hi.addColorStop(1, "rgba(255,255,255,0)");
-    c.fillStyle = hi; c.fillRect(40, ay + 4, W - 80, 3);
-    c.restore();
-    /* fixed schematic scale from control domain (never from live S.u) */
-    const __xc = (typeof SPEC !== "undefined" && SPEC.controls) ? SPEC.controls.filter(function (cc) { return cc.id === SPEC.xControl; })[0] : null;
-    let __xMax = (__xc && isFinite(__xc.max)) ? __xc.max : NaN;
-    if (!isFinite(__xMax)) {
-      if (typeof SPEC !== "undefined" && SPEC.controls) SPEC.controls.forEach(function (cc) { if (isFinite(cc.max) && (!isFinite(__xMax) || cc.max > __xMax)) __xMax = cc.max; });
-      if (!isFinite(__xMax)) { for (const __k in S) { if (isFinite(S[__k]) && (!isFinite(__xMax) || S[__k] > __xMax)) __xMax = S[__k]; } }
-      if (!isFinite(__xMax) || __xMax <= 0) __xMax = 80;
-    }
-    const pxPerCm = (W / 2 - 120) / __xMax;
-    /* moving object: at u=xMax it sits at 120 exactly as before; toward mirror as u decreases */
-    let objectX = 120 + (__xMax - (isFinite(S.u) ? S.u : __xMax)) * pxPerCm;
-    objectX = Math.max(100, Math.min(W / 2 - 30, objectX)); /* W/2-30 === cx-30, cx defined below */
-    c.save(); c.textAlign = "center";
-    for (let cm = 0; cm * pxPerCm <= W - 80 && cm <= __xMax; cm += 2) {
-      const major = cm % 10 === 0;
-      const tx = 120 + cm * pxPerCm;
-      if (tx > W - 40) break;
-      c.strokeStyle = major ? "#c7d6f2" : "rgba(199,214,242,.4)"; c.lineWidth = 1;
-      c.beginPath(); c.moveTo(tx, ay + 4); c.lineTo(tx, major ? ay - 3 : ay + 1); c.stroke();
-      if (major) { c.fillStyle = "#9fb0d0"; c.font = "10px Consolas, monospace"; c.fillText(cm, tx, ay + 30); }
-    }
-    c.restore();
-    /* principal axis (dashed, subtle) */
-    c.save();
-    c.strokeStyle = "rgba(159,176,208,.35)"; c.setLineDash([6, 6]); c.lineWidth = 1;
-    c.beginPath(); c.moveTo(40, ay); c.lineTo(W - 40, ay); c.stroke(); c.setLineDash([]);
-    c.restore();
+    c.strokeStyle = "#41598a"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(40, ay); c.lineTo(W - 40, ay); c.stroke();
     apText(c, "principal axis", W - 44, ay - 8, "#7d9a93", "11px Segoe UI", "right");
     const cx = W / 2;
     if (sc.element === "slab") {
-      const sg = c.createLinearGradient(cx - 42, 0, cx + 42, 0);
-      sg.addColorStop(0, "rgba(180,220,255,.08)"); sg.addColorStop(0.5, "rgba(200,235,255,.40)"); sg.addColorStop(1, "rgba(180,220,255,.08)");
-      c.fillStyle = sg; c.fillRect(cx - 42, ay - 62, 84, 124);
-      c.save();
-      c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-      c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-      c.strokeRect(cx - 42, ay - 62, 84, 124);
-      c.restore();
-      c.save();
-      c.strokeStyle = "rgba(255,255,255,.5)"; c.lineWidth = 3; c.lineCap = "round";
-      c.beginPath(); c.moveTo(cx - 24, ay - 40); c.lineTo(cx - 8, ay + 8); c.stroke();
-      c.restore();
+      c.fillStyle = "rgba(120,180,230,.22)"; c.strokeStyle = "#8fd0ff"; c.lineWidth = 2; c.fillRect(cx - 42, ay - 62, 84, 124); c.strokeRect(cx - 42, ay - 62, 84, 124);
       apText(c, "glass slab", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     } else if (sc.element === "prism") {
-      const pg = c.createLinearGradient(cx - 50, 0, cx + 50, 0);
-      pg.addColorStop(0, "rgba(180,220,255,.10)"); pg.addColorStop(0.5, "rgba(200,235,255,.42)"); pg.addColorStop(1, "rgba(180,220,255,.10)");
-      c.beginPath(); c.moveTo(cx - 50, ay + 50); c.lineTo(cx + 50, ay + 50); c.lineTo(cx, ay - 50); c.closePath();
-      c.fillStyle = pg; c.fill();
-      c.save();
-      c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-      c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-      c.stroke();
-      c.restore();
-      c.save(); c.clip();
-      c.strokeStyle = "rgba(255,255,255,.5)"; c.lineWidth = 3; c.lineCap = "round";
-      c.beginPath(); c.moveTo(cx - 22, ay + 30); c.lineTo(cx - 2, ay - 12); c.stroke();
-      c.restore();
+      c.fillStyle = "rgba(150,200,255,.22)"; c.strokeStyle = "#8fd0ff"; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(cx - 50, ay + 50); c.lineTo(cx + 50, ay + 50); c.lineTo(cx, ay - 50); c.closePath(); c.fill(); c.stroke();
       apText(c, "prism  A = 60°", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     } else if (sc.element === "lens") {
-      const lg = c.createLinearGradient(cx - 18, 0, cx + 18, 0);
-      lg.addColorStop(0, "rgba(180,220,255,.08)"); lg.addColorStop(0.5, "rgba(200,235,255,.40)"); lg.addColorStop(1, "rgba(180,220,255,.08)");
-      c.beginPath();
-      c.moveTo(cx, ay - 62);
-      c.quadraticCurveTo(cx + 18, ay, cx, ay + 62);
-      c.quadraticCurveTo(cx - 18, ay, cx, ay - 62);
-      c.closePath();
-      c.fillStyle = lg; c.fill();
-      c.save();
-      c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-      c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-      c.stroke();
-      c.restore();
-      c.save(); c.clip();
-      c.strokeStyle = "rgba(255,255,255,.55)"; c.lineWidth = 3; c.lineCap = "round";
-      c.beginPath(); c.moveTo(cx - 7, ay - 44); c.lineTo(cx + 1, ay + 4); c.stroke();
-      c.restore();
+      c.strokeStyle = "#8fd0ff"; c.lineWidth = 2.5; c.beginPath(); c.ellipse(cx, ay, 14, 62, 0, 0, Math.PI * 2); c.stroke();
       apText(c, "convex lens", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     } else {
-      /* silvered mirror: metallic gradient arc + glow over hatch backing */
-      const mx = sc.element === "concave_mirror" ? cx + 190 : cx - 190;
-      const a0 = sc.element === "concave_mirror" ? Math.PI * 0.7 : -Math.PI * 0.3;
-      const a1 = sc.element === "concave_mirror" ? Math.PI * 1.3 : Math.PI * 0.3;
-      c.save();
-      c.strokeStyle = "rgba(159,176,208,.5)"; c.lineWidth = 1;
-      for (let hh = -2; hh <= 2; hh++) {
-        c.beginPath(); c.arc(mx, ay, 196 + hh * 3, a0, a1); c.stroke();
-      }
-      const mg = c.createLinearGradient(cx - 40, 0, cx + 40, 0);
-      mg.addColorStop(0, "#7d8aa0"); mg.addColorStop(0.5, "#f2f6ff"); mg.addColorStop(1, "#7d8aa0");
-      c.strokeStyle = mg; c.lineWidth = 6; c.lineCap = "round";
-      c.shadowColor = "rgba(220,235,255,.8)"; c.shadowBlur = 8;
-      c.beginPath(); c.arc(mx, ay, 190, a0, a1); c.stroke();
-      c.restore();
+      c.strokeStyle = "#8fd0ff"; c.lineWidth = 2.5;
+      if (sc.element === "concave_mirror") { c.beginPath(); c.arc(cx + 190, ay, 190, Math.PI * 0.7, Math.PI * 1.3); c.stroke(); }
+      else { c.beginPath(); c.arc(cx - 190, ay, 190, -Math.PI * 0.3, Math.PI * 0.3); c.stroke(); }
       apText(c, sc.element === "convex_mirror" ? "convex mirror" : "concave mirror", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     }
-    /* rider shadows + stands */
-    osRiderShadow(c, objectX, ay + 24, 24); osRiderShadow(c, cx, ay + 24, 26);
-    c.fillStyle = "#7a5228"; c.fillRect(objectX - 12, ay + 4, 24, 9);
-    c.fillStyle = "#2a1608"; c.fillRect(objectX - 14, ay + 13, 28, 5);
-    c.fillStyle = "#7a5228"; c.fillRect(cx - 12, ay + 4, 24, 9);
-    c.fillStyle = "#1a2740"; c.fillRect(cx - 14, ay + 13, 28, 5);
-    /* object arrow with glow (same geometry as before) */
-    /* object arrow (OS-PERF: shadowBlur 0 — glow kept only on hero rays) */
-    c.save();
-    c.shadowBlur = 0;
-    c.strokeStyle = "#ff8a8a"; c.lineWidth = 2.5;
-    c.beginPath(); c.moveTo(objectX, ay); c.lineTo(objectX, ay - 42); c.stroke();
-    c.restore();
-    c.fillStyle = "#ff8a8a"; c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(objectX - 6, ay - 30); c.lineTo(objectX + 6, ay - 30); c.closePath(); c.fill();
-    apText(c, "object  u = " + (S.u != null ? S.u : "—") + " cm", objectX, ay + 20, "#ff8a8a", "11px Segoe UI", "center");
-    /* rays with glow + deterministic photon flow */
-    c.save();
-    c.strokeStyle = "rgba(232,179,75,.9)"; c.lineWidth = 1.6;
-    c.shadowColor = "rgba(232,179,75,.55)"; c.shadowBlur = window.__osNoGlow ? 0 : 5;
-    c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(cx, ay); c.lineTo(W - 60, ay + 34); c.stroke();
-    c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(W - 60, ay + 34); c.stroke();
-    c.restore();
-    osPhotonFlow(c, [[objectX, ay - 42], [cx, ay], [W - 60, ay + 34]], 6, "rgba(255,220,150,.95)", 2.2);
-    osPhotonFlow(c, [[objectX, ay - 42], [W - 60, ay + 34]], 4, "rgba(180,220,255,.9)", 2.0);
-    /* focal markers on the schematic scale (lens / mirrors with known f) */
-    if ((sc.element === "lens" || sc.element === "concave_mirror" || sc.element === "convex_mirror") && isFinite(S.f) && S.f > 0) {
-      const fx = pxPerCm * S.f;
-      if (cx - fx > 40) osFocalDiamond(c, cx - fx, ay, "F");
-      if (cx + fx < W - 40) osFocalDiamond(c, cx + fx, ay, "F'");
-    }
+    c.strokeStyle = "#ff8a8a"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(120, ay); c.lineTo(120, ay - 42); c.stroke();
+    c.fillStyle = "#ff8a8a"; c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(114, ay - 30); c.lineTo(126, ay - 30); c.closePath(); c.fill();
+    apText(c, "object  u = " + (S.u != null ? S.u : "—") + " cm", 120, ay + 20, "#ff8a8a", "11px Segoe UI", "center");
+    c.strokeStyle = "#e8b34b"; c.lineWidth = 1.5;
+    c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(cx, ay); c.lineTo(W - 60, ay + 34); c.stroke();
+    c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(W - 60, ay + 34); c.stroke();
     apText(c, sc.label || "Optics", W - 14, H - 12, "#7d9a93", "11px Segoe UI", "right");
   },
+
   magnet: function (c, W, H, S) {
     apBg(c, W, H);
     c.fillStyle = "#c0392b"; c.fillRect(W / 2 - 130, 150, 130, 40);
@@ -1003,73 +604,29 @@ const SCENES = {
 };
 
 function drawScene() {
-  /* OS-STATIC-PHOTONS: event-driven only (initial paint + osRequestDraw repaints).
-     No rAF loop. bubbleT is a paint counter, fixed within a paint. */
-  if (!OS_REDUCED) bubbleT += 1;
-  const fitA = osFitCanvas(appCanvas);
-  const W = fitA.W, H = fitA.H;
+  bubbleT += 0.016;
+  const W = appCanvas.width, H = appCanvas.height;
   const sc = SPEC.scene || { name: "generic" };
-  if (sc.name === "optics") {
-    /* OS-PERF: blit prerendered bench, then paint dynamic layer only. */
-    const key = W + "x" + H + "@" + osDpr() + "|" + (sc.element || "");
-    if (!__appStatic || __appStaticKey !== key) { __appStatic = buildAppStatic(W, H, sc); __appStaticKey = key; }
-    actx.drawImage(__appStatic, 0, 0, W, H);
-    const g = opticsGeom(W), ay = g.ay, cx = g.cx, pxPerCm = g.pxPerCm;
-    const objectX = opticsObjectX(W, g);
-    const y = activeY(S);
-    /* rider shadows + stands (positions depend on live S.u) */
-    osRiderShadow(actx, objectX, ay + 24, 24); osRiderShadow(actx, cx, ay + 24, 26);
-    actx.fillStyle = "#7a5228"; actx.fillRect(objectX - 12, ay + 4, 24, 9);
-    actx.fillStyle = "#2a1608"; actx.fillRect(objectX - 14, ay + 13, 28, 5);
-    actx.fillStyle = "#7a5228"; actx.fillRect(cx - 12, ay + 4, 24, 9);
-    actx.fillStyle = "#1a2740"; actx.fillRect(cx - 14, ay + 13, 28, 5);
-    /* object arrow — shadowBlur 0 (hero glow reserved for rays/markers) */
-    actx.save();
-    actx.shadowBlur = 0;
-    actx.strokeStyle = "#ff8a8a"; actx.lineWidth = 2.5;
-    actx.beginPath(); actx.moveTo(objectX, ay); actx.lineTo(objectX, ay - 42); actx.stroke();
-    actx.restore();
-    actx.fillStyle = "#ff8a8a"; actx.beginPath(); actx.moveTo(objectX, ay - 42); actx.lineTo(objectX - 6, ay - 30); actx.lineTo(objectX + 6, ay - 30); actx.closePath(); actx.fill();
-    apText(actx, "object  u = " + (S.u != null ? S.u : "—") + " cm", objectX, ay + 20, "#ff8a8a", "11px Segoe UI", "center");
-    /* hero rays — glow kept */
-    actx.save();
-    actx.strokeStyle = "rgba(232,179,75,.9)"; actx.lineWidth = 1.6;
-    actx.shadowColor = "rgba(232,179,75,.55)"; actx.shadowBlur = window.__osNoGlow ? 0 : 5;
-    actx.beginPath(); actx.moveTo(objectX, ay - 42); actx.lineTo(cx, ay); actx.lineTo(W - 60, ay + 34); actx.stroke();
-    actx.beginPath(); actx.moveTo(objectX, ay - 42); actx.lineTo(W - 60, ay + 34); actx.stroke();
-    actx.restore();
-    /* photons — shadowBlur 0 inside osPhotonFlow */
-    osPhotonFlow(actx, [[objectX, ay - 42], [cx, ay], [W - 60, ay + 34]], 6, "rgba(255,220,150,.95)", 2.2);
-    osPhotonFlow(actx, [[objectX, ay - 42], [W - 60, ay + 34]], 4, "rgba(180,220,255,.9)", 2.0);
-    /* focal markers (depend on live S.f) — diamond glow kept, label flat */
-    if ((sc.element === "lens" || sc.element === "concave_mirror" || sc.element === "convex_mirror") && isFinite(S.f) && S.f > 0) {
-      const fx = pxPerCm * S.f;
-      if (cx - fx > 40) osFocalDiamond(actx, cx - fx, ay, "F");
-      if (cx + fx < W - 40) osFocalDiamond(actx, cx + fx, ay, "F'");
-    }
-    void y; void faultOn;
-    return;
-  }
   const fn = SCENES[sc.name] || SCENES.generic;
   fn(actx, W, H, S, activeY(S), sc, faultOn);
 }
 
 function draw() {
-  const fitS = osFitCanvas(canvas);
-  const w = fitS.W, h = fitS.H;
-  /* OS-PERF: blit prerendered graph chrome; dynamic layer below paints only curve+marker. */
+  const w = canvas.width, h = canvas.height;
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, "#0e1a18"); grad.addColorStop(1, "#0b1413");
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = "rgba(120,150,140,.10)"; ctx.lineWidth = 1;
+  for (let gx = 0; gx <= w; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+  for (let gy = 0; gy <= h; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+
   const xc = SPEC.controls.filter(function (c) { return c.id === SPEC.xControl; })[0];
-  const g = stageGeom(w, h);
-  const ox = g.ox, oy = g.oy, aw = g.aw, ah = g.ah;
-  const xmin = g.xmin, xmax = g.xmax;
-  const skey = w + "x" + h + "@" + osDpr();
-  if (!__stageStatic || __stageStaticKey !== skey) { __stageStatic = buildStageStatic(w, h, g); __stageStaticKey = skey; }
-  ctx.drawImage(__stageStatic, 0, 0, w, h);
+  const ox = 70, oy = h - 46, aw = w - 130, ah = h - 92;
+  const xmin = xc.min, xmax = xc.max;
 
   const pts = [];
-  var __nPts = window.__osDegraded ? 80 : 160; /* OS-RES-SCALE: 81 pts while degraded */
-  for (let i = 0; i <= __nPts; i++) {
-    const st = clone(S); st[xc.id] = xmin + (i / __nPts) * (xmax - xmin);
+  for (let i = 0; i <= 160; i++) {
+    const st = clone(S); st[xc.id] = xmin + (i / 160) * (xmax - xmin);
     pts.push({ x: st[xc.id], y: activeY(st) });
   }
   let ymin = Infinity, ymax = -Infinity;
@@ -1082,12 +639,13 @@ function draw() {
   function px(x) { return ox + ((x - xmin) / (xmax - xmin)) * aw; }
   function py(y) { return oy - ((y - ymin) / (ymax - ymin)) * ah; }
 
-  // axes + tick labels live in the prerendered static layer (see buildStageStatic).
-  // curve (hero glow kept)
-  ctx.save();
-  ctx.strokeStyle = "#e8b34b"; ctx.lineWidth = 2.4;
-  ctx.shadowColor = "rgba(232,179,75,.5)"; ctx.shadowBlur = window.__osNoGlow ? 0 : 5;
-  ctx.beginPath();
+  // axes
+  ctx.strokeStyle = "#7d9a93"; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(ox, oy - ah); ctx.lineTo(ox, oy); ctx.lineTo(ox + aw, oy); ctx.stroke();
+  // zero line
+  if (ymin < 0 && ymax > 0) { ctx.strokeStyle = "rgba(120,150,140,.35)"; ctx.beginPath(); ctx.moveTo(ox, py(0)); ctx.lineTo(ox + aw, py(0)); ctx.stroke(); }
+  // curve
+  ctx.strokeStyle = "#e8b34b"; ctx.lineWidth = 2.4; ctx.beginPath();
   let started = false;
   pts.forEach(function (p) {
     if (!isNum(p.y)) { started = false; return; }
@@ -1095,20 +653,23 @@ function draw() {
     if (!started) { ctx.moveTo(X, Y); started = true; } else ctx.lineTo(X, Y);
   });
   ctx.stroke();
-  ctx.restore();
   // marker
   const cyv = activeY(S);
   if (isNum(cyv)) {
     const mx = px(S[xc.id]), my = py(cyv);
-    if (isFinite(mx) && isFinite(my)) { /* OS-DIAG-TRAP: skip non-finite marker */
     ctx.fillStyle = "rgba(232,179,75,.25)"; ctx.beginPath(); ctx.arc(mx, my, 14, 0, Math.PI * 2); ctx.fill();
-    ctx.save();
-    ctx.shadowColor = "rgba(232,179,75,.8)"; ctx.shadowBlur = window.__osNoGlow ? 0 : 8;
     ctx.fillStyle = "#e8b34b"; ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
-    ctx.restore();
-    }
   }
-  // labels live in the prerendered static layer (see buildStageStatic).
+  // labels
+  ctx.fillStyle = "#9fb0d0"; ctx.font = "13px Segoe UI, sans-serif"; ctx.textAlign = "center";
+  ctx.fillText(SPEC.xLabel + (SPEC.xUnit ? " (" + SPEC.xUnit + ")" : ""), ox + aw / 2, h - 12);
+  ctx.save(); ctx.translate(18, oy - ah / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText(SPEC.yLabel + (SPEC.yUnit ? " (" + SPEC.yUnit + ")" : ""), 0, 0); ctx.restore();
+  ctx.textAlign = "left"; ctx.fillStyle = "#7f93b8"; ctx.font = "11px Consolas, monospace";
+  ctx.fillText(ymax.toFixed(2), ox + 4, oy - ah + 12);
+  ctx.fillText(ymin.toFixed(2), ox + 4, oy - 4);
+  ctx.textAlign = "right"; ctx.fillText(xmin, ox, oy + 16);
+  ctx.textAlign = "left"; ctx.fillText(xmax, ox + aw, oy + 16);
 
   const chip = document.getElementById("liveChip");
   chip.innerHTML = SPEC.yLabel + ": <b>" + fmt(cyv) + (SPEC.yUnit ? " " + SPEC.yUnit : "") + "</b>";
@@ -1262,37 +823,6 @@ document.getElementById("aiSend").addEventListener("click", function () {
   catch (e) { document.getElementById("dbChip").textContent = "unavailable"; }
 })();
 </script>
-<script>/* OS-PAINT-WATCHDOG (presentation-only, no deps): rolling-avg paint guard. */
-(function(){
-if(window.__osPaintWatch)return;window.__osPaintWatch=true;
-window.__osDegraded=false;window.__osNoGlow=false;
-var ts=[],cool=0,noted=false;
-function toast(m){try{if(window.OSToast)window.OSToast.show(m,"warn");}catch(e){}}
-function rec(dt){ts.push(dt);if(ts.length>20)ts.shift();if(ts.length<5)return;
-var avg=ts.reduce(function(a,b){return a+b;},0)/ts.length;
-if(!window.__osDegraded&&avg>80){window.__osDegraded=true;window.__osNoGlow=true;cool=0;
-if(!noted){noted=true;toast("Performance mode: effects reduced");}}
-else if(window.__osDegraded){if(avg<40){if(++cool>=60){window.__osDegraded=false;window.__osNoGlow=false;cool=0;}}else cool=0;}}
-function wrap(f){return function(){var t0=performance.now();try{return f.apply(this,arguments);}finally{rec(performance.now()-t0);}};}
-try{if(typeof drawScene==="function"){var a=drawScene;drawScene=wrap(a);}
-if(typeof draw==="function"){var b=draw;draw=wrap(b);}}catch(e){}
-})();
-</script>
-<script>/* OS-DIAG-TRAP (presentation-only diagnostics, removable, no deps). */
-(function(){
-if(window.__osDiagTrap)return;window.__osDiagTrap=true;
-var toasts=0,calls=0,done=0,errs=[];
-function show(m){if(toasts>=3)return;toasts++;m=String(m).slice(0,160);
-try{if(window.OSToast){window.OSToast.show(m,"warn");return;}}catch(e){}
-try{var d=document.createElement("div");d.style.cssText="position:fixed;bottom:12px;right:12px;z-index:9999;background:#3a1d1d;color:#ffd7d7;padding:8px 12px;border-radius:8px;font:12px sans-serif;max-width:60vw";d.textContent=m;document.body.appendChild(d);setTimeout(function(){if(d.remove)d.remove();},4000);}catch(e){}}
-function upd(){try{var el=document.getElementById("engineChip")||document.getElementById("liveChip");if(el)el.title="frames "+done+"/"+calls+(errs.length?" err:"+errs[errs.length-1].slice(0,60):"");}catch(e){}}
-function note(m){errs.push(String(m));if(errs.length>3)errs.shift();show(m);upd();}
-window.addEventListener("error",function(e){note("Error: "+(e.message||"error")+" @"+(e.lineno||"?")+":"+(e.colno||"?"));});
-window.addEventListener("unhandledrejection",function(e){var r=e.reason;note("Rejection: "+((r&&r.message)||r||"error"));});
-window.__osFrameStats=function(){return{calls:calls,ok:done,errors:errs.slice(-3)};};
-function wrapNm(nm){try{var f=window[nm];if(typeof f!=="function"||f.__osDiag)return;var g=function(){calls++;try{var r=f.apply(this,arguments);done++;upd();return r;}catch(e){note("Frame "+nm+": "+(e.message||e));throw e;}};g.__osDiag=true;window[nm]=g;}catch(e){}}
-wrapNm("drawScene");wrapNm("draw");upd(); /* chains over watchdog wrapper when present */
-})();</script>
 <script>window.addEventListener("DOMContentLoaded",function(){try{var el=document.querySelector("[data-os-quiz]");if(el&&window.OSQuiz&&!el.getAttribute("data-os-quiz-done")){var id=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.experimentId)?CONFIG.experimentId:"";window.OSQuiz.renderInto(el,id);}}catch(e){}});</script>
 <script>window.addEventListener("DOMContentLoaded",function(){try{if(window.OSProcedure&&window.OSProcedure.initFromBank)window.OSProcedure.initFromBank();}catch(e){}});</script>
 <script>/* OS-REPORT-WIRING: generic printable-report hook (idempotent). */

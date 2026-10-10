@@ -1,27 +1,10 @@
 <!DOCTYPE html>
-<!--
-  OS-CANVAS-PATTERNS (reusable batch list — convex_lens_uv REFERENCE):
-  osDpr(), osFitCanvas(cv), osBrushedRail(ctx,W), osTickLabel(ctx,px,cm),
-  osRiderShadow(ctx,px), drawUpright(px,kind,color), osGlassLens(px),
-  osFocalMarkers(), osPhotonFlow(polyline,n,color), drawBench(),
-  drawEyeView(), frame(), plotPoint(), drawGraphs(), render(),
-  updateReadout(), osBenchHitTest(sx), osSyncSliders(), osStartLoop()
-  Notes: deterministic bubbleT counter (no Date.now/Math.random);
-  HiDPI via devicePixelRatio capped 2; reduced-motion => single static frame;
-  palette: navy boards #1a2740/#3a4d75, brass #e8b34b, parchment secondary.
--->
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenSchool — Convex Lens (u–v Method)</title>
 <link rel="stylesheet" href="../../../assets/css/lab-theme.css" />
-<style>
-  /* OS-READOUT-POLISH: tabular numerals, units aligned; canvas affordances only. */
-  .os-readout .row b{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
-  #bench{touch-action:none;cursor:grab}
-  #bench.os-dragging{cursor:grabbing}
-</style>
 </head>
 <body>
 <a class="os-skip-link" href="#main-content">Skip to main content</a>
@@ -275,235 +258,74 @@ function focalFromUV() {
   return (U * V) / (U + V);
 }
 
-/* ---- Bench canvas (REFERENCE redesign: HiDPI + layered bench + glass + photons) - */
+/* ---- Bench canvas -------------------------------------------------------- */
 const bench = document.getElementById("bench");
 const bx = bench.getContext("2d");
 const PAD = 60, RAIL_Y = 200;
-const OS_REDUCED = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) || false;
-let bubbleT = 0; // deterministic frame counter for photon flow + focal pulse (NOT Date.now)
-function osDpr() { return Math.min(2, window.devicePixelRatio || 1); }
-function osFitCanvas(cv) {
-  const dpr = osDpr();
-  const lw = parseInt(cv.getAttribute("width"), 10) || 800;
-  const lh = parseInt(cv.getAttribute("height"), 10) || 330;
-  const bw = Math.round(lw * dpr), bh = Math.round(lh * dpr);
-  if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
-  const ctx = cv.getContext("2d");
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { W: lw, H: lh };
-}
-let benchGeom = { W: 800, H: 330 };
-const posToPx = function (cm) { return PAD + (cm / RAIL_MAX) * (benchGeom.W - 2 * PAD); };
-const pxToPos = function (px) { return Math.max(0, Math.min(RAIL_MAX, ((px - PAD) / (benchGeom.W - 2 * PAD)) * RAIL_MAX)); };
-
-function osBrushedRail(ctx, W) {
-  // layered bench: brushed-steel rail gradient, top highlight
-  const rail = ctx.createLinearGradient(0, RAIL_Y - 4, 0, RAIL_Y + 26);
-  rail.addColorStop(0, "#5a719f"); rail.addColorStop(0.18, "#3a4d75");
-  rail.addColorStop(0.5, "#22344f"); rail.addColorStop(0.82, "#1a2740");
-  rail.addColorStop(1, "#0e1828");
-  ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,.45)"; ctx.shadowBlur = 10; ctx.shadowOffsetY = 4;
-  ctx.fillStyle = rail; ctx.fillRect(PAD - 20, RAIL_Y, W - 2 * (PAD - 20), 26);
-  ctx.restore();
-  // brushed streaks (horizontal hairlines)
-  ctx.save(); ctx.globalAlpha = 0.16; ctx.strokeStyle = "#c7d6f2"; ctx.lineWidth = 1;
-  for (let i = 0; i < 4; i++) {
-    const yy = RAIL_Y + 4 + i * 6;
-    ctx.beginPath(); ctx.moveTo(PAD - 20, yy); ctx.lineTo(W - (PAD - 20), yy); ctx.stroke();
-  }
-  ctx.restore();
-  // top specular highlight
-  ctx.save();
-  const hi = ctx.createLinearGradient(0, RAIL_Y, 0, RAIL_Y + 3);
-  hi.addColorStop(0, "rgba(255,255,255,.55)"); hi.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = hi; ctx.fillRect(PAD - 20, RAIL_Y, W - 2 * (PAD - 20), 3);
-  ctx.restore();
-}
-function osTickLabel(ctx, px, cm, major) {
-  // tick with soft drop shadow for legibility
-  ctx.save();
-  ctx.strokeStyle = major ? "#c7d6f2" : "rgba(199,214,242,.4)"; ctx.lineWidth = 1;
-  ctx.shadowColor = "rgba(0,0,0,.6)"; ctx.shadowBlur = major ? 3 : 0; ctx.shadowOffsetY = 1;
-  ctx.beginPath(); ctx.moveTo(px, RAIL_Y); ctx.lineTo(px, major ? RAIL_Y - 9 : RAIL_Y - 5); ctx.stroke();
-  ctx.restore();
-  if (major) {
-    ctx.save();
-    ctx.fillStyle = "#9fb0d0"; ctx.font = "10px Consolas, monospace"; ctx.textAlign = "center";
-    ctx.shadowColor = "rgba(0,0,0,.7)"; ctx.shadowBlur = 3; ctx.shadowOffsetY = 1;
-    ctx.fillText(cm, px, RAIL_Y + 40);
-    ctx.restore();
-  }
-}
-function osRiderShadow(ctx, px) {
-  ctx.save();
-  const g = ctx.createRadialGradient(px, RAIL_Y + 22, 2, px, RAIL_Y + 22, 26);
-  g.addColorStop(0, "rgba(0,0,0,.5)"); g.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = g;
-  ctx.beginPath(); ctx.ellipse(px, RAIL_Y + 22, 26, 7, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.restore();
-}
-function osFocalMarkers(ctx) {
-  // animated focal-point markers at b +/- TRUE_F (pulse from bubbleT, deterministic)
-  const axisY = RAIL_Y - 60;
-  const pulse = OS_REDUCED ? 0 : Math.sin(bubbleT * 0.06);
-  const r = 4 + 1.5 * pulse;
-  [["F", state.b - TRUE_F], ["F'", state.b + TRUE_F]].forEach(function (pair) {
-    const label = pair[0], cm = pair[1];
-    if (cm < 0 || cm > RAIL_MAX) return;
-    const px = posToPx(cm);
-    ctx.save();
-    ctx.shadowColor = "rgba(232,179,75,.9)"; ctx.shadowBlur = 8;
-    ctx.fillStyle = "#e8b34b";
-    ctx.beginPath();
-    ctx.moveTo(px, axisY - r - 5); ctx.lineTo(px + r, axisY - 5);
-    ctx.lineTo(px, axisY + r - 5); ctx.lineTo(px - r, axisY - 5);
-    ctx.closePath(); ctx.fill();
-    ctx.restore();
-    ctx.save();
-    ctx.fillStyle = "#e8b34b"; ctx.font = "bold 11px Segoe UI"; ctx.textAlign = "center";
-    ctx.shadowColor = "rgba(0,0,0,.7)"; ctx.shadowBlur = 3;
-    ctx.fillText(label, px, axisY - 12 - r);
-    ctx.restore();
-  });
-}
-function osPhotonFlow(ctx, pts, n, color, size) {
-  // photon-dot flow along a ray polyline; phase from deterministic bubbleT
-  if (OS_REDUCED) return;
-  const segs = [];
-  let total = 0;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const dx = pts[i + 1][0] - pts[i][0], dy = pts[i + 1][1] - pts[i][1];
-    const len = Math.sqrt(dx * dx + dy * dy);
-    segs.push(len); total += len;
-  }
-  if (!total) return;
-  ctx.save();
-  ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 6;
-  for (let k = 0; k < n; k++) {
-    // map frame counter to distance deterministically
-    const d = ((bubbleT * 2.2 + (k * total) / n) % total + total) % total;
-    let acc = 0, x = pts[0][0], y = pts[0][1];
-    for (let s = 0; s < segs.length; s++) {
-      if (d <= acc + segs[s] || s === segs.length - 1) {
-        const t = segs[s] ? (d - acc) / segs[s] : 0;
-        x = pts[s][0] + (pts[s + 1][0] - pts[s][0]) * t;
-        y = pts[s][1] + (pts[s + 1][1] - pts[s][1]) * t;
-        break;
-      }
-      acc += segs[s];
-    }
-    ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
-  }
-  ctx.restore();
-}
+const posToPx = function (cm) { return PAD + (cm / RAIL_MAX) * (bench.width - 2 * PAD); };
+const pxToPos = function (px) { return Math.max(0, Math.min(RAIL_MAX, ((px - PAD) / (bench.width - 2 * PAD)) * RAIL_MAX)); };
 
 function drawBench() {
-  benchGeom = osFitCanvas(bench);
-  const w = benchGeom.W, h = benchGeom.H;
+  const w = bench.width, h = bench.height;
   bx.clearRect(0, 0, w, h);
-  // navy board backdrop + subtle vignette
-  const bg = bx.createLinearGradient(0, 0, 0, h);
-  bg.addColorStop(0, "#16233d"); bg.addColorStop(1, "#0d1626");
-  bx.fillStyle = bg; bx.fillRect(0, 0, w, h);
-  osBrushedRail(bx, w);
-  // graduations with tick shadows
+  // rail
+  const rail = bx.createLinearGradient(0, RAIL_Y, 0, RAIL_Y + 26);
+  rail.addColorStop(0, "#3a4d75"); rail.addColorStop(1, "#1a2740");
+  bx.fillStyle = rail; bx.fillRect(PAD - 20, RAIL_Y, w - 2 * (PAD - 20), 26);
+  // graduations
   for (let cm = 0; cm <= RAIL_MAX; cm += 5) {
-    osTickLabel(bx, posToPx(cm), cm, cm % 10 === 0);
+    const px = posToPx(cm), major = cm % 10 === 0;
+    bx.strokeStyle = major ? "#c7d6f2" : "rgba(199,214,242,.4)"; bx.lineWidth = 1;
+    bx.beginPath(); bx.moveTo(px, RAIL_Y); bx.lineTo(px, major ? RAIL_Y - 9 : RAIL_Y - 5); bx.stroke();
+    if (major) { bx.fillStyle = "#9fb0d0"; bx.font = "10px Consolas, monospace"; bx.textAlign = "center"; bx.fillText(cm, px, RAIL_Y + 40); }
   }
   // principal axis
-  bx.save();
   bx.strokeStyle = "rgba(159,176,208,.35)"; bx.setLineDash([6, 6]); bx.lineWidth = 1;
   bx.beginPath(); bx.moveTo(PAD, RAIL_Y - 60); bx.lineTo(w - PAD, RAIL_Y - 60); bx.stroke(); bx.setLineDash([]);
-  bx.restore();
 
   const aPx = posToPx(state.a), bPx = posToPx(state.b), cPx = posToPx(state.c);
-  const axisY = RAIL_Y - 60, tipY = axisY - 70;
-  const imgPos = trueImagePos();
-  const imgX = imgPos == null ? null : posToPx(Math.max(0, Math.min(RAIL_MAX, imgPos)));
-  const imgY = axisY + 70;
 
-  // rays under glass (parallel + central), brass with glow
-  bx.save();
-  bx.strokeStyle = "rgba(232,179,75,.55)"; bx.lineWidth = 1.4;
-  bx.shadowColor = "rgba(232,179,75,.5)"; bx.shadowBlur = 4;
-  bx.beginPath(); bx.moveTo(aPx, tipY); bx.lineTo(bPx, tipY); bx.stroke();
-  if (imgX != null) { bx.beginPath(); bx.moveTo(bPx, tipY); bx.lineTo(imgX, imgY); bx.stroke(); }
-  bx.beginPath(); bx.moveTo(aPx, tipY); bx.lineTo(bPx, axisY);
-  if (imgX != null) bx.lineTo(imgX, imgY); else bx.lineTo(bPx + 120, axisY + 40);
-  bx.stroke();
-  bx.restore();
-  // photon-dot flow along both rays (deterministic)
-  if (imgX != null) {
-    osPhotonFlow(bx, [[aPx, tipY], [bPx, tipY], [imgX, imgY]], 7, "rgba(255,220,150,.95)", 2.2);
-    osPhotonFlow(bx, [[aPx, tipY], [bPx, axisY], [imgX, imgY]], 6, "rgba(180,220,255,.9)", 2.0);
-  } else {
-    osPhotonFlow(bx, [[aPx, tipY], [bPx, tipY]], 4, "rgba(255,220,150,.95)", 2.2);
-  }
-
-  osFocalMarkers(bx);
-
-  // riders with soft shadows (object, lens, image)
-  osRiderShadow(bx, aPx); osRiderShadow(bx, bPx); osRiderShadow(bx, cPx);
+  // object needle
   drawUpright(aPx, "object", "#ffb347");
-  osGlassLens(bPx);
+  // lens
+  drawLens(bPx);
+  // image needle
   drawUpright(cPx, "image", "#e8b34b");
+
+  // ray hint (paraxial) from object tip through lens to image tip
+  const tipY = RAIL_Y - 60 - 70;
+  const imgPos = trueImagePos();
+  bx.strokeStyle = "rgba(232,179,75,.55)"; bx.lineWidth = 1.4;
+  bx.beginPath(); bx.moveTo(aPx, tipY); bx.lineTo(bPx, tipY); bx.stroke();
+  if (imgPos != null) { bx.beginPath(); bx.moveTo(bPx, tipY); bx.lineTo(posToPx(imgPos), RAIL_Y - 60 + 70); bx.stroke(); }
+  bx.beginPath(); bx.moveTo(aPx, tipY); bx.lineTo(bPx, RAIL_Y - 60); bx.lineTo(bPx, tipY); bx.stroke();
 }
 function drawUpright(px, kind, color) {
-  bx.save();
   bx.fillStyle = "#7a5228"; bx.fillRect(px - 12, RAIL_Y - 2, 24, 10);
   bx.fillStyle = "#2a1608"; bx.fillRect(px - 14, RAIL_Y + 8, 28, 6);
-  // needle highlight
-  bx.fillStyle = "rgba(255,255,255,.25)"; bx.fillRect(px - 12, RAIL_Y - 2, 24, 2);
   bx.strokeStyle = color; bx.lineWidth = 2.5;
-  bx.shadowColor = color; bx.shadowBlur = 6;
   bx.beginPath(); bx.moveTo(px, RAIL_Y); bx.lineTo(px, RAIL_Y - 60 - 70); bx.stroke();
-  bx.shadowBlur = 0;
   bx.fillStyle = color; bx.beginPath(); bx.arc(px, RAIL_Y - 60 - 70, 4, 0, Math.PI * 2); bx.fill();
   bx.fillStyle = color; bx.font = "11px Segoe UI"; bx.textAlign = "center";
-  bx.shadowColor = "rgba(0,0,0,.7)"; bx.shadowBlur = 3;
   bx.fillText(kind, px, RAIL_Y - 60 - 78);
-  bx.restore();
 }
-function osGlassLens(px) {
-  const top = RAIL_Y - 60 - 60, mid = RAIL_Y - 60, bot = RAIL_Y - 60 + 60;
-  bx.save();
+function drawLens(px) {
   bx.fillStyle = "#7a5228"; bx.fillRect(px - 12, RAIL_Y - 2, 24, 10);
   bx.fillStyle = "#1a2740"; bx.fillRect(px - 14, RAIL_Y + 8, 28, 6);
-  // glass body: vertical gradient, translucent blue
-  const g = bx.createLinearGradient(px - 20, 0, px + 20, 0);
-  g.addColorStop(0, "rgba(180,220,255,.06)"); g.addColorStop(0.5, "rgba(200,235,255,.38)");
-  g.addColorStop(1, "rgba(180,220,255,.06)");
+  bx.strokeStyle = "rgba(180,220,255,.9)"; bx.lineWidth = 2;
   bx.beginPath();
-  bx.moveTo(px, top);
-  bx.quadraticCurveTo(px + 22, mid, px, bot);
-  bx.quadraticCurveTo(px - 22, mid, px, top);
-  bx.closePath();
-  bx.fillStyle = g; bx.fill();
-  bx.fillStyle = "rgba(232,179,75,.10)"; bx.fill();
-  // edge glow
-  bx.strokeStyle = "rgba(190,228,255,.95)"; bx.lineWidth = 2;
-  bx.shadowColor = "rgba(150,210,255,.9)"; bx.shadowBlur = 10;
-  bx.stroke();
-  bx.shadowBlur = 0;
-  // refraction highlight: diagonal streak inside glass
-  bx.save();
-  bx.clip();
-  bx.strokeStyle = "rgba(255,255,255,.55)"; bx.lineWidth = 3; bx.lineCap = "round";
-  bx.beginPath(); bx.moveTo(px - 9, top + 18); bx.lineTo(px + 2, mid + 6); bx.stroke();
-  bx.strokeStyle = "rgba(255,255,255,.22)"; bx.lineWidth = 6;
-  bx.beginPath(); bx.moveTo(px - 4, mid + 14); bx.lineTo(px + 6, bot - 14); bx.stroke();
-  bx.restore();
-  bx.restore();
+  bx.moveTo(px, RAIL_Y - 60 - 60);
+  bx.quadraticCurveTo(px + 22, RAIL_Y - 60, px, RAIL_Y - 60 + 60);
+  bx.quadraticCurveTo(px - 22, RAIL_Y - 60, px, RAIL_Y - 60 - 60);
+  bx.closePath(); bx.stroke();
+  bx.fillStyle = "rgba(232,179,75,.12)"; bx.fill();
 }
-function drawLens(px) { osGlassLens(px); }
 
 /* ---- Eye view / parallax canvas ----------------------------------------- */
 const eye = document.getElementById("eyeView");
 const ex = eye.getContext("2d");
 function drawEyeView() {
-  const geom = osFitCanvas(eye);
-  const w = geom.W, h = geom.H;
+  const w = eye.width, h = eye.height;
   ex.clearRect(0, 0, w, h);
   ex.fillStyle = "#0b1413"; ex.fillRect(0, 0, w, h);
   ex.strokeStyle = "rgba(159,176,208,.25)";
@@ -545,8 +367,7 @@ const graphUV = document.getElementById("graphUV");
 const graphInv = document.getElementById("graphInv");
 
 function frame(g, c, xlabel, ylabel, xmax, ymax) {
-  const geom = osFitCanvas(c);
-  const w = geom.W, h = geom.H, ox = 42, oy = h - 30;
+  const w = c.canvas.width, h = c.canvas.height, ox = 42, oy = h - 30;
   c.clearRect(0, 0, w, h);
   c.strokeStyle = "rgba(159,176,208,.25)";
   for (let i = 0; i <= 5; i++) {
@@ -590,28 +411,15 @@ function drawGraphs() {
   });
 }
 
-/* ---- Render loop (deterministic rAF; frozen single frame on reduced-motion) - */
-let osLoopOn = false;
+/* ---- Render loop --------------------------------------------------------- */
 function render() {
   drawBench(); drawEyeView(); updateReadout();
 }
-function osStartLoop() {
-  if (OS_REDUCED || osLoopOn) return;
-  osLoopOn = true;
-  const tick = function () {
-    bubbleT++;
-    drawBench(); drawEyeView();
-    requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
-}
 function updateReadout() {
   const U = u(), V = v(), F = focalFromUV();
-  const rU = document.getElementById("roU"), rV = document.getElementById("roV"), rF = document.getElementById("roF");
-  rU.textContent = U.toFixed(2) + " cm";
-  rV.textContent = V.toFixed(2) + " cm";
-  rF.textContent = isFinite(F) ? F.toFixed(3) + " cm" : "—";
-  [rU, rV, rF].forEach(function (el) { el.style.fontVariantNumeric = "tabular-nums"; });
+  document.getElementById("roU").textContent = U.toFixed(2) + " cm";
+  document.getElementById("roV").textContent = V.toFixed(2) + " cm";
+  document.getElementById("roF").textContent = isFinite(F) ? F.toFixed(3) + " cm" : "—";
   document.getElementById("aVal").textContent = state.a.toFixed(1);
   document.getElementById("bVal").textContent = state.b.toFixed(1);
   document.getElementById("cVal").textContent = state.c.toFixed(1);
@@ -623,42 +431,26 @@ function updateReadout() {
   else { box.className = "os-callout"; box.innerHTML = "<h4>Parallax present</h4><span>Aim the eye sideways and move the image needle until image and needle coincide.</span>"; }
 }
 
-/* ---- Interaction (pointer drag on canvas <-> sliders both ways) ------------ */
+/* ---- Interaction --------------------------------------------------------- */
 let drag = null;
-function osBenchHitTest(sx) {
+bench.addEventListener("mousedown", function (e) {
+  const rect = bench.getBoundingClientRect();
+  const sx = (e.clientX - rect.left) * (bench.width / rect.width);
   const aPx = posToPx(state.a), bPx = posToPx(state.b), cPx = posToPx(state.c);
   const d = [[Math.abs(sx - aPx), "a"], [Math.abs(sx - bPx), "b"], [Math.abs(sx - cPx), "c"]].sort(function (x, y) { return x[0] - y[0]; });
-  return d[0][0] < 28 ? d[0][1] : null;
-}
-function osSyncSliders() {
-  document.getElementById("aRange").value = state.a;
-  document.getElementById("bRange").value = state.b;
-  document.getElementById("cRange").value = state.c;
-}
-function osDragTo(sx) {
-  let cm = Math.round(pxToPos(sx) * 10) / 10;
-  if (drag === "a") { state.a = Math.min(cm, state.b - 0.5); }
-  if (drag === "b") { state.b = cm; }
-  if (drag === "c") { state.c = cm; }
-  osSyncSliders(); render();
-}
-function osEventX(e) {
+  if (d[0][0] < 22) drag = d[0][1];
+});
+bench.addEventListener("mousemove", function (e) {
+  if (!drag) return;
   const rect = bench.getBoundingClientRect();
-  const cssW = rect.width || benchGeom.W;
-  return ((e.clientX - rect.left) / cssW) * benchGeom.W;
-}
-bench.addEventListener("pointerdown", function (e) {
-  drag = osBenchHitTest(osEventX(e));
-  if (drag) { bench.classList.add("os-dragging"); try { bench.setPointerCapture(e.pointerId); } catch (_) {} osDragTo(osEventX(e)); e.preventDefault(); }
+  const sx = (e.clientX - rect.left) * (bench.width / rect.width);
+  let cm = Math.round(pxToPos(sx) * 10) / 10;
+  if (drag === "a") { state.a = Math.min(cm, state.b - 0.5); document.getElementById("aRange").value = state.a; }
+  if (drag === "b") { state.b = cm; document.getElementById("bRange").value = state.b; }
+  if (drag === "c") { state.c = cm; document.getElementById("cRange").value = state.c; }
+  render();
 });
-bench.addEventListener("pointermove", function (e) {
-  if (drag) { osDragTo(osEventX(e)); return; }
-  bench.style.cursor = osBenchHitTest(osEventX(e)) ? "grab" : "default";
-});
-function osEndDrag() { drag = null; bench.classList.remove("os-dragging"); }
-bench.addEventListener("pointerup", osEndDrag);
-bench.addEventListener("pointercancel", osEndDrag);
-window.addEventListener("mouseup", function () { drag = null; bench.classList.remove("os-dragging"); });
+window.addEventListener("mouseup", function () { drag = null; });
 
 document.getElementById("aRange").addEventListener("input", function (e) { state.a = Math.min(parseFloat(e.target.value), state.b - 0.5); render(); });
 document.getElementById("bRange").addEventListener("input", function (e) { state.b = parseFloat(e.target.value); render(); });
@@ -800,8 +592,7 @@ document.getElementById("aiSend").addEventListener("click", function () { const 
 
 /* ---- Boot ---------------------------------------------------------------- */
 (async function () {
-  renderTable(); drawGraphs(); render(); osStartLoop();
-  window.addEventListener("resize", function () { render(); drawGraphs(); });
+  renderTable(); drawGraphs(); render();
   try { await window.LabNotebook.open(); document.getElementById("dbChip").textContent = window.LabNotebook.isFallback() ? "memory" : "IndexedDB"; }
   catch (e) { document.getElementById("dbChip").textContent = "unavailable"; }
 })();

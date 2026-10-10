@@ -5,16 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Refraction through a Glass Slab — OpenSchool Virtual Lab</title>
 <link rel="stylesheet" href="../../assets/css/lab-theme.css" />
-<!--
-  OS-OPTICS-POLISH (presentation-only): osDpr/osFitCanvas HiDPI, brushed rail,
-  tick labels, rider shadows, glass slab gradient body + edge glow + highlight streak,
-  brass rays with glow, osPhotonFlow dots; deterministic bubbleT,
-  event-driven static frames (reduced-motion safe). Physics/controls/ids unchanged.
--->
-<style>
-  .os-readout .row b{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
-  .os-table td.num{font-variant-numeric:tabular-nums}
-</style>
 </head>
 <body>
 <a class="os-skip-link" href="#main-content">Skip to main content</a>
@@ -279,54 +269,6 @@ const ctx = canvas.getContext("2d");
 /* ---- Apparatus scene library (per-experiment) ---------------------------- */
 const appCanvas = document.getElementById("apparatus");
 const actx = appCanvas.getContext("2d");
-/* ---- OS-OPTICS-POLISH helpers (presentation-only, deterministic) ---------- */
-var OS_REDUCED = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) || false;
-function osDpr() { return Math.min(2, window.devicePixelRatio || 1); }
-function osFitCanvas(cv) {
-  const dpr = osDpr();
-  const lw = parseInt(cv.getAttribute("width"), 10) || 760;
-  const lh = parseInt(cv.getAttribute("height"), 10) || 250;
-  const bw = Math.round(lw * dpr), bh = Math.round(lh * dpr);
-  if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
-  const c2 = cv.getContext("2d");
-  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { W: lw, H: lh };
-}
-function osRiderShadow(c, x, y, r) {
-  c.save();
-  const g = c.createRadialGradient(x, y, 2, x, y, r || 26);
-  g.addColorStop(0, "rgba(0,0,0,.5)"); g.addColorStop(1, "rgba(0,0,0,0)");
-  c.fillStyle = g;
-  c.beginPath(); c.ellipse(x, y, r || 26, 7, 0, 0, Math.PI * 2); c.fill();
-  c.restore();
-}
-function osPhotonFlow(c, pts, n, color, size) {
-  if (OS_REDUCED) return; /* reduced-motion: static rays, no travelling dots */
-  const segs = []; let total = 0;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const dx = pts[i + 1][0] - pts[i][0], dy = pts[i + 1][1] - pts[i][1];
-    const len = Math.sqrt(dx * dx + dy * dy);
-    segs.push(len); total += len;
-  }
-  if (!total) return;
-  c.save();
-  c.fillStyle = color; c.shadowColor = color; c.shadowBlur = 6;
-  for (let k = 0; k < n; k++) {
-    const d = ((bubbleT * 2.2 + (k * total) / n) % total + total) % total;
-    let acc = 0, x = pts[0][0], y = pts[0][1];
-    for (let s = 0; s < segs.length; s++) {
-      if (d <= acc + segs[s] || s === segs.length - 1) {
-        const t = segs[s] ? (d - acc) / segs[s] : 0;
-        x = pts[s][0] + (pts[s + 1][0] - pts[s][0]) * t;
-        y = pts[s][1] + (pts[s + 1][1] - pts[s][1]) * t;
-        break;
-      }
-      acc += segs[s];
-    }
-    c.beginPath(); c.arc(x, y, size, 0, Math.PI * 2); c.fill();
-  }
-  c.restore();
-}
 function apBg(c, W, H) {
   const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#0e1a18"); g.addColorStop(1, "#0b1413");
   c.fillStyle = g; c.fillRect(0, 0, W, H);
@@ -413,43 +355,11 @@ const SCENES = {
   optics: function (c, W, H, S, y, sc) {
     apBg(c, W, H);
     const ay = 140;
-    /* OS-OPTICS-POLISH: brushed-steel bench rail with top highlight */
-    const rail = c.createLinearGradient(0, ay + 4, 0, ay + 17);
-    rail.addColorStop(0, "#5a719f"); rail.addColorStop(0.5, "#22344f"); rail.addColorStop(1, "#0e1828");
-    c.save();
-    c.shadowColor = "rgba(0,0,0,.45)"; c.shadowBlur = 8; c.shadowOffsetY = 3;
-    c.fillStyle = rail; c.fillRect(40, ay + 4, W - 80, 13);
-    c.restore();
-    c.save(); c.globalAlpha = 0.16; c.strokeStyle = "#c7d6f2"; c.lineWidth = 1;
-    c.beginPath(); c.moveTo(40, ay + 8); c.lineTo(W - 40, ay + 8); c.stroke();
-    c.beginPath(); c.moveTo(40, ay + 13); c.lineTo(W - 40, ay + 13); c.stroke();
-    c.restore();
-    c.save();
-    const hi = c.createLinearGradient(0, ay + 4, 0, ay + 7);
-    hi.addColorStop(0, "rgba(255,255,255,.55)"); hi.addColorStop(1, "rgba(255,255,255,0)");
-    c.fillStyle = hi; c.fillRect(40, ay + 4, W - 80, 3);
-    c.restore();
-    /* principal axis (dashed, subtle) */
-    c.save();
-    c.strokeStyle = "rgba(159,176,208,.35)"; c.setLineDash([6, 6]); c.lineWidth = 1;
-    c.beginPath(); c.moveTo(40, ay); c.lineTo(W - 40, ay); c.stroke(); c.setLineDash([]);
-    c.restore();
+    c.strokeStyle = "#41598a"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(40, ay); c.lineTo(W - 40, ay); c.stroke();
     apText(c, "principal axis", W - 44, ay - 8, "#7d9a93", "11px Segoe UI", "right");
     const cx = W / 2;
     if (sc.element === "slab") {
-      /* OS-OPTICS-POLISH: glass slab gradient body + edge glow + highlight streak */
-      const sg = c.createLinearGradient(cx - 42, 0, cx + 42, 0);
-      sg.addColorStop(0, "rgba(180,220,255,.08)"); sg.addColorStop(0.5, "rgba(200,235,255,.40)"); sg.addColorStop(1, "rgba(180,220,255,.08)");
-      c.fillStyle = sg; c.fillRect(cx - 42, ay - 62, 84, 124);
-      c.save();
-      c.strokeStyle = "rgba(190,228,255,.95)"; c.lineWidth = 2;
-      c.shadowColor = "rgba(150,210,255,.9)"; c.shadowBlur = 10;
-      c.strokeRect(cx - 42, ay - 62, 84, 124);
-      c.restore();
-      c.save();
-      c.strokeStyle = "rgba(255,255,255,.5)"; c.lineWidth = 3; c.lineCap = "round";
-      c.beginPath(); c.moveTo(cx - 24, ay - 40); c.lineTo(cx - 8, ay + 8); c.stroke();
-      c.restore();
+      c.fillStyle = "rgba(120,180,230,.22)"; c.strokeStyle = "#8fd0ff"; c.lineWidth = 2; c.fillRect(cx - 42, ay - 62, 84, 124); c.strokeRect(cx - 42, ay - 62, 84, 124);
       apText(c, "glass slab", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     } else if (sc.element === "prism") {
       c.fillStyle = "rgba(150,200,255,.22)"; c.strokeStyle = "#8fd0ff"; c.lineWidth = 2;
@@ -464,29 +374,12 @@ const SCENES = {
       else { c.beginPath(); c.arc(cx - 190, ay, 190, -Math.PI * 0.3, Math.PI * 0.3); c.stroke(); }
       apText(c, sc.element === "convex_mirror" ? "convex mirror" : "concave mirror", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     }
-    /* rider shadows + stands */
-    osRiderShadow(c, 120, ay + 24, 24); osRiderShadow(c, cx, ay + 24, 26);
-    c.fillStyle = "#7a5228"; c.fillRect(108, ay + 4, 24, 9);
-    c.fillStyle = "#2a1608"; c.fillRect(106, ay + 13, 28, 5);
-    c.fillStyle = "#7a5228"; c.fillRect(cx - 12, ay + 4, 24, 9);
-    c.fillStyle = "#1a2740"; c.fillRect(cx - 14, ay + 13, 28, 5);
-    /* object arrow with glow (same geometry as before) */
-    c.save();
-    c.strokeStyle = "#ff8a8a"; c.lineWidth = 2.5;
-    c.shadowColor = "rgba(255,138,138,.7)"; c.shadowBlur = 6;
-    c.beginPath(); c.moveTo(120, ay); c.lineTo(120, ay - 42); c.stroke();
-    c.restore();
+    c.strokeStyle = "#ff8a8a"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(120, ay); c.lineTo(120, ay - 42); c.stroke();
     c.fillStyle = "#ff8a8a"; c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(114, ay - 30); c.lineTo(126, ay - 30); c.closePath(); c.fill();
     apText(c, "object  u = " + (S.u != null ? S.u : "—") + " cm", 120, ay + 20, "#ff8a8a", "11px Segoe UI", "center");
-    /* OS-OPTICS-POLISH: glowing rays + photon flow (same geometry) */
-    c.save();
-    c.strokeStyle = "rgba(232,179,75,.9)"; c.lineWidth = 1.6;
-    c.shadowColor = "rgba(232,179,75,.55)"; c.shadowBlur = 5;
+    c.strokeStyle = "#e8b34b"; c.lineWidth = 1.5;
     c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(cx, ay); c.lineTo(W - 60, ay + 34); c.stroke();
     c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(W - 60, ay + 34); c.stroke();
-    c.restore();
-    osPhotonFlow(c, [[120, ay - 42], [cx, ay], [W - 60, ay + 34]], 6, "rgba(255,220,150,.95)", 2.2);
-    osPhotonFlow(c, [[120, ay - 42], [W - 60, ay + 34]], 4, "rgba(180,220,255,.9)", 2.0);
     apText(c, sc.label || "Optics", W - 14, H - 12, "#7d9a93", "11px Segoe UI", "right");
   },
 
@@ -711,20 +604,17 @@ const SCENES = {
 };
 
 function drawScene() {
-  bubbleT += 0.016; /* deterministic frame counter (NOT Date.now); static frames, frozen when reduced-motion */
-  const fitA = osFitCanvas(appCanvas);
-  const W = fitA.W, H = fitA.H;
+  bubbleT += 0.016;
+  const W = appCanvas.width, H = appCanvas.height;
   const sc = SPEC.scene || { name: "generic" };
   const fn = SCENES[sc.name] || SCENES.generic;
   fn(actx, W, H, S, activeY(S), sc, faultOn);
 }
 
 function draw() {
-  const fitS = osFitCanvas(canvas);
-  const w = fitS.W, h = fitS.H;
-  /* OS-OPTICS-POLISH: navy board */
+  const w = canvas.width, h = canvas.height;
   const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, "#16233d"); grad.addColorStop(1, "#0d1626");
+  grad.addColorStop(0, "#0e1a18"); grad.addColorStop(1, "#0b1413");
   ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
   ctx.strokeStyle = "rgba(120,150,140,.10)"; ctx.lineWidth = 1;
   for (let gx = 0; gx <= w; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
@@ -755,10 +645,7 @@ function draw() {
   // zero line
   if (ymin < 0 && ymax > 0) { ctx.strokeStyle = "rgba(120,150,140,.35)"; ctx.beginPath(); ctx.moveTo(ox, py(0)); ctx.lineTo(ox + aw, py(0)); ctx.stroke(); }
   // curve
-  ctx.save();
-  ctx.strokeStyle = "#e8b34b"; ctx.lineWidth = 2.4;
-  ctx.shadowColor = "rgba(232,179,75,.5)"; ctx.shadowBlur = 5;
-  ctx.beginPath();
+  ctx.strokeStyle = "#e8b34b"; ctx.lineWidth = 2.4; ctx.beginPath();
   let started = false;
   pts.forEach(function (p) {
     if (!isNum(p.y)) { started = false; return; }
@@ -766,16 +653,12 @@ function draw() {
     if (!started) { ctx.moveTo(X, Y); started = true; } else ctx.lineTo(X, Y);
   });
   ctx.stroke();
-  ctx.restore();
   // marker
   const cyv = activeY(S);
   if (isNum(cyv)) {
     const mx = px(S[xc.id]), my = py(cyv);
     ctx.fillStyle = "rgba(232,179,75,.25)"; ctx.beginPath(); ctx.arc(mx, my, 14, 0, Math.PI * 2); ctx.fill();
-    ctx.save();
-    ctx.shadowColor = "rgba(232,179,75,.8)"; ctx.shadowBlur = 8;
     ctx.fillStyle = "#e8b34b"; ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
-    ctx.restore();
   }
   // labels
   ctx.fillStyle = "#9fb0d0"; ctx.font = "13px Segoe UI, sans-serif"; ctx.textAlign = "center";
