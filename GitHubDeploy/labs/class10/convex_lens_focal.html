@@ -506,6 +506,7 @@ function osRiderShadow(c, x, y, r) {
 }
 function osPhotonFlow(c, pts, n, color, size) {
   if (OS_REDUCED) return; /* reduced-motion: static rays, no travelling dots */
+  if (window.__osDegraded || window.__osNoGlow) return; /* OS-PAINT-WATCHDOG: skip dots in perf mode */
   const segs = []; let total = 0;
   for (let i = 0; i < pts.length - 1; i++) {
     const dx = pts[i + 1][0] - pts[i][0], dy = pts[i + 1][1] - pts[i][1];
@@ -536,7 +537,7 @@ function osFocalDiamond(c, x, y, label) {
   const pulse = OS_REDUCED ? 0 : Math.sin(bubbleT * 0.06);
   const r = 4 + 1.5 * pulse;
   c.save();
-  c.shadowColor = "rgba(232,179,75,.9)"; c.shadowBlur = 8;
+  c.shadowColor = "rgba(232,179,75,.9)"; c.shadowBlur = window.__osNoGlow ? 0 : 8;
   c.fillStyle = "#e8b34b";
   c.beginPath();
   c.moveTo(x, y - r - 5); c.lineTo(x + r, y - 5);
@@ -765,7 +766,7 @@ const SCENES = {
     /* rays with glow + deterministic photon flow */
     c.save();
     c.strokeStyle = "rgba(232,179,75,.9)"; c.lineWidth = 1.6;
-    c.shadowColor = "rgba(232,179,75,.55)"; c.shadowBlur = 5;
+    c.shadowColor = "rgba(232,179,75,.55)"; c.shadowBlur = window.__osNoGlow ? 0 : 5;
     c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(cx, ay); c.lineTo(W - 60, ay + 34); c.stroke();
     c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(W - 60, ay + 34); c.stroke();
     c.restore();
@@ -1030,7 +1031,7 @@ function drawScene() {
     /* hero rays — glow kept */
     actx.save();
     actx.strokeStyle = "rgba(232,179,75,.9)"; actx.lineWidth = 1.6;
-    actx.shadowColor = "rgba(232,179,75,.55)"; actx.shadowBlur = 5;
+    actx.shadowColor = "rgba(232,179,75,.55)"; actx.shadowBlur = window.__osNoGlow ? 0 : 5;
     actx.beginPath(); actx.moveTo(objectX, ay - 42); actx.lineTo(cx, ay); actx.lineTo(W - 60, ay + 34); actx.stroke();
     actx.beginPath(); actx.moveTo(objectX, ay - 42); actx.lineTo(W - 60, ay + 34); actx.stroke();
     actx.restore();
@@ -1081,7 +1082,7 @@ function draw() {
   // curve (hero glow kept)
   ctx.save();
   ctx.strokeStyle = "#e8b34b"; ctx.lineWidth = 2.4;
-  ctx.shadowColor = "rgba(232,179,75,.5)"; ctx.shadowBlur = 5;
+  ctx.shadowColor = "rgba(232,179,75,.5)"; ctx.shadowBlur = window.__osNoGlow ? 0 : 5;
   ctx.beginPath();
   let started = false;
   pts.forEach(function (p) {
@@ -1097,7 +1098,7 @@ function draw() {
     const mx = px(S[xc.id]), my = py(cyv);
     ctx.fillStyle = "rgba(232,179,75,.25)"; ctx.beginPath(); ctx.arc(mx, my, 14, 0, Math.PI * 2); ctx.fill();
     ctx.save();
-    ctx.shadowColor = "rgba(232,179,75,.8)"; ctx.shadowBlur = 8;
+    ctx.shadowColor = "rgba(232,179,75,.8)"; ctx.shadowBlur = window.__osNoGlow ? 0 : 8;
     ctx.fillStyle = "#e8b34b"; ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
@@ -1253,6 +1254,22 @@ document.getElementById("aiSend").addEventListener("click", function () {
   buildControls(); renderHead(); renderTable(); drawScene(); draw(); updateReadout();
   try { await window.LabNotebook.open(); document.getElementById("dbChip").textContent = window.LabNotebook.isFallback() ? "memory" : "IndexedDB"; }
   catch (e) { document.getElementById("dbChip").textContent = "unavailable"; }
+})();
+</script>
+<script>/* OS-PAINT-WATCHDOG (presentation-only, no deps): rolling-avg paint guard. */
+(function(){
+if(window.__osPaintWatch)return;window.__osPaintWatch=true;
+window.__osDegraded=false;window.__osNoGlow=false;
+var ts=[],cool=0,noted=false;
+function toast(m){try{if(window.OSToast)window.OSToast.show(m,"warn");}catch(e){}}
+function rec(dt){ts.push(dt);if(ts.length>20)ts.shift();if(ts.length<5)return;
+var avg=ts.reduce(function(a,b){return a+b;},0)/ts.length;
+if(!window.__osDegraded&&avg>80){window.__osDegraded=true;window.__osNoGlow=true;cool=0;
+if(!noted){noted=true;toast("Performance mode: effects reduced");}}
+else if(window.__osDegraded){if(avg<40){if(++cool>=60){window.__osDegraded=false;window.__osNoGlow=false;cool=0;}}else cool=0;}}
+function wrap(f){return function(){var t0=performance.now();try{return f.apply(this,arguments);}finally{rec(performance.now()-t0);}};}
+try{if(typeof drawScene==="function"){var a=drawScene;drawScene=wrap(a);}
+if(typeof draw==="function"){var b=draw;draw=wrap(b);}}catch(e){}
 })();
 </script>
 <script>window.addEventListener("DOMContentLoaded",function(){try{var el=document.querySelector("[data-os-quiz]");if(el&&window.OSQuiz&&!el.getAttribute("data-os-quiz-done")){var id=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.experimentId)?CONFIG.experimentId:"";window.OSQuiz.renderInto(el,id);}}catch(e){}});</script>
