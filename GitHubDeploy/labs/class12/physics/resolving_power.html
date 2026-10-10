@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenSchool — Resolving Power (P-C12-21)</title>
 <link rel="stylesheet" href="../../../assets/css/lab-theme.css" />
+<!--
+  OS-OPTICS-POLISH (presentation-only): osDpr/osFitCanvas HiDPI, navy board,
+  glow highlights, tabular-numeral readouts. Equations, controls, ids unchanged.
+-->
+<style>
+  .os-readout .row b{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
+  #stage{touch-action:none}
+</style>
 </head>
 <body>
 <a class="os-skip-link" href="#main-content">Skip to main content</a>
@@ -281,6 +289,18 @@ let vivaState = null;
 
 const canvas = document.getElementById("stage");
 const ctx = canvas.getContext("2d");
+/* ---- OS-OPTICS-POLISH helpers (presentation-only; static frame) ---------- */
+function osDpr() { return Math.min(2, window.devicePixelRatio || 1); }
+function osFitCanvas(cv) {
+  var dpr = osDpr();
+  var lw = parseInt(cv.getAttribute("width"), 10) || 720;
+  var lh = parseInt(cv.getAttribute("height"), 10) || 440;
+  var bw = Math.round(lw * dpr), bh = Math.round(lh * dpr);
+  if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
+  var c2 = cv.getContext("2d");
+  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W: lw, H: lh };
+}
 
 function currentInputs() {
   return {
@@ -296,11 +316,12 @@ function airy(x) {
 }
 
 function draw() {
-  var w = canvas.width, h = canvas.height;
+  var fit = osFitCanvas(canvas);
+  var w = fit.W, h = fit.H;
   var grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, "#0e1a18"); grad.addColorStop(1, "#0b1413");
+  grad.addColorStop(0, "#16233d"); grad.addColorStop(1, "#0d1626");
   ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = "rgba(120,150,140,.12)"; ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(159,176,208,.10)"; ctx.lineWidth = 1;
   for (var gx = 0; gx <= w; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
   for (var gy = 0; gy <= h; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
 
@@ -316,16 +337,27 @@ function draw() {
   var sepNorm = Math.min(2.2, Math.max(0.35, res.urad / 130));
 
   function disc(cx, color) {
-    var g = ctx.createRadialGradient(cx, cy, 4, cx, cy, baseR);
-    g.addColorStop(0, color);
-    g.addColorStop(0.35, "rgba(80,140,255,.45)");
+    /* OS-OPTICS-POLISH: hot core + glowing first-minimum ring */
+    ctx.save();
+    ctx.shadowColor = "rgba(140,200,255,.9)"; ctx.shadowBlur = 18;
+    var g = ctx.createRadialGradient(cx, cy, 2, cx, cy, baseR);
+    g.addColorStop(0, "#ffffff");
+    g.addColorStop(0.18, color);
+    g.addColorStop(0.42, "rgba(80,140,255,.45)");
     g.addColorStop(1, "rgba(80,140,255,0)");
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.arc(cx, cy, baseR, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(160,190,240,.5)"; ctx.lineWidth = 1.5;
+    ctx.restore();
+    ctx.save();
+    ctx.strokeStyle = "rgba(190,215,255,.75)"; ctx.lineWidth = 1.5;
+    ctx.shadowColor = "rgba(140,200,255,.8)"; ctx.shadowBlur = 6;
     ctx.beginPath(); ctx.arc(cx, cy, baseR * 0.42, 0, Math.PI * 2); ctx.stroke();
-  }
-  disc(cx1, "rgba(120,190,255,.95)");
+    ctx.restore();
+    ctx.save();
+    ctx.strokeStyle = "rgba(160,190,240,.30)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, baseR * 0.78, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  }  disc(cx1, "rgba(120,190,255,.95)");
   disc(cx2, "rgba(120,190,255,.95)");
 
   ctx.strokeStyle = "#ff6b81"; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
@@ -333,14 +365,18 @@ function draw() {
   ctx.beginPath(); ctx.moveTo(cx2, cy - baseR - 12); ctx.lineTo(cx2, cy + baseR + 12); ctx.stroke();
   ctx.setLineDash([]);
   ctx.fillStyle = "#ffb02e"; ctx.font = "12px monospace";
-  ctx.fillText("separation / Airy radius ~ " + sepNorm.toFixed(2), 60, 290);
+  var verdict = sepNorm >= 1.15 ? "resolved" : (sepNorm >= 0.9 ? "just resolved (Rayleigh)" : "unresolved");
+  ctx.fillStyle = "#9fb0d0";
+  ctx.fillText("separation / Airy radius ~ " + sepNorm.toFixed(2) + "  —  " + verdict, 60, 290);
 
   var ox = 60, oy = 400, aw = w - 120, ah = 80;
   ctx.strokeStyle = "#7d9a93"; ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(ox, oy - ah); ctx.lineTo(ox, oy); ctx.lineTo(ox + aw, oy); ctx.stroke();
   var half = 12;
+  ctx.save();
   ctx.lineWidth = 2;
   ctx.strokeStyle = "#e8b34b";
+  ctx.shadowColor = "rgba(232,179,75,.6)"; ctx.shadowBlur = 6;
   ctx.beginPath();
   for (var i = 0; i <= 160; i++) {
     var xv = -half + (i / 160) * half * 2;
@@ -350,6 +386,7 @@ function draw() {
     if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
   }
   ctx.stroke();
+  ctx.restore();
   ctx.fillStyle = "#8fa3c8"; ctx.font = "12px monospace";
   ctx.fillText("combined intensity (two Airy patterns)", ox + 8, oy - ah - 8);
 

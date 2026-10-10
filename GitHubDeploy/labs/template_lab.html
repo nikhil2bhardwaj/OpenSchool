@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenSchool — Master Lab Shell (Template)</title>
 <link rel="stylesheet" href="../assets/css/lab-theme.css" />
+<style>
+  /* OS-CANVAS-POLISH (presentation-only): tabular readouts, canvas affordances only. */
+  .os-readout .row b{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;white-space:nowrap}
+  .os-table td.num{font-variant-numeric:tabular-nums}
+  canvas{touch-action:manipulation}
+</style>
 </head>
 <body>
 <a class="os-skip-link" href="#main-content">Skip to main content</a>
@@ -312,8 +318,9 @@ const ctx = canvas.getContext("2d");
 
 function draw() {
   const w = canvas.width, h = canvas.height;
+  /* OS-CANVAS-POLISH: navy board (presentation-only; geometry/physics unchanged) */
   const grad = ctx.createLinearGradient(0, 0, 0, h);
-  grad.addColorStop(0, "#0e1a18"); grad.addColorStop(1, "#0b1413");
+  grad.addColorStop(0, "#16233d"); grad.addColorStop(1, "#0d1626");
   ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
 
   // grid
@@ -728,5 +735,114 @@ document.getElementById("aiSend").addEventListener("click", function () {
     if(target&&target!==p&&typeof target.click==="function"){ev.preventDefault();target.click();}
   });
 })();</script>
+<script>
+/* OS-CANVAS-POLISH (charts, presentation-only): HiDPI cap 2, reduced-motion freeze,
+   deterministic bubbleT counter (no nondeterministic-RNG/wall-clock), no deps.
+   Families: circuits=osWireGlow+osNeedleGauge; chemistry=osLiquid+osMeniscus+osBubbles;
+   biology=osCellShade; mechanics=osShadowTrail; charts=osGrid+osBestFitGlow.
+   Physics/controls/ids/storage/quiz/viva/Hindi untouched; rendering + readout polish only. */
+(function () {
+  "use strict";
+  var OS_CAT = "charts";
+  var OS_REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var bubbleT = 0; /* deterministic frame counter for bubbles/photon flow/glow pulse */
+  function osDpr() { return Math.min(2, window.devicePixelRatio || 1); }
+  function osFitCanvas(cv) {
+    var dpr = osDpr();
+    var lw = parseInt(cv.getAttribute("width"), 10) || cv.clientWidth || 800;
+    var lh = parseInt(cv.getAttribute("height"), 10) || cv.clientHeight || 300;
+    if (!cv.getAttribute("data-os-logical")) {
+      cv.setAttribute("data-os-logical", lw + "x" + lh);
+      if (cv.style && !cv.style.aspectRatio) { cv.style.width = "100%"; cv.style.height = "auto"; }
+    }
+    var bw = Math.round(lw * dpr), bh = Math.round(lh * dpr);
+    if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
+    var ctx = cv.getContext("2d");
+    if (ctx && ctx.setTransform) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+    return { ctx: ctx, W: lw, H: lh };
+  }
+  function osGrid(ctx, W, H, step) {
+    ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#8ea2c8"; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (var x = step; x < W; x += step) { ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); }
+    for (var y = step; y < H; y += step) { ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); }
+    ctx.stroke(); ctx.restore();
+  }
+  function osVignette(ctx, W, H) {
+    var g = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.75);
+    g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.28)");
+    ctx.save(); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore();
+  }
+  function osBestFitGlow(ctx, pts, color) {
+    if (!pts || pts.length < 2) { return; }
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = 2.5; ctx.lineJoin = "round";
+    ctx.shadowColor = color; ctx.shadowBlur = 10; ctx.globalAlpha = 0.9;
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var i = 1; i < pts.length; i++) { ctx.lineTo(pts[i][0], pts[i][1]); }
+    ctx.stroke(); ctx.restore();
+  }
+  function osAccent(fit, t) {
+    var ctx = fit.ctx, W = fit.W, H = fit.H;
+    try {
+      var n = 24, pts = [];
+      for (var i = 0; i <= n; i++) {
+        var px = W * 0.08 + (W * 0.84 * i) / n;
+        var py = H * 0.78 - (H * 0.56 * i) / n + Math.sin(i * 0.7 + t * 0.02) * H * 0.008;
+        pts.push([px, py]);
+      }
+      osBestFitGlow(ctx, pts, "#7CFC98");
+    } catch (e) { /* presentation-only: never break the lab */ }
+  }
+  function osPolishStatic() {
+    var cvs = document.querySelectorAll("canvas");
+    for (var i = 0; i < cvs.length; i++) {
+      try {
+        var fit = osFitCanvas(cvs[i]);
+        fit.ctx.save();
+        osGrid(fit.ctx, fit.W, fit.H, 28);
+        osAccent(fit, bubbleT);
+        osVignette(fit.ctx, fit.W, fit.H);
+        fit.ctx.restore();
+      } catch (e) { /* never break the lab */ }
+    }
+    var ros = document.querySelectorAll(".os-readout .row b, .os-stat b");
+    for (var j = 0; j < ros.length; j++) {
+      if (ros[j].style) { ros[j].style.fontVariantNumeric = "tabular-nums"; }
+    }
+  }
+  function osBaseRepaint() {
+    var names = ["render", "draw", "redraw", "frame", "updateCanvas", "drawScene", "drawStage", "paint", "update"];
+    for (var i = 0; i < names.length; i++) {
+      try {
+        var fn = window[names[i]];
+        if (typeof fn === "function" && fn.__osPolished !== true) { fn(); return true; }
+      } catch (e) { /* ignore */ }
+    }
+    return false;
+  }
+  function osStartLoop() {
+    if (OS_REDUCED) { return; } /* reduced-motion freeze: single static frame */
+    var frames = 0;
+    function tick() {
+      bubbleT++;
+      frames++;
+      if (frames % 20 === 0) { /* low-frequency accent refresh over a fresh base repaint */
+        try { if (osBaseRepaint()) { osPolishStatic(); } } catch (e) { /* ignore */ }
+      }
+      if (frames < 1200) { requestAnimationFrame(tick); }
+    }
+    requestAnimationFrame(tick);
+  }
+  function boot() {
+    osPolishStatic();
+    try {
+      window.addEventListener("resize", function () { osPolishStatic(); });
+    } catch (e) { /* ignore */ }
+    osStartLoop();
+  }
+  if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", boot); }
+  else { boot(); }
+})();
+</script>
 </body>
 </html>
