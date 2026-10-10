@@ -485,7 +485,7 @@ const appCanvas = document.getElementById("apparatus");
 const actx = appCanvas.getContext("2d");
 /* ---- OS-OPTICS-POLISH helpers (presentation-only, deterministic) ---------- */
 var OS_REDUCED = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) || false;
-function osDpr() { return Math.min(2, window.devicePixelRatio || 1); }
+function osDpr() { var base = Math.min(2, window.devicePixelRatio || 1); if (window.__osDegraded) return Math.min(base, 1) * 0.75; return base; }
 function osFitCanvas(cv) {
   const dpr = osDpr();
   const lw = parseInt(cv.getAttribute("width"), 10) || 760;
@@ -1067,8 +1067,9 @@ function draw() {
   ctx.drawImage(__stageStatic, 0, 0, w, h);
 
   const pts = [];
-  for (let i = 0; i <= 160; i++) {
-    const st = clone(S); st[xc.id] = xmin + (i / 160) * (xmax - xmin);
+  var __nPts = window.__osDegraded ? 80 : 160; /* OS-RES-SCALE: 81 pts while degraded */
+  for (let i = 0; i <= __nPts; i++) {
+    const st = clone(S); st[xc.id] = xmin + (i / __nPts) * (xmax - xmin);
     pts.push({ x: st[xc.id], y: activeY(st) });
   }
   let ymin = Infinity, ymax = -Infinity;
