@@ -1,10 +1,10 @@
 # OpenSchool NCERT Virtual STEM Laboratory
 
-Zero-dependency, offline-first virtual STEM laboratory with **70 NCERT/CBSE practicals** across Classes 9–12. Every sandbox runs entirely in the browser — even from a USB stick with no internet connection.
+Zero-dependency, offline-first virtual STEM laboratory with **78 NCERT/CBSE practicals** across Classes 9–12. Every sandbox runs entirely in the browser — even from a USB stick with no internet connection.
 
 ## Features
 
-- **70 mapped practicals** across Classes 9–12 (Physics, Chemistry, Biology)
+- **78 mapped practicals** across Classes 9–12 (Physics, Chemistry, Biology)
 - **Pure static HTML** — no build step, no bundler, no server required
 - **IndexedDB notebook** — save notes, viva results, observations per experiment
 - **100% offline** — all simulation kernels, FSM reagent tests, and apparatus renderers run locally
@@ -36,7 +36,7 @@ GitHubDeploy/
 │   ├── class12/chemistry/ (11 labs: 6 original + 5 new: ethanol oxidation, esterification, iodine clock, solubility product, buffers)
 │   └── class9/biology/   (4 new: osmosis, plasmolysis, binary fission, seed germination)
 ├── manifests/
-│   └── catalog.json        (70 entries: id, cls, subject, archetype, title, aim, ready, href)
+│   └── catalog.json        (78 entries: id, cls, subject, archetype, title, aim, ready, href)
 ```
 
 ## How It Works
@@ -98,4 +98,4 @@ Open-source, free to use and modify for educational purposes.
 - IndexedDB storage works offline; fallback to memory if IndexedDB unavailable
 
 ---
-All 70 labs are catalogued and filterable. Open `index.html` and try the Class and Subject filter buttons — they now work correctly after the `wireFilters` bug fix.
+All 78 labs are catalogued and filterable. Open `index.html` and try the Class and Subject filter buttons — they now work correctly after the `wireFilters` bug fix.
