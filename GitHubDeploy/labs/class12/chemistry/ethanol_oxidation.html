@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenSchool — P-C12-22 Oxidation of Ethanol</title>
+<link rel="stylesheet" href="../../../assets/css/lab-theme.css" />
+</head>
+<body>
+<a class="os-skip-link" href="#main-content">Skip to main content</a>
+<div class="os-app">
+
+  <header class="os-topbar os-bench">
+    <div class="os-brand">
+      <div class="os-logo">OS</div>
+      <div>Oxidation of Ethanol<small id="labCrumb">P-C12-22 · Class 12 Chemistry · Aldehydes, Ketones &amp; Carboxylic Acids</small></div>
+    </div>
+    <div class="os-spacer"></div>
+    <span class="os-chip"><span data-i18n="topbar.notebook">Notebook:</span> <b id="dbChip">…</b></span>
+    <span class="os-row" role="group" aria-label="Language">
+      <button class="os-filter-pill" data-os-lang-toggle="en">EN</button>
+      <button class="os-filter-pill" data-os-lang-toggle="hi">हिं</button>
+    </span>
+    <a class="os-btn ghost sm" href="../../../index.html" data-i18n="lab.back">← Curriculum Hub</a>
+  </header>
+
+  <main id="main-content" class="os-wrap">
+    <div class="os-lab-grid">
+
+      <!-- ============================ LEFT PANE ============================ -->
+      <section class="os-panel os-apparatus">
+        <header>
+          <span class="os-kicker" data-i18n="lab.apparatus">Apparatus — Ethanol oxidation test-tube</span>
+          <div class="os-spacer"></div>
+          <span class="os-chip" id="engineChip" data-i18n="lab.engineReady">CHEMICAL_FSM ready</span>
+        </header>
+        <div class="os-body os-controls">
+          <div class="os-stage os-spotlight">
+            <canvas role="img" aria-label="Interactive experiment simulation canvas. Use the on-page controls to change the plotted scene." id="stage" width="720" height="440"></canvas>
+            <div class="os-readout os-instrument" id="readout">
+              <div class="row"><span>Temp °C</span><b id="roX">60</b></div>
+              <div class="row"><span>oxid. score</span><b id="roY">0</b></div>
+            </div>
+          </div>
+
+          <div class="os-control-block os-fader">
+            <div class="os-control-title">Reaction conditions (deterministic FSM)</div>
+            <div class="os-field">
+              <label for="oxidantSel">Oxidant</label>
+              <select class="os-select" id="oxidantSel">
+                <option value="k2cr2o7">Acidified K₂Cr₂O₇ (orange → green)</option>
+                <option value="kmno4">Alkaline KMnO₄ (purple → brown ppt)</option>
+                <option value="cu">Controlled — heated Cu (black → pink)</option>
+              </select>
+            </div>
+            <div class="os-field">
+              <label for="testSel">Confirmatory test on product</label>
+              <select class="os-select" id="testSel">
+                <option value="tollens">Tollens' reagent</option>
+                <option value="iodoform">Iodoform test</option>
+                <option value="litmus">Litmus / NaHCO₃ (acid test)</option>
+                <option value="none">No confirmatory test</option>
+              </select>
+            </div>
+            <div class="os-field">
+              <label for="xRange">Temperature — <span class="os-mono" id="xVal">60 °C</span></label>
+              <input type="range" class="os-range" id="xRange" min="20" max="90" step="1" value="60" />
+            </div>
+            <div class="os-row">
+              <label class="os-toggle"><input type="checkbox" id="faultToggle" /> Overheat (force over-oxidation, +15 °C effective)</label>
+            </div>
+          </div>
+
+          <div class="os-row">
+            <button class="os-btn primary" id="btnRecord" data-i18n="btn.record">Record Reading</button>
+            <button class="os-btn" id="btnReset" data-i18n="btn.reset">Reset Apparatus</button>
+          </div>
+
+          <div class="os-callout" id="faultMsg">
+            <h4>Live status</h4>
+            <span>Select oxidant + temperature and press <b>Record Reading</b> to populate the observation table.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================ RIGHT PANE =========================== -->
+      <section class="os-panel">
+        <header>
+          <span class="os-kicker" data-i18n="lab.observation">Observation Table</span>
+          <div class="os-spacer"></div>
+          <span class="os-chip" id="trialCount">0 trials</span>
+        </header>
+        <div class="os-body os-controls">
+          <div class="os-table-wrap os-obs">
+            <table class="os-table" id="obsTable">
+              <thead>
+                <tr><th>#</th><th>Oxidant</th><th>Temp</th><th>Product</th><th>Colour / Test</th><th></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="os-stat-grid">
+            <div class="os-stat"><span>Mean score</span><b id="statMean">0.000</b></div>
+            <div class="os-stat"><span data-i18n="stats.stderr">Std. Error</span><b id="statErr">0.000</b></div>
+            <div class="os-stat"><span data-i18n="stats.trials">Trials</span><b id="statN">0</b></div>
+          </div>
+
+          <div class="os-row">
+            <button class="os-btn success" id="btnSave" data-i18n="btn.save">Save to Notebook</button>
+            <button class="os-btn" id="btnExport" data-i18n="btn.export">Export CBSE Sheet</button>
+            <button class="os-btn" id="btnReport" data-i18n="btn.report">Print Report</button>
+            <button class="os-btn danger" id="btnClear" data-i18n="btn.clear">Clear Trials</button>
+          </div>
+          <div class="os-callout ok" id="saveMsg" style="display:none"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============================ BOTTOM TABS ============================ -->
+    <section class="os-panel" style="margin-top:18px">
+      <div class="os-tabs os-tabs-anim" role="tablist" aria-label="Lab information tabs" id="tabs">
+        <button class="os-tab active" data-tab="theory" role="tab" aria-selected="true" data-i18n="tabs.theory">Theory &amp; Diagram</button>
+        <button class="os-tab" data-tab="errors" role="tab" aria-selected="false" data-i18n="tabs.errors">Precautions &amp; Errors</button>
+        <button class="os-tab" data-tab="viva" role="tab" aria-selected="false" data-i18n="tabs.viva">Viva-Voce Arena</button>
+        <button class="os-tab" data-tab="procedure" role="tab" aria-selected="false" data-i18n="tabs.procedure">Procedure</button>
+        <button class="os-tab" data-tab="quiz" role="tab" aria-selected="false" data-i18n="tabs.quiz">Quiz</button>
+      </div>
+
+      <div role="tabpanel" tabindex="0" class="os-tabpanel active" data-panel="theory">
+        <h3>Theory</h3>
+        <button class="os-btn sm ghost" type="button" data-os-tts-btn data-os-tts-label="Theory">🔊 Read aloud</button>
+        <p class="os-muted">Ethanol undergoes controlled oxidation to ethanal (acetaldehyde) and vigorous
+          oxidation to ethanoic acid (acetic acid). Strong oxidants in acidic/alkaline medium drive
+          over-oxidation; heated copper gives controlled dehydrogenation stopping at the aldehyde.</p>
+        <div class="os-eq">CH₃CH₂OH + [O] → CH₃CHO + H₂O &nbsp;&nbsp;→&nbsp;&nbsp; CH₃COOH (vigorous [O])</div>
+        <ul class="os-muted">
+          <li><b>Acidified K₂Cr₂O₇:</b> orange Cr(VI) → green Cr(III). Warm gently: ethanal first; on heating gives ethanoic acid.</li>
+          <li><b>Alkaline KMnO₄:</b> purple MnO₄⁻ → brown MnO₂ precipitate. Product isolated as ethanoate; acidification gives ethanoic acid.</li>
+          <li><b>Heated Cu (CuO/Cu):</b> black CuO-coated wire turns pink-brown Cu; ethanol vapours dehydrogenate to ethanal only (no over-oxidation).</li>
+          <li><b>Distinguishing tests:</b> Tollens' (silver mirror) positive for ethanal, negative for ethanoic acid;
+            NaHCO₃ effervescence / blue litmus→red positive for acid only; iodoform positive for ethanol/ethanal (CH₃CO– group precursor), negative for ethanoic acid.</li>
+        </ul>
+      </div>
+
+      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="errors">
+        <h3>Precautions &amp; Standard Errors</h3>
+        <ul class="os-muted">
+          <li>Warm gently in a water bath — never boil ethanol directly over a flame (flammable).</li>
+          <li>Use dilute solutions; add oxidant dropwise to control over-oxidation.</li>
+          <li>For the Cu method, pass vapours over freshly heated CuO wire; reheat wire between passes.</li>
+          <li>Smell products cautiously (wafting); do not inhale vapours directly.</li>
+          <li>Record colour change against a white background for consistent end-point judgement.</li>
+        </ul>
+        <div class="os-callout warn" id="triageBox"><h4>Triage</h4><span>Toggle “Overheat” to observe forced over-oxidation: ethanal readings shift to ethanoic acid and Tollens' goes negative.</span></div>
+      </div>
+
+      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="viva">
+        <div class="os-row between">
+          <h3 style="margin:0">Viva-Voce Arena</h3>
+          <div class="os-row">
+            <button class="os-filter-pill active" id="modeOffline" data-i18n="viva.offline">Offline Viva</button>
+            <button class="os-filter-pill" id="modeAI" data-i18n="viva.ai">AI Examiner</button>
+          </div>
+        </div>
+        <div id="offlineViva">
+          <div class="os-callout" id="vivaProgress">Offline viva: 0 / 0 questions answered.</div>
+          <div id="vivaQA"></div>
+          <div class="os-row" style="margin-top:10px">
+            <button class="os-btn primary" id="vivaStart" data-i18n="viva.startOffline">Start Offline Viva</button>
+          </div>
+        </div>
+        <div id="aiViva" style="display:none">
+          <div class="os-grid-3">
+            <div class="os-field"><label for="aiProvider">Provider</label>
+              <select class="os-select" id="aiProvider">
+                <option value="ollama">Local Ollama</option>
+                <option value="openai">OpenAI (key)</option>
+                <option value="anthropic">Anthropic (key)</option>
+              </select></div>
+            <div class="os-field"><label for="aiEndpoint">Endpoint (optional)</label>
+              <input aria-label="http://localhost:11434" class="os-input" id="aiEndpoint" placeholder="http://localhost:11434" /></div>
+            <div class="os-field"><label for="aiModel">Model</label>
+              <input aria-label="llama3.1" class="os-input" id="aiModel" placeholder="llama3.1" /></div>
+          </div>
+          <div class="os-field" style="margin-top:8px"><label for="aiKey">API key (only for cloud providers — supplied by you)</label>
+            <input aria-label="sk-… (never stored)" class="os-input" id="aiKey" type="password" placeholder="sk-… (never stored)" /></div>
+          <div class="os-row" style="margin-top:10px">
+            <button class="os-btn primary" id="aiStart" data-i18n="viva.startAI">Start AI Viva</button>
+          </div>
+          <div id="aiTranscript" class="os-control-block os-fader" style="margin-top:12px;max-height:300px;overflow:auto"></div>
+          <div class="os-row" style="margin-top:8px">
+            <input aria-label="Type your answer…" class="os-input" id="aiReply" placeholder="Type your answer…" data-i18n-ph="viva.answerPh">
+            <button class="os-btn success" id="aiSend" data-i18n="viva.send">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="os-tabpanel" data-panel="procedure" role="tabpanel" tabindex="0" aria-label="Procedure">
+        <h3>Procedure</h3>
+        <div data-os-procedure></div>
+      </div>
+      <div class="os-tabpanel" data-panel="quiz" role="tabpanel" tabindex="0" aria-label="Quiz">
+        <h3>Quiz</h3>
+        <button class="os-btn sm ghost" type="button" data-os-bookmark-btn aria-pressed="false">☆ Bookmark</button>
+        <div data-os-quiz></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="../../../assets/js/storage.js"></script>
+<script src="../../../assets/js/report.js"></script>
+<script src="../../../assets/js/graph.js"></script>
+<script src="../../../assets/js/quiz-bank-1.js"></script>
+<script src="../../../assets/js/quiz-bank-2.js"></script>
+<script src="../../../assets/js/quiz-bank-3.js"></script>
+<script src="../../../assets/js/quiz-bank-4.js"></script>
+<script src="../../../assets/js/quiz-bank-5.js"></script>
+<script src="../../../assets/js/quiz-bank-hi-1.js"></script>
+<script src="../../../assets/js/quiz-bank-hi-2.js"></script>
+<script src="../../../assets/js/quiz-bank-hi-3.js"></script>
+<script src="../../../assets/js/quiz-bank-hi-4.js"></script>
+<script src="../../../assets/js/quiz-bank-hi-5.js"></script>
+<script src="../../../assets/js/quiz-bank.js"></script>
+<script src="../../../assets/js/quiz.js"></script>
+<script src="../../../assets/js/tts.js"></script>
+<script src="../../../assets/js/bookmarks.js"></script>
+<script src="../../../assets/js/i18n.js"></script>
+<script src="../../../assets/js/procedure.js"></script>
+<script src="../../../assets/js/procedure-bank.js"></script>
+<script src="../../../assets/js/procedure-bank-hi.js"></script>
+<script>
+/* OS-STORAGE-GUARD: local-only fallback notice. If storage.js failed to load
+   (e.g. this file was copied out of the project tree standalone), show a
+   .os-callout warning with the path fix. No CDN, no downloads -- local only. */
+(function () {
+  function showGuard() {
+    if (window.LabNotebook || window.LabNotebookDB) return;
+    if (document.querySelector("[data-os-storage-guard]")) return;
+    var d = document.createElement("div");
+    d.className = "os-callout warn";
+    d.setAttribute("data-os-storage-guard", "1");
+    d.innerHTML = "<h4>Notebook storage missing</h4><span>" +
+      "Could not load <b>../../../assets/js/storage.js</b>, so Save / Export are disabled. " +
+      "Keep this file inside the project tree (<b>GitHubDeploy/labs/class12/chemistry/ethanol_oxidation.html</b>) " +
+      "so the relative path resolves -- do not open it as a standalone copy and do not " +
+      "fetch anything from a CDN; this lab is fully local.</span>";
+    var host = document.querySelector(".os-wrap") || document.querySelector(".os-app") || document.body;
+    host.insertBefore(d, host.firstChild);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", showGuard);
+  else showGuard();
+})();
+</script>
+<script src="../../../assets/js/ai-examiner.js"></script>
+<script src="../../../assets/js/viva-bank-hi.js"></script>
+<script src="../../../assets/js/viva-hi.js"></script>
+<!-- OS-MOTION: vendored GSAP + guarded motion helper (offline, no CDN) -->
+<script src="../../../assets/vendor/gsap/gsap.min.js"></script>
+<script src="../../../assets/js/motion.js"></script>
+<script src="../../../assets/js/perf.js"></script>
+<script>window.scheduleDraw=(window.OSPerf&&window.OSPerf.rafThrottle)?window.OSPerf.rafThrottle(function(){try{if(typeof drawScene==="function")drawScene();}catch(e){}try{if(typeof draw==="function")draw();}catch(e){}try{if(typeof updateReadout==="function")updateReadout();}catch(e){}}):function(){try{if(typeof drawScene==="function")drawScene();}catch(e){}try{if(typeof draw==="function")draw();}catch(e){}try{if(typeof updateReadout==="function")updateReadout();}catch(e){}};</script>
+<script>
+/* ==========================================================================
+   P-C12-22 Oxidation of Ethanol — CHEMICAL_FSM (deterministic, no randomness).
+   Fixed lookup table: (oxidant x temperature) to colour + product;
+   (product x confirmatory test) to test result. Fully deterministic.
+   ========================================================================== */
+const CONFIG = {
+  experimentId: "P-C12-22",
+  experimentTitle: "Oxidation of Ethanol / Distinguishing aldehyde",
+  subject: "chemistry",
+  classLevel: 12
+};
+
+const OX_LABEL = {
+  k2cr2o7: "K2Cr2O7/H+",
+  kmno4: "KMnO4/OH-",
+  cu: "Heated Cu"
+};
+
+/* Fixed FSM lookup. score: 0 = no reaction, 1 = ethanal, 2 = ethanoic acid/ethanoate. */
+function fsmLookup(tempC, oxidant, test, overheat) {
+  const t = overheat ? tempC + 15 : tempC;
+  let product, colour, score, note;
+  if (oxidant === "k2cr2o7") {
+    colour = "orange → green";
+    if (t < 40)      { score = 1; product = "ethanal (partial oxidation)";   note = "Gentle warming stops at aldehyde."; }
+    else             { score = 2; product = "ethanoic acid (over-oxidation)"; note = "Excess [O] oxidises aldehyde to acid."; }
+  } else if (oxidant === "kmno4") {
+    colour = "purple → brown ppt (MnO2)";
+    if (t < 40)      { score = 1; product = "ethanal intermediate → ethanoate"; note = "Cold dilute conditions slow the second step."; }
+    else             { score = 2; product = "ethanoate (acid on acidification)"; note = "Warm alkaline KMnO4 drives complete oxidation."; }
+  } else { /* controlled heated Cu */
+    if (t < 50)      { score = 0; product = "no reaction (wire too cool)"; colour = "black CuO — unchanged"; note = "Heat the wire to dull red before passing vapours."; }
+    else             { score = 1; product = "ethanal (controlled, no over-oxidation)"; colour = "black CuO → pink Cu"; note = "Dehydrogenation stops at aldehyde."; }
+  }
+  /* Confirmatory test flags — fixed table on product score. */
+  let testRes;
+  if (test === "none") {
+    testRes = "—";
+  } else if (test === "tollens") {
+    testRes = (score === 1) ? "Tollens +ve (silver mirror)" : (score === 2 ? "Tollens −ve" : "Tollens −ve (no aldehyde)");
+  } else if (test === "iodoform") {
+    testRes = (score === 1) ? "Iodoform +ve (yellow CHI3)" : "Iodoform −ve";
+  } else if (test === "litmus") {
+    testRes = (score === 2) ? "Acid +ve (blue litmus red, NaHCO3 effervescence)" : "Acid −ve (no effervescence)";
+  } else {
+    testRes = "—";
+  }
+  const observation = colour + " | " + product + " | " + testRes;
+  return { score: score, product: product, colour: colour, testRes: testRes, note: note, observation: observation, tEff: t };
+}
+
+const ENGINE = {
+  oxidant: "k2cr2o7",
+  test: "tollens",
+  fault: false,
+  compute(x) {
+    return fsmLookup(x, this.oxidant, this.test, this.fault).score;
+  },
+  full(x) {
+    return fsmLookup(x, this.oxidant, this.test, this.fault);
+  }
+};
+
+const VIVA_BANK = [
+  { question: "Name two oxidising agents used to oxidise ethanol and state what each oxidises it to under vigorous conditions.",
+    answer: "Acidified K2Cr2O7 and alkaline KMnO4; both drive ethanol past ethanal to ethanoic acid (isolated as ethanoate with KMnO4/OH-), while heated copper stops at ethanal." },
+  { question: "What colour changes confirm oxidation with acidified K2Cr2O7 and with alkaline KMnO4?",
+    answer: "K2Cr2O7: orange Cr(VI) turns green Cr(III). KMnO4: purple manganate(VII) turns to a brown precipitate of MnO2 in alkaline medium." },
+  { question: "How is over-oxidation to the acid controlled so that ethanal can be isolated?",
+    answer: "Use gentle warming with limited oxidant, distil off volatile ethanal as it forms, or use heated copper dehydrogenation which cannot over-oxidise; excess heat/oxidant forces ethanoic acid." },
+  { question: "Give one chemical test that distinguishes ethanal from ethanoic acid and state the expected result for each.",
+    answer: "Tollens' reagent: ethanal gives a silver mirror (positive), ethanoic acid gives no reaction; alternatively NaHCO3 gives brisk CO2 effervescence only with the acid." }
+];
+
+const trials = [];
+let vivaState = null;
+
+/* ---- Canvas rendering: test-tube colour + observation text ---------------- */
+const canvas = document.getElementById("stage");
+const ctx = canvas.getContext("2d");
+
+const LIQUID = {
+  k2cr2o7_low: "#ff9a1f", k2cr2o7_high: "#2fae5f",
+  kmno4_low: "#8a2be2",   kmno4_high: "#6b4a2b",
+  cu_idle: "#c9d4e3",     cu_active: "#d7ecff"
+};
+
+function liquidColour(st, oxidant) {
+  if (oxidant === "k2cr2o7") return st.score === 1 ? LIQUID.k2cr2o7_low : LIQUID.k2cr2o7_high;
+  if (oxidant === "kmno4")   return st.score === 1 ? LIQUID.kmno4_low   : LIQUID.kmno4_high;
+  return st.score === 1 ? LIQUID.cu_active : LIQUID.cu_idle;
+}
+
+function draw() {
+  const w = canvas.width, h = canvas.height;
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, "#0e1a18"); grad.addColorStop(1, "#0b1413");
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+
+  ctx.strokeStyle = "rgba(120,150,140,.12)"; ctx.lineWidth = 1;
+  for (let gx = 0; gx <= w; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
+  for (let gy = 0; gy <= h; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+
+  const x = parseFloat(document.getElementById("xRange").value);
+  const st = ENGINE.full(x);
+
+  /* bench */
+  ctx.fillStyle = "#16233a"; ctx.fillRect(40, 360, 640, 14);
+  ctx.fillStyle = "#24344f"; ctx.fillRect(40, 374, 640, 6);
+
+  /* test tube */
+  const tx = 120, ty = 70, tw = 120, th = 280;
+  ctx.fillStyle = "rgba(180,210,240,.15)";
+  ctx.fillRect(tx, ty, tw, th);
+  ctx.strokeStyle = "#7d94b8"; ctx.lineWidth = 3;
+  ctx.strokeRect(tx, ty, tw, th);
+  /* liquid */
+  const fillH = Math.round(th * 0.62);
+  ctx.fillStyle = liquidColour(st, ENGINE.oxidant);
+  ctx.fillRect(tx + 4, ty + th - fillH, tw - 8, fillH - 4);
+  /* meniscus */
+  ctx.fillStyle = "rgba(255,255,255,.35)";
+  ctx.fillRect(tx + 4, ty + th - fillH, tw - 8, 4);
+  /* heated-Cu wire indicator */
+  if (ENGINE.oxidant === "cu") {
+    ctx.fillStyle = st.score === 1 ? "#e08a5a" : "#2b2b2e";
+    ctx.fillRect(tx + tw / 2 - 5, ty - 20, 10, 120);
+    ctx.fillStyle = "#9fb2cc";
+    ctx.font = "12px sans-serif";
+    ctx.fillText(st.score === 1 ? "Cu (pink, reduced)" : "CuO (black, oxidised)", tx + tw + 12, ty + 40);
+  }
+  /* flame / water-bath indicator */
+  ctx.fillStyle = "#e8b34b";
+  ctx.font = "13px sans-serif";
+  ctx.fillText("bath: " + x.toFixed(0) + " °C" + (ENGINE.fault ? " (+15 overheat)" : ""), tx, 392);
+
+  /* observation card */
+  const cx = 300, cy = 70, cw = 380, chh = 280;
+  ctx.fillStyle = "#101c30";
+  ctx.fillRect(cx, cy, cw, chh);
+  ctx.strokeStyle = "#e8b34b"; ctx.lineWidth = 2;
+  ctx.strokeRect(cx, cy, cw, chh);
+  ctx.fillStyle = "#e8eef7";
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText(OX_LABEL[ENGINE.oxidant] + "  ·  " + x.toFixed(0) + " °C", cx + 14, cy + 28);
+  ctx.fillStyle = "#e8b34b";
+  ctx.font = "13px sans-serif";
+  wrapText("Colour: " + st.colour, cx + 14, cy + 52, cw - 28, 18);
+  ctx.fillStyle = "#e8eef7";
+  wrapText("Product: " + st.product, cx + 14, cy + 102, cw - 28, 18);
+  ctx.fillStyle = "#9fe6b8";
+  wrapText("Test: " + st.testRes, cx + 14, cy + 152, cw - 28, 18);
+  ctx.fillStyle = "#8fa3c2";
+  wrapText(st.note, cx + 14, cy + 202, cw - 28, 18);
+  ctx.fillStyle = "#7d9a93";
+  ctx.font = "12px sans-serif";
+  ctx.fillText("CH3CH2OH + [O] → CH3CHO → CH3COOH", cx + 14, cy + chh - 12);
+
+  document.getElementById("roX").textContent = x.toFixed(0);
+  document.getElementById("roY").textContent = String(st.score);
+}
+
+function wrapText(text, x, y, maxW, lh) {
+  const words = text.split(" ");
+  let line = "", yy = y;
+  for (let i = 0; i < words.length; i++) {
+    const t = line ? line + " " + words[i] : words[i];
+    if (ctx.measureText(t).width > maxW && line) { ctx.fillText(line, x, yy); line = words[i]; yy += lh; }
+    else line = t;
+  }
+  if (line) ctx.fillText(line, x, yy);
+}
+
+/* ---- Observation table arithmetic (mean oxidation score) ------------------ */
+function recompute() {
+  const vals = trials.map(function (t) { return t.y; });
+  const n = vals.length;
+  const mean = n ? vals.reduce(function (a, b) { return a + b; }, 0) / n : 0;
+  let stderr = 0;
+  if (n > 1) {
+    const variance = vals.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / (n - 1);
+    stderr = Math.sqrt(variance) / Math.sqrt(n);
+  }
+  document.getElementById("statMean").textContent = mean.toFixed(3);
+  document.getElementById("statErr").textContent = stderr.toFixed(3);
+  document.getElementById("statN").textContent = String(n);
+  document.getElementById("trialCount").textContent = n + " " + ((window.OS_I18N&&window.OS_I18N.t)?window.OS_I18N.t("trials.unit"):"trials");
+}
+
+function renderTable() {
+  const tbody = document.querySelector("#obsTable tbody");
+  tbody.innerHTML = "";
+  trials.forEach(function (t, i) {
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      "<td>" + (i + 1) + "</td>" +
+      "<td>" + t.oxLabel + "</td>" +
+      '<td class="num">' + t.x.toFixed(0) + " °C</td>" +
+      "<td>" + t.product + " (s=" + t.y + ")</td>" +
+      "<td>" + t.colour + "<br><span class='os-muted'>" + t.testRes + "</span></td>" +
+      '<td><button class="os-btn danger sm" data-row="' + i + '">×</button></td>';
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll("button[data-row]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      trials.splice(parseInt(btn.dataset.row, 10), 1);
+      renderTable(); recompute();
+    });
+  });
+  recompute();
+}
+
+/* ---- Controls ------------------------------------------------------------ */
+document.getElementById("xRange").addEventListener("input", function (e) {
+  document.getElementById("xVal").textContent = parseFloat(e.target.value).toFixed(0) + " °C";
+  scheduleDraw();
+});
+document.getElementById("oxidantSel").addEventListener("change", function (e) {
+  ENGINE.oxidant = e.target.value;
+  draw();
+});
+document.getElementById("testSel").addEventListener("change", function (e) {
+  ENGINE.test = e.target.value;
+  draw();
+});
+document.getElementById("faultToggle").addEventListener("change", function (e) {
+  ENGINE.fault = e.target.checked;
+  const box = document.getElementById("faultMsg");
+  if (ENGINE.fault) {
+    box.className = "os-callout danger";
+    box.innerHTML = "<h4>Overheat active</h4><span>Effective temperature +15 °C — partial-oxidation readings shift to ethanoic acid (Tollens goes negative).</span>";
+  } else {
+    box.className = "os-callout";
+    box.innerHTML = "<h4>Live status</h4><span>Apparatus operating normally.</span>";
+  }
+  draw();
+});
+document.getElementById("btnRecord").addEventListener("click", function () {
+  const x = parseFloat(document.getElementById("xRange").value);
+  const st = ENGINE.full(x);
+  trials.push({ x: x, y: st.score, oxLabel: OX_LABEL[ENGINE.oxidant], oxidant: ENGINE.oxidant, product: st.product, colour: st.colour, testRes: st.testRes });
+  renderTable();
+});
+document.getElementById("btnReset").addEventListener("click", function () {
+  document.getElementById("xRange").value = 60;
+  document.getElementById("xVal").textContent = "60 °C";
+  document.getElementById("oxidantSel").value = "k2cr2o7";
+  document.getElementById("testSel").value = "tollens";
+  document.getElementById("faultToggle").checked = false;
+  ENGINE.oxidant = "k2cr2o7"; ENGINE.test = "tollens"; ENGINE.fault = false;
+  document.getElementById("faultMsg").className = "os-callout";
+  document.getElementById("faultMsg").innerHTML = "<h4>Live status</h4><span>Apparatus operating normally.</span>";
+  draw();
+});
+document.getElementById("btnClear").addEventListener("click", function () {
+  trials.length = 0; renderTable();
+});
+
+/* ---- Notebook persistence ------------------------------------------------ */
+function flash(msg, ok) {
+  const el = document.getElementById("saveMsg");
+  el.style.display = "block";
+  el.className = "os-callout " + (ok === false ? "danger" : "ok");
+  el.textContent = msg;
+  setTimeout(function () { el.style.display = "none"; }, 4000);
+}
+
+document.getElementById("btnSave").addEventListener("click", async function () {
+  if (!trials.length) return flash("Record at least one reading first.", false);
+  await window.LabNotebook.open();
+  await window.LabNotebook.saveTrial(CONFIG.experimentId, {
+    class_level: CONFIG.classLevel, subject: CONFIG.subject, title: CONFIG.experimentTitle,
+    readings: trials.map(function (t) { return { "Oxidant": t.oxLabel, "Temp (C)": t.x.toFixed(0), "Product": t.product, "Colour": t.colour, "Test": t.testRes }; }),
+    results: { "Mean score": document.getElementById("statMean").textContent, "Std. Error": document.getElementById("statErr").textContent }
+  });
+  flash("Trial saved to the IndexedDB notebook.", true);
+});
+
+document.getElementById("btnExport").addEventListener("click", async function () {
+  await window.LabNotebook.open();
+  const html = await window.LabNotebook.exportToCBSEFormat(CONFIG.experimentId);
+  const w = window.open("", "_blank");
+  if (w) { w.document.write(html); w.document.close(); }
+  else flash("Allow pop-ups to view the exported CBSE sheet.", false);
+});
+
+/* ---- Tab switching ------------------------------------------------------- */
+document.getElementById("tabs").addEventListener("click", function (ev) {
+  const tab = ev.target.closest(".os-tab"); if (!tab) return;
+  document.querySelectorAll(".os-tab").forEach(function (t) { t.classList.remove("active"); });
+  document.querySelectorAll(".os-tabpanel").forEach(function (p) { p.classList.remove("active"); });
+  tab.classList.add("active");
+  document.querySelector('.os-tabpanel[data-panel="' + tab.dataset.tab + '"]').classList.add("active");
+});
+
+/* ---- Viva engine --------------------------------------------------------- */
+const examiner = new window.AIExaminer({
+  experimentId: CONFIG.experimentId,
+  experimentTitle: CONFIG.experimentTitle,
+  subject: CONFIG.subject,
+  classLevel: CONFIG.classLevel,
+  vivaBank: VIVA_BANK,
+  getObservations: function () {
+    return trials.map(function (t) { return { "oxidant": t.oxLabel, "temp_C": t.x.toFixed(0), "product": t.product, "test": t.testRes }; });
+  },
+  onToken: function (_chunk, full) { appendAI("examiner", full, true); },
+  onMessage: function (text) { appendAI("examiner", text, false); },
+  onError: function (e) { appendAI("system", "Error: " + (e.message || e), false); }
+});
+
+function appendAI(role, text, replaceLast) {
+  const host = document.getElementById("aiTranscript");
+  if (replaceLast) {
+    let last = host.querySelector('[data-stream="1"]');
+    if (!last) { last = document.createElement("div"); last.dataset.stream = "1"; last.className = "os-callout"; host.appendChild(last); }
+    last.textContent = text;
+  } else {
+    const d = document.createElement("div");
+    d.className = "os-callout " + (role === "student" ? "ok" : "warn");
+    d.textContent = (role === "student" ? "You: " : role === "examiner" ? "Examiner: " : "") + text;
+    host.appendChild(d);
+  }
+  host.scrollTop = host.scrollHeight;
+}
+
+/* offline viva */
+function renderOffline() {
+  const q = examiner.offlineQuestion();
+  const host = document.getElementById("vivaQA");
+  host.innerHTML = "";
+  document.getElementById("vivaProgress").textContent =
+    "Offline viva: " + examiner.offline.index + " / " + VIVA_BANK.length + " questions answered — score " +
+    examiner.offline.score + "/" + examiner.offline.total + ".";
+  if (!q) {
+    host.innerHTML = '<div class="os-callout ok"><h4>Viva complete</h4><span>Final score ' +
+      examiner.offline.score + "/" + examiner.offline.total + ". Review the model answers below.</span></div>";
+    examiner.offline.answers.forEach(function (a) {
+      const d = document.createElement("div");
+      d.className = "os-viva-item open";
+      d.innerHTML = '<div class="os-viva-q"><span class="qmark">Q</span><span>' + a.question + ' <span class="os-chip">' + a.mark + '/2</span></span></div>' +
+        '<div class="os-viva-a"><b>Your answer:</b> ' + (a.answer || "<em>blank</em>") + "<br><b>Model answer:</b> " + a.model + "</div>";
+      host.appendChild(d);
+    });
+    return;
+  }
+  const wrap = document.createElement("div");
+  wrap.className = "os-callout";
+  wrap.innerHTML = "<h4>Question " + (q.index + 1) + "</h4><span>" + q.question + "</span>";
+  const input = document.createElement("textarea");
+  input.className = "os-input"; input.rows = 3; input.placeholder = "Type your answer…";
+  const btn = document.createElement("button");
+  btn.className = "os-btn primary"; btn.textContent = "Submit Answer";
+  btn.style.marginTop = "8px";
+  btn.addEventListener("click", function () {
+    const res = examiner.offlineSubmit(input.value);
+    renderOffline();
+  });
+  host.appendChild(wrap); host.appendChild(input); host.appendChild(btn);
+}
+
+document.getElementById("vivaStart").addEventListener("click", function () {
+  examiner.offlineStart(); renderOffline();
+});
+document.getElementById("modeOffline").addEventListener("click", function () {
+  this.classList.add("active"); document.getElementById("modeAI").classList.remove("active");
+  document.getElementById("offlineViva").style.display = "block";
+  document.getElementById("aiViva").style.display = "none";
+});
+document.getElementById("modeAI").addEventListener("click", function () {
+  this.classList.add("active"); document.getElementById("modeOffline").classList.remove("active");
+  document.getElementById("offlineViva").style.display = "none";
+  document.getElementById("aiViva").style.display = "block";
+});
+document.getElementById("aiStart").addEventListener("click", function () {
+  examiner.configure({
+    provider: document.getElementById("aiProvider").value,
+    model: document.getElementById("aiModel").value.trim(),
+    endpoint: document.getElementById("aiEndpoint").value.trim(),
+    apiKey: document.getElementById("aiKey").value.trim()
+  });
+  document.getElementById("aiTranscript").innerHTML = "";
+  examiner.aiStart();
+});
+document.getElementById("aiSend").addEventListener("click", function () {
+  const box = document.getElementById("aiReply");
+  if (!box.value.trim()) return;
+  appendAI("student", box.value, false);
+  const text = box.value; box.value = "";
+  examiner.aiSend(text);
+});
+
+/* ---- Boot ---------------------------------------------------------------- */
+(async function () {
+  draw();
+  renderTable();
+  document.getElementById("xVal").textContent = "60 °C";
+  try {
+    await window.LabNotebook.open();
+    document.getElementById("dbChip").textContent = window.LabNotebook.isFallback() ? "memory" : "IndexedDB";
+  } catch (e) { document.getElementById("dbChip").textContent = "unavailable"; }
+})();
+</script>
+<script>window.addEventListener("DOMContentLoaded",function(){try{var el=document.querySelector("[data-os-quiz]");if(el&&window.OSQuiz&&!el.getAttribute("data-os-quiz-done")){var id=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.experimentId)?CONFIG.experimentId:"";window.OSQuiz.renderInto(el,id);}}catch(e){}});</script>
+<script>window.addEventListener("DOMContentLoaded",function(){try{if(window.OSProcedure&&window.OSProcedure.initFromBank)window.OSProcedure.initFromBank();}catch(e){}});</script>
+<script>/* OS-REPORT-WIRING: generic printable-report hook (idempotent). */
+window.addEventListener("DOMContentLoaded",function(){
+  var b=document.getElementById("btnReport");
+  if(!b||b.getAttribute("data-os-report-done"))return;
+  b.setAttribute("data-os-report-done","1");
+  b.addEventListener("click",function(){
+    try{
+      if(!window.OSReport){alert("Report helper (assets/js/report.js) failed to load.");return;}
+      var T=(typeof trials!=="undefined"&&Array.isArray(trials))?trials:[];
+      if(!T.length){alert("Record at least one reading first.");return;}
+      var cfg=(typeof CONFIG!=="undefined"&&CONFIG)?CONFIG:{};
+      var th=document.querySelector('[data-panel="theory"]');
+      var mEl=document.getElementById("statMean"),eEl=document.getElementById("statErr"),
+          nEl=document.getElementById("statN"),gEl=document.getElementById("statG");
+      window.OSReport.printLabReport({
+        experimentId:cfg.experimentId||document.title,
+        title:cfg.experimentTitle||document.title,
+        readings:T,
+        stats:{
+          mean:mEl?mEl.textContent:(gEl?gEl.textContent:""),
+          stderr:eEl?eEl.textContent:"",
+          n:nEl?nEl.textContent:T.length
+        },
+        canvasEl:document.getElementById("stage"),
+        theory:th?th.innerText.slice(0,600):""
+      });
+    }catch(err){alert("Report failed: "+(err&&err.message||err));}
+  });
+});</script>
+<script>/* OS-I18N-CHROME: re-render dynamic chrome on language toggle (guarded, idempotent). */
+(function(){function rr(){try{if(typeof renderHead==="function"&&document.getElementById("obsHead"))renderHead();}catch(e){}try{if(typeof renderTable==="function"&&document.getElementById("obsTable"))renderTable();}catch(e){}try{if(typeof recompute==="function")recompute();}catch(e){}}if(window.__osI18nChromeWired)return;window.__osI18nChromeWired=true;document.addEventListener("os-lang-change",rr);})();</script>
+</body>
+</html>

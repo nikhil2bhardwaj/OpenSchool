@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenSchool NCERT — Virtual STEM Laboratory</title>
+<link rel="stylesheet" href="assets/css/lab-theme.css?v=3" />
+<style>
+/* OS-HUB-REWORK (index-only): editorial hero, asymmetric grid, skeletons, empty, reveal. */
+.os-hero--editorial{text-align:left;padding:40px 8px 18px;max-width:1100px;margin:0 auto}
+.os-hero--editorial h1{background:linear-gradient(90deg,var(--os-accent-pale),var(--os-accent) 55%,var(--os-accent-deep));-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:none}
+.os-hero--editorial p{margin:0;max-width:62ch}
+.os-hero__stats{display:flex;flex-wrap:wrap;gap:10px 26px;margin:16px 0 0;padding:0;list-style:none;font-variant-numeric:tabular-nums}
+.os-hero__stats li{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--os-text-muted)}
+.os-hero__stats b{font-family:var(--os-mono);font-size:20px;color:var(--os-text);font-weight:700}
+.os-hero__meta{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.os-cards--asym{grid-template-columns:repeat(6,minmax(0,1fr))}
+.os-cards--asym .os-card{grid-column:span 2}
+.os-cards--asym .os-card.is-featured{grid-column:span 3;border-color:var(--os-accent)}
+.os-cards--asym .os-card .launch{margin-top:auto;padding-top:8px}
+.os-cards--asym .os-card{min-height:220px}
+.os-cards--asym .os-card.is-featured{min-height:250px}
+@media (max-width:980px){.os-cards--asym{grid-template-columns:repeat(2,minmax(0,1fr))}.os-cards--asym .os-card{grid-column:auto}.os-cards--asym .os-card.is-featured{grid-column:1/-1}}
+@media (max-width:600px){.os-cards--asym{grid-template-columns:1fr}.os-cards--asym .os-card.is-featured{grid-column:auto}}
+.os-skel{pointer-events:none;min-height:220px}
+.os-skel .sk{border-radius:8px;background:rgba(127,143,178,.22)}
+.os-skel .sk-line{height:12px}
+.os-skel .sk-w40{width:40%}.os-skel .sk-w60{width:60%}.os-skel .sk-w90{width:90%}
+.os-skel .sk-title{height:18px;width:75%}
+.os-skel .sk-cta{height:30px;width:45%;border-radius:8px}
+@media (prefers-reduced-motion:no-preference){.os-skel{animation:osSkelPulse 1.2s ease-in-out infinite}}
+@keyframes osSkelPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.os-empty{grid-column:1/-1;text-align:center;border:1px dashed var(--os-line);border-radius:var(--os-radius);padding:44px 22px;background:rgba(11,18,32,.35)}
+.os-empty__icon{font-size:34px;line-height:1;color:var(--os-text-dim)}
+.os-empty h3{margin:10px 0 6px;font-size:17px}
+.os-empty p{margin:0 auto 16px;max-width:52ch;color:var(--os-text-muted);font-size:13.5px}
+.os-card.os-enter{opacity:0;transform:translateY(14px)}
+.os-card.os-enter.is-in{opacity:1;transform:none;transition:opacity .45s ease,transform .45s ease}
+@media (prefers-reduced-motion:reduce){.os-card.os-enter{opacity:1;transform:none}.os-card.os-enter.is-in{transition:none}.os-skel{animation:none}}
+</style>
+</head>
+<body>
+<a class="os-skip-link" href="#main-content">Skip to main content</a>
+<div class="os-app">
+
+  <header class="os-topbar">
+    <div class="os-brand">
+      <div class="os-logo">OS</div>
+      <div>OpenSchool<small data-i18n="brand.tag">NCERT VIRTUAL STEM LAB</small></div>
+    </div>
+    <div class="os-spacer"></div>
+    <span class="os-chip" id="dbStatus"><span data-i18n="topbar.notebook">Notebook:</span> <b>checking…</b></span>
+    <span class="os-chip"><span data-i18n="topbar.mode">Mode:</span> <b data-i18n="topbar.offline">100% Offline</b></span>
+    <span class="os-row" role="group" aria-label="Language">
+      <button class="os-filter-pill" data-os-lang-toggle="en">EN</button>
+      <button class="os-filter-pill" data-os-lang-toggle="hi">हिं</button>
+    </span>
+  </header>
+
+  <main class="os-wrap" id="main-content">
+    <section class="os-hero os-hero--editorial">
+      <span class="os-kicker" data-i18n="hero.kicker">Open-source · Zero-build · Zero-dependency</span>
+      <h1 data-i18n="hero.title">Virtual STEM laboratory</h1>
+      <p data-i18n="hero.sub">Experiential, apparatus-free science practicals mapped to the NCERT / CBSE Class 9–12 curriculum.
+         Every sandbox runs entirely in your browser — even from a USB stick, with no internet connection.</p>
+      <ul class="os-hero__stats" aria-label="Library statistics">
+        <li><b>78</b><span>experiments</span></li>
+        <li><b>12</b><span>biology</span></li>
+        <li><b>100%</b><span>offline</span></li>
+      </ul>
+      <div class="os-hero__meta">
+        <span class="os-chip">100% Offline · No CDN · USB-ready</span>
+        <a class="os-chip" href="formulas.html" style="text-decoration:none">ƒx Formula Sheets</a>
+      </div>
+    </section>
+
+    <div class="os-filters">
+      <div class="os-row" id="osMasteryWidget" role="status" aria-live="polite" style="width:100%">
+        <span class="os-chip" id="osXpChip"><b>0</b> XP</span>
+        <span class="os-chip" id="osLevelChip">Novice</span>
+        <span class="os-chip" id="osStreakChip">🔥 0-day streak</span>
+        <span class="os-spacer"></span>
+        <a class="os-chip" id="osMistakesChip" href="mistakes.html" style="text-decoration:none">📝 Mistakes: <b>0</b> → review</a>
+      </div>
+      <div class="os-row" id="classFilters" role="group" aria-label="Filter by class">
+        <button class="os-filter-pill active" data-class="all" aria-pressed="true" data-i18n="filters.allClasses">All Classes</button>
+        <button class="os-filter-pill" data-class="9" aria-pressed="false" data-i18n="filters.class9">Class 9</button>
+        <button class="os-filter-pill" data-class="10" aria-pressed="false" data-i18n="filters.class10">Class 10</button>
+        <button class="os-filter-pill" data-class="11" aria-pressed="false" data-i18n="filters.class11">Class 11</button>
+        <button class="os-filter-pill" data-class="12" aria-pressed="false" data-i18n="filters.class12">Class 12</button>
+      </div>
+      <div class="os-row" id="subjectFilters" role="group" aria-label="Filter by subject">
+        <button class="os-filter-pill active" data-subject="all" aria-pressed="true" data-i18n="filters.allSubjects">All Subjects</button>
+        <button class="os-filter-pill" data-subject="physics" aria-pressed="false" data-i18n="filters.physics">Physics</button>
+        <button class="os-filter-pill" data-subject="chemistry" aria-pressed="false" data-i18n="filters.chemistry">Chemistry</button>
+        <button class="os-filter-pill" data-subject="biology" aria-pressed="false" data-i18n="filters.biology">Biology</button>
+      </div>
+      <label class="os-hidden" for="search">Search experiments</label>
+      <input class="os-input os-search" id="search" type="search" data-i18n-ph="search.placeholder" placeholder="Search experiment, aim, or keyword…" aria-label="Search experiments by title, aim, or keyword" />
+      <span class="os-chip" id="resultCount"><b>0</b> experiments</span>
+    </div>
+
+    <section class="os-panel" id="plannerPanel" aria-label="Today's revision plan">
+      <div class="os-body" id="plannerWidget"><p class="os-dim" style="margin:0">Loading revision plan…</p></div>
+    </section>
+    <div class="os-row" style="margin:10px 0" role="group" aria-label="Bookmark view">
+      <button class="os-filter-pill" id="starredFilter" aria-pressed="false" type="button">☆ Starred only</button>
+      <span class="os-chip" id="bookmarkCount"><b>0</b> starred</span>
+    </div>
+
+    <div class="os-cards os-cards--asym" id="cards" aria-live="polite"><article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div><div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div><div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article><article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div><div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div><div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article><article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div><div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div><div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article><article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div><div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div><div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article><article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div><div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div><div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article><article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div><div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div><div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article></div>
+  </main>
+
+  <footer class="os-footer">
+    <span data-i18n="footer.note">OpenSchool NCERT · Static, offline-first, IndexedDB-powered lab notebook ·</span>
+    <a href="teacher-dashboard.html" data-i18n="dashboard.title">Teacher Dashboard</a> ·
+    <a href="exam.html">Exam Hall (Timed Paper)</a> ·
+    <a href="formulas.html" data-i18n="formulas.title">Formula Sheets</a> ·
+    <a href="mistakes.html">Mistake Book</a> ·
+    <a href="tests.html">Kernel Tests</a> ·
+    <span id="storageNote"></span>
+    <br /><span class="os-chip" style="margin-top:8px;display:inline-flex">100% Offline certified · Zero CDN · Zero build · USB-ready</span>
+  </footer>
+</div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/catalog-hi.js"></script>
+<script src="assets/js/storage.js"></script>
+<script src="assets/js/planner.js"></script>
+<script src="assets/js/bookmarks.js"></script>
+<script src="assets/js/mastery.js"></script>
+<script src="assets/js/mistakes.js"></script>
+<script src="assets/vendor/gsap/gsap.min.js"></script>
+<script>
+/* ==========================================================================
+   OpenSchool curriculum catalog (inline so the hub works over file://)
+   ========================================================================== */
+const CATALOG = [
+  { id:"P-C09-01", cls:9, subject:"physics", archetype:"VOLUMETRIC_GLASSWARE", title:"Density of a Solid (Archimedes' Principle)", aim:"Determine the density of a solid (denser than water) using a spring balance and a measuring cylinder.", ready:true, href:"labs/class9/density_archimedes.html" },
+  { id:"P-C09-02", cls:9, subject:"physics", archetype:"1D_BRIDGE", title:"Verification of Ohm's Law", aim:"Verify Ohm's law by studying the variation of current with potential difference across a resistor.", ready:true, href:"labs/class9/ohm_law_basic.html" },
+  { id:"P-C09-03", cls:9, subject:"physics", archetype:"OPTICS_RAIL", title:"Refraction through a Glass Slab", aim:"Trace the path of a ray of light passing through a rectangular glass slab and measure the lateral displacement and angle of refraction.", ready:true, href:"labs/class9/refraction_glass_slab.html" },
+  { id:"P-C09-04", cls:9, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Laws of Reflection of Sound", aim:"Verify the laws of reflection of sound using two tubes and a reflecting surface.", ready:true, href:"labs/class9/sound_reflection.html" },
+  { id:"P-C09-05", cls:9, subject:"physics", archetype:"VOLUMETRIC_GLASSWARE", title:"Buoyant Force and Displaced Liquid", aim:"Establish the relation between the weight of a body and the buoyant force acting on it.", ready:true, href:"labs/class9/buoyancy_relation.html" },
+  { id:"P-C09-06", cls:9, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"True Solution, Colloid and Suspension", aim:"Prepare a true solution, a colloid and a suspension, and distinguish them by their properties.", ready:true, href:"labs/class9/solution_types.html" },
+  { id:"P-C09-07", cls:9, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Separation of a Mixture by Chromatography", aim:"Separate the components of a mixture using sublimation and paper chromatography.", ready:true, href:"labs/class9/mixture_separation.html" },
+  { id:"P-C09-08", cls:9, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Melting Point of Ice and Boiling Point of Water", aim:"Determine the melting point of ice and the boiling point of water.", ready:true, href:"labs/class9/melting_boiling.html" },
+  { id:"P-C09-09", cls:9, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Action of Acids and Bases on Indicators", aim:"Study the action of acids and bases on indicators and test the pH of common solutions.", ready:true, href:"labs/class9/acid_base_indicator.html" },
+  { id:"P-C09-10", cls:9, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Reaction of Acids with Metals and Carbonates", aim:"Carry out the reaction of acids with metals and with metal carbonates and identify the gases evolved.", ready:true, href:"labs/class9/acid_metal_carbonate.html" },
+  { id:"P-C10-01", cls:10, subject:"physics", archetype:"1D_BRIDGE", title:"Resistors in Series and Parallel", aim:"Determine the equivalent resistance of a combination of resistors connected in series and in parallel.", ready:true, href:"labs/class10/resistance_combo.html" },
+  { id:"P-C10-02", cls:10, subject:"physics", archetype:"OPTICS_RAIL", title:"Image Formation by a Convex Lens", aim:"Determine the focal length of a convex lens by focusing a distant object and by the u–v method.", ready:true, href:"labs/class10/convex_lens_focal.html" },
+  { id:"P-C10-03", cls:10, subject:"physics", archetype:"OPTICS_RAIL", title:"Image Formation by a Concave Mirror", aim:"Study the nature and position of the image formed by a concave mirror for different object distances.", ready:true, href:"labs/class10/concave_mirror.html" },
+  { id:"P-C10-04", cls:10, subject:"physics", archetype:"OPTICS_RAIL", title:"Path of a Ray through a Prism", aim:"Trace the path of a ray of light through a triangular glass prism and measure the angle of deviation.", ready:true, href:"labs/class10/prism_refraction.html" },
+  { id:"P-C10-05", cls:10, subject:"physics", archetype:"OPTICS_RAIL", title:"Magnetic Field around a Bar Magnet", aim:"Trace the magnetic field lines around a bar magnet using a plotting compass.", ready:true, href:"labs/class10/magnetic_field_lines.html" },
+  { id:"P-C10-06", cls:10, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"pH of Solutions (Dilution)", aim:"Determine the pH of some common solutions using pH paper and a calibrated pH meter.", ready:true, href:"labs/class10/ph_of_samples.html" },
+  { id:"P-C10-07", cls:10, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Types of Chemical Reactions", aim:"Study the various types of chemical reactions: combination, decomposition, displacement and double displacement.", ready:true, href:"labs/class10/reaction_types.html" },
+  { id:"P-C10-08", cls:10, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Cleansing Action of Soap and Micelle Formation", aim:"Study the cleansing action of soap and the formation of micelles.", ready:true, href:"labs/class10/soap_micelle.html" },
+  { id:"P-C10-09", cls:10, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Properties of Acids and Bases", aim:"Study the properties of acids and bases by their reaction with metals, carbonates and the neutralisation reaction.", ready:true, href:"labs/class10/acid_base_properties.html" },
+  { id:"P-C10-10", cls:10, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Electrolysis of Water", aim:"Carry out the electrolysis of water and identify the gases liberated at the electrodes.", ready:true, href:"labs/class10/electrolysis.html" },
+  { id:"P-C11-01", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Acceleration due to Gravity (g) — Simple Pendulum", aim:"Determine the acceleration due to gravity using a simple pendulum and plot L–T and L–T² graphs.", ready:true, href:"labs/class11/physics/simple_pendulum.html" },
+  { id:"P-C11-02", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Laws of a Sonometer", aim:"Verify the laws of a sonometer (laws of length, tension and frequency).", ready:true, href:"labs/class11/physics/sonometer_laws.html" },
+  { id:"P-C11-03", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Force Constant of a Helical Spring", aim:"Determine the force constant of a helical spring from the load–extension graph.", ready:true, href:"labs/class11/physics/spring_constant.html" },
+  { id:"P-C11-04", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Velocity of Sound — Resonance Tube", aim:"Determine the velocity of sound in air using a resonance tube.", ready:true, href:"labs/class11/physics/resonance_tube.html" },
+  { id:"P-C11-05", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Coefficient of Viscosity — Stokes' Method", aim:"Determine the coefficient of viscosity of a liquid by measuring the terminal velocity of a falling sphere (Stokes' method).", ready:true, href:"labs/class11/physics/viscosity_terminal.html" },
+  { id:"P-C11-06", cls:11, subject:"physics", archetype:"VOLUMETRIC_GLASSWARE", title:"Surface Tension by Capillary Rise", aim:"Determine the surface tension of water by the capillary-rise method.", ready:true, href:"labs/class11/physics/capillary_rise.html" },
+  { id:"P-C11-07", cls:11, subject:"physics", archetype:"1D_BRIDGE", title:"Young's Modulus — Searle's Apparatus", aim:"Determine Young's modulus of the material of a wire using Searle's apparatus.", ready:true, href:"labs/class11/physics/youngs_modulus.html" },
+  { id:"P-C11-08", cls:11, subject:"physics", archetype:"1D_BRIDGE", title:"Force of Limiting Friction", aim:"Study the relationship between the force of limiting friction and the normal reaction and find the coefficient of friction.", ready:true, href:"labs/class11/physics/friction.html" },
+  { id:"P-C11-09", cls:11, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"pH Change during Strong Acid–Strong Base Titration", aim:"Study the variation of pH during the titration of a strong acid with a strong base.", ready:true, href:"labs/class11/chemistry/ph_equilibrium.html" },
+  { id:"P-C11-10", cls:11, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Functional Group Analysis — Dry Tests", aim:"Detect the functional groups present in an organic compound using dry tests.", ready:true, href:"labs/class11/chemistry/salt_analysis_dry.html" },
+  { id:"P-C11-11", cls:11, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Enthalpy of Neutralisation", aim:"Determine the enthalpy of neutralisation of a strong acid with a strong base using a calorimeter.", ready:true, href:"labs/class11/chemistry/enthalpy_neutralisation.html" },
+  { id:"P-C11-12", cls:11, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Effect of Temperature on Reaction Rate", aim:"Study the effect of concentration and temperature on the rate of a chemical reaction.", ready:true, href:"labs/class11/chemistry/reaction_rates.html" },
+  { id:"P-C11-13", cls:11, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Distribution (Partition) Coefficient", aim:"Determine the distribution (partition) coefficient of a solute between two immiscible solvents.", ready:true, href:"labs/class11/chemistry/partition_coefficient.html" },
+  { id:"P-C11-14", cls:11, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Standard Solution of Oxalic Acid", aim:"Prepare a standard solution of oxalic acid and determine the strength of a given solution.", ready:true, href:"labs/class11/chemistry/standard_solution.html" },
+  { id:"P-C11-15", cls:11, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Functional Group Analysis — Wet Tests", aim:"Identify the functional groups of an organic compound using wet tests.", ready:true, href:"labs/class11/chemistry/functional_groups_wet.html" },
+  { id:"P-C12-01", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"Resistance & Resistivity — Meter Bridge", aim:"Determine the resistance of a given wire using a metre bridge and hence the resistivity of its material.", ready:true, href:"labs/class12/physics/meter_bridge.html" },
+  { id:"P-C12-02", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"Comparison of EMFs using a Potentiometer", aim:"Compare the electromotive forces of two primary cells using a potentiometer.", ready:true, href:"labs/class12/physics/potentiometer_emf.html" },
+  { id:"P-C12-03", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"Internal Resistance using a Potentiometer", aim:"Determine the internal resistance of a primary cell using a potentiometer.", ready:true, href:"labs/class12/physics/potentiometer_internal_r.html" },
+  { id:"P-C12-04", cls:12, subject:"physics", archetype:"OPTICS_RAIL", title:"Focal Length of a Convex Lens (u–v)", aim:"Determine the focal length of a convex lens by plotting graphs between u and v and between 1/u and 1/v.", ready:true, href:"labs/class12/physics/convex_lens_uv.html" },
+  { id:"P-C12-05", cls:12, subject:"physics", archetype:"OPTICS_RAIL", title:"Focal Length of a Convex Mirror (auxiliary lens)", aim:"Determine the focal length of a convex mirror using a convex auxiliary lens.", ready:true, href:"labs/class12/physics/convex_mirror_aux.html" },
+  { id:"P-C12-06", cls:12, subject:"physics", archetype:"OPTICS_RAIL", title:"Angle of Minimum Deviation and Refractive Index of a Prism", aim:"Determine the angle of minimum deviation and the refractive index of the material of a prism.", ready:true, href:"labs/class12/physics/prism_deviation.html" },
+  { id:"P-C12-07", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"V–I Characteristics of a P-N Junction Diode", aim:"Draw the V–I characteristics of a P-N junction diode in forward and reverse bias.", ready:true, href:"labs/class12/physics/pn_diode_characteristics.html" },
+  { id:"P-C12-08", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"Zener Diode Characteristics and Voltage Regulation", aim:"Study the characteristics of a Zener diode and its use as a voltage regulator / rectifier.", ready:true, href:"labs/class12/physics/zener_rectifier.html" },
+  { id:"P-C12-09", cls:12, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"KMnO₄ vs. Mohr's Salt — Redox Titration", aim:"Determine the molarity and strength of a given KMnO4 solution by titrating it against standard 0.05 M Mohr's salt solution.", ready:true, href:"labs/class12/chemistry/titration_mohr_salt.html" },
+  { id:"P-C12-10", cls:12, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"NaOH vs Oxalic Acid Titration", aim:"Determine the molarity and strength of a NaOH solution by titrating against a standard oxalic acid solution.", ready:true, href:"labs/class12/chemistry/titration_oxalic_acid.html" },
+  { id:"P-C12-11", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Qualitative Inorganic Salt Analysis", aim:"Identify one cation and one anion in a given unknown inorganic salt by systematic qualitative analysis.", ready:true, href:"labs/class12/chemistry/qualitative_salt_analysis.html" },
+  { id:"P-C12-12", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Functional Group Analysis of an Organic Compound", aim:"Identify the functional group present in a given organic compound by wet tests.", ready:true, href:"labs/class12/chemistry/functional_group_analysis.html" },
+  { id:"P-C12-13", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Preparation of Acetanilide / Aspirin (Yield)", aim:"Prepare a sample of acetanilide (or aspirin) from the given starting material.", ready:true, href:"labs/class12/chemistry/preparation_aspirin.html" },
+  { id:"P-C12-14", cls:12, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Colorimetry — Concentration of a Coloured Solution", aim:"Determine the concentration of a coloured species in solution using a colorimeter (Beer–Lambert law).", ready:true, href:"labs/class12/chemistry/colorimetry.html" },
+  { id:"P-C12-15", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Kinetics of the Thiosulphate–Acid Reaction", aim:"Study the kinetics of the reaction between sodium thiosulphate and hydrochloric acid and determine the order of reaction.", ready:true, href:"labs/class12/chemistry/kinetics.html" },
+  { id:"P-C11-16", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Doppler Effect — Moving Source and Observer", aim:"Study the Doppler effect by varying the source and observer positions and measure the observed frequency shift.", ready:true, href:"labs/class11/physics/doppler_effect.html" },
+  { id:"P-C11-17", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Sonometer — Standing Waves and Frequency", aim:"Verify the law of vibrating strings by varying tension and length and measure the fundamental frequency.", ready:true, href:"labs/class11/physics/sonometer_standing_waves.html" },
+  { id:"P-C11-18", cls:11, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Beats Frequency — Two Close Tones", aim:"Produce beats by sounding two nearly equal frequencies and measure the amplitude modulation period.", ready:true, href:"labs/class11/physics/beats_frequency.html" },
+  { id:"P-C11-19", cls:11, subject:"physics", archetype:"OPTICS_RAIL", title:"Resonance Column — Air Column Length", aim:"Determine the velocity of sound in air by varying the air column length and finding resonance positions.", ready:true, href:"labs/class11/physics/resonance_column.html" },
+  { id:"P-C11-20", cls:11, subject:"physics", archetype:"CHEMICAL_FSM", title:"Seebeck Effect — Thermoelectric Voltage", aim:"Measure the thermoelectric voltage developed across a junctions of two different metals for a given temperature difference.", ready:true, href:"labs/class11/physics/seebeck_effect.html" },
+  { id:"P-C09-11", cls:9, subject:"biology", archetype:"VOLUMETRIC_GLASSWARE", title:"Osmosis by Potato Osmometer", aim:"Determine the phenomenon of osmosis using a potato osmometer and study the movement of water through a semi-permeable membrane.", ready:true, href:"labs/class9/biology/osmosis_osmometer.html" },
+  { id:"P-C09-12", cls:9, subject:"biology", archetype:"CHEMICAL_FSM", title:"Plasmolysis in Onion Peel", aim:"Study the phenomenon of plasmolysis and deplasmolysis in epidermal peel of onion using hypertonic and hypotonic solutions.", ready:true, href:"labs/class9/biology/plasmolysis_onion.html" },
+  { id:"P-C09-13", cls:9, subject:"biology", archetype:"CHEMICAL_FSM", title:"Binary Fission in Amoeba", aim:"Study the stages of binary fission in Amoeba using prepared slides and chart the sequence of nuclear and cytoplasmic division.", ready:true, href:"labs/class9/biology/binary_fission_amoeba.html" },
+  { id:"P-C09-14", cls:9, subject:"biology", archetype:"VOLUMETRIC_GLASSWARE", title:"Seed Germination", aim:"Study the conditions necessary for seed germination and observe the emergence of the radicle and plumule.", ready:true, href:"labs/class9/biology/seed_germination.html" },
+  { id:"P-C12-16", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"Photoelectric Effect", aim:"Study the photoelectric effect, verify Einstein photoelectric equation and determine the work function and threshold frequency of the cathode material.", ready:true, href:"labs/class12/physics/photoelectric_effect.html" },
+  { id:"P-C12-17", cls:12, subject:"physics", archetype:"1D_BRIDGE", title:"Half-Wave Rectifier", aim:"Draw the input and output waveforms of a half-wave rectifier using a P-N junction diode and determine its ripple characteristics.", ready:true, href:"labs/class12/physics/halfwave_rectifier.html" },
+  { id:"P-C12-18", cls:12, subject:"physics", archetype:"OPTICS_RAIL", title:"Bohr Model of the Hydrogen Atom", aim:"Study the Bohr model of the hydrogen atom and compute the radii of permitted orbits and the energies of stationary states.", ready:true, href:"labs/class12/physics/bohr_model.html" },
+  { id:"P-C12-19", cls:12, subject:"physics", archetype:"HARMONIC_OSCILLATOR", title:"Radioactive Decay and Half-life", aim:"Study the law of radioactive decay, plot the decay curve and determine the half-life of a given radioactive element using a simulated source.", ready:true, href:"labs/class12/physics/radioactive_decay.html" },
+  { id:"P-C12-20", cls:12, subject:"physics", archetype:"OPTICS_RAIL", title:"Compound Microscope", aim:"Study the construction and working of a compound microscope and determine its magnifying power for different objective-eyepiece combinations.", ready:true, href:"labs/class12/physics/compound_microscope.html" },
+  { id:"P-C12-21", cls:12, subject:"physics", archetype:"OPTICS_RAIL", title:"Resolving Power of a Telescope", aim:"Determine the resolving power of a telescope and study its variation with aperture of the objective.", ready:true, href:"labs/class12/physics/resolving_power.html" },
+  { id:"P-C12-22", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Oxidation of Ethanol", aim:"Study the oxidation of ethanol with alkaline potassium permanganate and identify the products of partial and complete oxidation.", ready:true, href:"labs/class12/chemistry/ethanol_oxidation.html" },
+  { id:"P-C12-23", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Esterification Reaction", aim:"Prepare an ester from a carboxylic acid and an alcohol and study the esterification reaction.", ready:true, href:"labs/class12/chemistry/esterification.html" },
+  { id:"P-C12-24", cls:12, subject:"chemistry", archetype:"CHEMICAL_FSM", title:"Iodine Clock Reaction", aim:"Study the kinetics of the iodine clock reaction and determine the effect of concentration on the time of appearance of the blue colour.", ready:true, href:"labs/class12/chemistry/iodine_clock.html" },
+  { id:"P-C12-25", cls:12, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Solubility Product of Calcium Hydroxide", aim:"Determine the solubility product of calcium hydroxide by titrating its saturated solution against standard hydrochloric acid.", ready:true, href:"labs/class12/chemistry/solubility_product.html" },
+  { id:"P-C12-26", cls:12, subject:"chemistry", archetype:"VOLUMETRIC_GLASSWARE", title:"Buffer Solutions", aim:"Prepare acidic and basic buffer solutions and study the change in pH on addition of small amounts of acid or base.", ready:true, href:"labs/class12/chemistry/buffer_solutions.html" },
+  { id:"P-C11-21", cls:11, subject:"biology", archetype:"HARMONIC_OSCILLATOR", title:"Study of Pollen Germination in Flowers", aim:"Study pollen germination in flowers by preparing a temporary mount and observing germination and pollen tube growth.", ready:true, href:"labs/class11/biology/pollen_germination.html" },
+  { id:"P-C11-22", cls:11, subject:"biology", archetype:"VOLUMETRIC_GLASSWARE", title:"Rate of Transpiration in Plants", aim:"Study the rate of transpiration in plants using a Ganong potometer and compare water uptake under different conditions.", ready:true, href:"labs/class11/biology/transpiration_rate.html" },
+  { id:"P-C11-23", cls:11, subject:"biology", archetype:"VOLUMETRIC_GLASSWARE", title:"Evolution of Oxygen during Photosynthesis", aim:"Demonstrate the evolution of oxygen gas during photosynthesis in an aquatic plant and measure the volume evolved.", ready:true, href:"labs/class11/biology/photosynthesis_oxygen.html" },
+  { id:"P-C11-24", cls:11, subject:"biology", archetype:"CHEMICAL_FSM", title:"Release of CO2 during Respiration", aim:"Demonstrate the release of carbon dioxide during respiration in germinating seeds using lime water.", ready:true, href:"labs/class11/biology/respiration_co2.html" },
+  { id:"P-C12-27", cls:12, subject:"biology", archetype:"OPTICS_RAIL", title:"Mitosis in Onion Root Tip", aim:"Study the stages of mitosis in onion root tip cells using a prepared slide and identify prophase, metaphase, anaphase and telophase.", ready:true, href:"labs/class12/biology/mitosis_onion.html" },
+  { id:"P-C12-28", cls:12, subject:"biology", archetype:"CHEMICAL_FSM", title:"Adaptations of Plants to Environment", aim:"Study adaptations of plants to dry and aquatic environments using specimens and identify xerophytic and hydrophytic characters.", ready:true, href:"labs/class12/biology/adaptations_plants.html" },
+  { id:"P-C12-29", cls:12, subject:"biology", archetype:"OPTICS_RAIL", title:"Homologous and Analogous Organs", aim:"Study homologous and analogous organs in plants and animals using specimens and identify evidence of divergent and convergent evolution.", ready:true, href:"labs/class12/biology/homologous_organs.html" },
+  { id:"P-C12-30", cls:12, subject:"biology", archetype:"VOLUMETRIC_GLASSWARE", title:"Population Density by Quadrat Method", aim:"Determine population density of plant species in a given area using the quadrat method and compute frequency and abundance.", ready:true, href:"labs/class12/biology/quadrat_ecology.html" },
+];
+
+/* --------------------------------------------------------------------------
+   Notification helper (toast-free, uses the status chip)
+   -------------------------------------------------------------------------- */
+function setStorageNote(text) {
+  const el = document.getElementById("storageNote");
+  if (el) el.textContent = text;
+}
+
+/* --------------------------------------------------------------------------
+   Rendering, filtering, search
+   -------------------------------------------------------------------------- */
+const state = { cls: "all", subject: "all", query: "", onlyStarred: false };
+
+function badgeClass(n) { return "class" + n; }
+
+/* F10: is this experiment starred? Guarded — hub works without bookmarks.js. */
+function isStarred(id) {
+  try { if (window.OSBookmarks) return window.OSBookmarks.has(id); } catch (e) {}
+  return false;
+}
+
+/* i18n bridge: hub dynamic strings follow OS_I18N (localStorage-persisted). */
+function T(k) {
+  try { if (window.OS_I18N) return window.OS_I18N.t(k); } catch (e) {}
+  var en = {
+    "results.experiments": "experiments",
+    "results.empty": "No experiments match your filters.",
+    "cards.launch": "Launch Lab →",
+    "cards.planned": "Planned",
+    "filters.classPrefix": "Class ",
+    "filters.physics": "Physics",
+    "filters.chemistry": "Chemistry",
+    "filters.biology": "Biology",
+    "bookmarks.starred": "starred",
+    "bookmarks.only": "Starred only",
+    "mistakes.title": "Mistakes Notebook",
+    "mastery.xp": "XP",
+    "mastery.streak": "-day streak",
+    "topbar.notebook": "Notebook:",
+    "storage.persisted": "Trials persist in browser IndexedDB (OpenSchool_NCERT_DB).",
+    "storage.memory": "In-memory notebook active (IndexedDB unavailable).",
+    "storage.unavailable": "Notebook storage could not initialise."
+  };
+  return en[k] != null ? en[k] : k;
+}
+
+/* Hindi catalog bridge: window.OS_CATALOG_HI = {id:{title_hi,aim_hi}}.
+   Guarded — hub works without catalog-hi.js (falls back to English). */
+function hiEntry(id) {
+  try {
+    if (window.OS_I18N && window.OS_I18N.getLang() === "hi" &&
+        window.OS_CATALOG_HI && window.OS_CATALOG_HI[id]) return window.OS_CATALOG_HI[id];
+  } catch (e) {}
+  return null;
+}
+
+function subjectName(s) {
+  var v = T("filters." + s);
+  return v.indexOf("filters.") === 0 ? s : v;
+}
+
+/* OS-HUB-REWORK: sentence-case hero title (keeps hi string intact). */
+try {
+  if (window.OS_I18N && window.OS_I18N.STR && window.OS_I18N.STR.en) {
+    window.OS_I18N.STR.en["hero.title"] = "Virtual STEM laboratory";
+  }
+} catch (e) {}
+
+var OS_FEATURED = ["P-C12-20", "P-C12-16"];
+
+function skeletonHTML(n) {
+  var out = "";
+  for (var i = 0; i < (n || 6); i++) {
+    out += '<article class="os-card os-skel" aria-hidden="true"><div class="sk sk-line sk-w40"></div>' +
+      '<div class="sk sk-title"></div><div class="sk sk-line sk-w90"></div>' +
+      '<div class="sk sk-line sk-w60"></div><div class="sk sk-cta"></div></article>';
+  }
+  return out;
+}
+
+function emptyHTML() {
+  return '<div class="os-empty" role="status"><div class="os-empty__icon" aria-hidden="true">◌</div>' +
+    "<h3>" + T("results.empty") + "</h3>" +
+    "<p>Try a shorter keyword, a different class, or clear the starred filter. The full 78-experiment catalog is still offline below.</p>" +
+    '<button class="os-btn primary sm" type="button" data-os-reset>Show all 78 experiments</button></div>';
+}
+
+function prefersReducedMotion() {
+  try { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  catch (e) { return false; }
+}
+
+/* Scroll-reveal: vendored GSAP when present, CSS .os-enter fallback. Transform/opacity only. */
+function revealCards(host) {
+  var cards = host.querySelectorAll(".os-card:not(.os-skel)");
+  if (!cards.length) return;
+  if (prefersReducedMotion()) {
+    Array.prototype.forEach.call(cards, function (c) { c.classList.remove("os-enter"); });
+    return;
+  }
+  if (window.gsap && typeof window.gsap.fromTo === "function") {
+    try {
+      Array.prototype.forEach.call(cards, function (c) { c.classList.remove("os-enter"); });
+      window.gsap.fromTo(cards,
+        { y: 14, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.45, stagger: 0.035, ease: "power2.out", overwrite: true, clearProps: "transform" });
+      return;
+    } catch (e) {}
+  }
+  Array.prototype.forEach.call(cards, function (c) { c.classList.add("os-enter"); });
+  try {
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.08 });
+      Array.prototype.forEach.call(cards, function (c) { io.observe(c); });
+      setTimeout(function () {
+        Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-in"); });
+        try { io.disconnect(); } catch (e2) {}
+      }, 1200);
+    } else if (window.requestAnimationFrame) {
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-in"); });
+        });
+      });
+    } else {
+      Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-in"); });
+    }
+  } catch (e) {
+    Array.prototype.forEach.call(cards, function (c) { c.classList.add("is-in"); });
+  }
+}
+
+function buildCards(host, list) {
+  host.innerHTML = "";
+  if (!list.length) {
+    host.innerHTML = emptyHTML();
+    var rb = host.querySelector("[data-os-reset]");
+    if (rb) rb.addEventListener("click", function () {
+      state.cls = "all"; state.subject = "all"; state.query = ""; state.onlyStarred = false;
+      try {
+        var si = document.getElementById("search"); if (si) si.value = "";
+        [["classFilters", "all", "class"], ["subjectFilters", "all", "subject"]].forEach(function (g) {
+          var grp = document.getElementById(g[0]);
+          if (!grp) return;
+          Array.prototype.forEach.call(grp.querySelectorAll(".os-filter-pill"), function (b) {
+            var on = (g[2] === "class" ? b.dataset.class : b.dataset.subject) === "all";
+            b.classList.toggle("active", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+        });
+        var sb = document.getElementById("starredFilter");
+        if (sb) { sb.classList.remove("active"); sb.setAttribute("aria-pressed", "false"); }
+        syncStarredFilter();
+      } catch (e) {}
+      render();
+    });
+    return;
+  }
+  var isDefault = (state.cls === "all" && state.subject === "all" && !state.query.trim() && !state.onlyStarred);
+  var ordered = list.slice();
+  if (isDefault) {
+    ordered.sort(function (a, b) {
+      var ai = OS_FEATURED.indexOf(a.id), bi = OS_FEATURED.indexOf(b.id);
+      if (ai === -1 && bi === -1) return 0;
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+  }
+  ordered.forEach(function (e) {
+    const card = document.createElement("article");
+    var feat = OS_FEATURED.indexOf(e.id) !== -1;
+    card.className = "os-card os-enter" + (feat ? " is-featured" : "");
+    if (feat) card.setAttribute("data-featured", "true");
+    const he = hiEntry(e.id);
+    const dispTitle = (he && he.title_hi) ? he.title_hi : e.title;
+    const dispAim = (he && he.aim_hi) ? he.aim_hi : e.aim;
+    const launch = e.ready && e.href
+      ? '<a class="os-btn primary sm" href="' + e.href + '">' + T("cards.launch") + "</a>"
+      : '<span class="os-chip">' + T("cards.planned") + "</span>";
+    /* OS-MASTERY-RING: per-experiment XP ring (guarded, zero-dep). */
+    let ring = "";
+    try {
+      if (window.OSMastery && typeof window.OSMastery.getRing === "function") {
+        const r = window.OSMastery.getRing(e.id);
+        const deg = Math.max(0, Math.min(100, r.pct)) * 3.6;
+        ring = '<span class="os-chip" title="' + r.xp + ' XP · ' + r.level + '" style="gap:6px">' +
+          '<span aria-hidden="true" style="display:inline-block;width:14px;height:14px;border-radius:50%;' +
+          'background:conic-gradient(var(--os-accent, #4da3ff) ' + deg + 'deg, rgba(127,127,127,.25) 0deg)"></span>' +
+          "<b>" + r.xp + "</b>&nbsp;XP · " + r.level + "</span>";
+      }
+    } catch (err) {}
+    card.innerHTML =
+      '<div class="tags">' +
+        '<span class="os-badge ' + badgeClass(e.cls) + '">' + T("filters.classPrefix") + e.cls + "</span>" +
+        '<span class="os-badge ' + e.subject + '">' + subjectName(e.subject) + "</span>" +
+        ring +
+      "</div>" +
+      "<h3>" + dispTitle + "</h3>" +
+      '<p class="aim">' + dispAim + "</p>" +
+      '<div class="launch"><span class="os-mono os-dim" style="font-size:11px">' + e.id + "</span>" +
+      '<button class="os-btn sm ghost' + (isStarred(e.id) ? " active" : "") + '" type="button" data-os-card-star="' + e.id +
+        '" aria-pressed="' + (isStarred(e.id) ? "true" : "false") + '" aria-label="Bookmark ' + e.id + '" title="Bookmark this lab">' +
+        (isStarred(e.id) ? "★" : "☆") + "</button>" + launch + "</div>";
+    host.appendChild(card);
+  });
+  // F10: wire per-card star toggles (host is rebuilt each render, so no dupes).
+  host.querySelectorAll("[data-os-card-star]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const id = btn.getAttribute("data-os-card-star");
+      try {
+        if (window.OSBookmarks) {
+          const on = window.OSBookmarks.toggle(id);
+          btn.textContent = on ? "★" : "☆";
+          btn.setAttribute("aria-pressed", on ? "true" : "false");
+          btn.classList.toggle("active", on);
+          syncBookmarkCount();
+          if (state.onlyStarred && !on) render();
+        }
+      } catch (err) {}
+    });
+  });
+  document.getElementById("resultCount").innerHTML = "<b>" + list.length + "</b> " + T("results.experiments");
+  revealCards(host);
+}
+
+function render() {
+  var host = document.getElementById("cards");
+  if (!host) return;
+  var q = state.query.trim().toLowerCase();
+  var list = CATALOG.filter(function (e) {
+    if (state.cls !== "all" && String(e.cls) !== state.cls) return false;
+    if (state.subject !== "all" && e.subject !== state.subject) return false;
+    if (state.onlyStarred && !isStarred(e.id)) return false;
+    if (q) {
+      var he2 = hiEntry(e.id);
+      var hay = (e.id + " " + e.title + " " + e.aim + " " + e.archetype +
+        (he2 ? (" " + (he2.title_hi || "") + " " + (he2.aim_hi || "")) : "")).toLowerCase();
+      if (hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+  /* Skeleton first so first paint / filter changes never flash empty. */
+  host.innerHTML = skeletonHTML(Math.min(Math.max(list.length, 1), 8));
+  var build = function () { buildCards(host, list); };
+  try {
+    if (window.requestAnimationFrame) {
+      window.requestAnimationFrame(function () {
+        try { setTimeout(build, 16); } catch (e) { build(); }
+      });
+    } else { setTimeout(build, 16); }
+  } catch (e) { build(); }
+}
+
+/* F10: hub Bookmarks view — starred-only toggle + count chip. Guarded. */
+function syncBookmarkCount() {
+  try {
+    const el = document.getElementById("bookmarkCount");
+    if (!el) return;
+    const n = (window.OSBookmarks && typeof window.OSBookmarks.list === "function")
+      ? window.OSBookmarks.list().length : 0;
+    el.innerHTML = "<b>" + n + "</b> " + T("bookmarks.starred");
+  } catch (e) {}
+}
+
+function syncStarredFilter() {
+  try {
+    const starBtn = document.getElementById("starredFilter");
+    if (!starBtn) return;
+    starBtn.textContent = (state.onlyStarred ? "★ " : "☆ ") + T("bookmarks.only");
+  } catch (e) {}
+}
+
+function wireFilters(groupId, key) {
+  const group = document.getElementById(groupId);
+  group.addEventListener("click", function (ev) {
+    const btn = ev.target.closest(".os-filter-pill");
+    if (!btn) return;
+    Array.prototype.forEach.call(group.querySelectorAll(".os-filter-pill"), function (b) {
+      b.classList.remove("active");
+      b.setAttribute("aria-pressed", "false");
+    });
+    btn.classList.add("active");
+    btn.setAttribute("aria-pressed", "true");
+    if (key === "class") state.cls = btn.dataset.class;
+    else if (key === "subject") state.subject = btn.dataset.subject;
+    render();
+  });
+}
+
+wireFilters("classFilters", "class");
+wireFilters("subjectFilters", "subject");
+document.getElementById("search").addEventListener("input", function (e) {
+  state.query = e.target.value;
+  render();
+});
+document.addEventListener("os-lang-change", function () { render(); syncBookmarkCount(); syncStarredFilter(); });
+render();
+
+/* --------------------------------------------------------------------------
+   IndexedDB status
+   -------------------------------------------------------------------------- */
+(async function () {
+  const chip = document.getElementById("dbStatus");
+  function chipHtml(status) {
+    // Rebuild the label span so a later OS_I18N.apply() can re-translate it.
+    return '<span data-i18n="topbar.notebook">' + T("topbar.notebook") + "</span> <b>" + status + "</b>";
+  }
+  try {
+    const db = new window.LabNotebookDB();
+    await db.open();
+    if (db.isFallback()) {
+      chip.innerHTML = chipHtml("memory");
+      setStorageNote(db._error || T("storage.memory"));
+    } else {
+      chip.innerHTML = chipHtml("IndexedDB");
+      setStorageNote(T("storage.persisted"));
+    }
+  } catch (err) {
+    chip.innerHTML = chipHtml("unavailable");
+    setStorageNote(T("storage.unavailable"));
+  }
+})();
+
+/* --------------------------------------------------------------------------
+   F8 planner widget + F10 bookmark view wiring (guarded, hub-only).
+   -------------------------------------------------------------------------- */
+(function () {
+  try {
+    const starBtn = document.getElementById("starredFilter");
+    if (starBtn) {
+      starBtn.addEventListener("click", function () {
+        state.onlyStarred = !state.onlyStarred;
+        starBtn.classList.toggle("active", state.onlyStarred);
+        starBtn.setAttribute("aria-pressed", state.onlyStarred ? "true" : "false");
+        syncStarredFilter();
+        render();
+      });
+    }
+    document.addEventListener("os-bookmark-change", function () {
+      syncBookmarkCount();
+      if (state.onlyStarred) render();
+    });
+    syncBookmarkCount();
+    syncStarredFilter();
+  } catch (e) {}
+
+  // F8: Today's revision widget — LabNotebook stats + mastery XP.
+  (async function () {
+    const host = document.getElementById("plannerWidget");
+    if (!host) return;
+    function fallback(msg) {
+      try {
+        if (window.OSPlanner) window.OSPlanner.renderHubWidget(host, CATALOG, [], { limit: 5 });
+        else host.innerHTML = '<p class="os-dim" style="margin:0">' + msg + "</p>";
+      } catch (e) {
+        host.innerHTML = '<p class="os-dim" style="margin:0">' + msg + "</p>";
+      }
+    }
+    try {
+      if (!window.OSPlanner) return fallback("Revision planner unavailable.");
+      let stats = [];
+      try {
+        if (window.LabNotebookDB) {
+          const db = new window.LabNotebookDB();
+          if (typeof db.getUsageStats === "function") stats = await db.getUsageStats();
+        } else if (window.LabNotebook && typeof window.LabNotebook.getUsageStats === "function") {
+          stats = await window.LabNotebook.getUsageStats();
+        }
+      } catch (e) { stats = []; }
+      window.OSPlanner.renderHubWidget(host, CATALOG, stats, { limit: 5 });
+    } catch (e) { fallback("Revision planner unavailable."); }
+  })();
+})();
+</script>
+<script>
+/* OS-HUB-WIDGET: mastery totals + mistakes count (guarded, zero-dep). */
+(function () {
+  function paint() {
+    try {
+      if (window.OSMastery && typeof window.OSMastery.getTotals === "function") {
+        var t = window.OSMastery.getTotals();
+        var xp = document.getElementById("osXpChip");
+        var lv = document.getElementById("osLevelChip");
+        var st = document.getElementById("osStreakChip");
+        if (xp) xp.innerHTML = "<b>" + t.xp + "</b>&nbsp;" + T("mastery.xp");
+        if (lv) lv.textContent = t.next ? (t.level + " → " + t.next.name + " @" + t.next.min) : ("🏆 " + t.level);
+        if (st) st.textContent = "🔥 " + t.streak + T("mastery.streak");
+      }
+    } catch (e) {}
+    try {
+      var n = (window.OSMistakes && typeof window.OSMistakes.count === "function") ? window.OSMistakes.count() : 0;
+      var chip = document.getElementById("osMistakesChip");
+      if (chip) chip.innerHTML = "📝 " + T("mistakes.title") + ": <b>" + n + "</b> → review";
+    } catch (e) {}
+  }
+  try { document.addEventListener("os-mistakes-change", paint); } catch (e) {}
+  try { document.addEventListener("os-lang-change", paint); } catch (e) {}
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", paint);
+  else paint();
+})();
+</script>
+</body>
+</html>

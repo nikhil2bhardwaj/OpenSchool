@@ -1,0 +1,2779 @@
+[
+  {
+    "experiment_id": "P-C09-01",
+    "class_level": 9,
+    "subject": "physics",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the density of a solid (denser than water) using a spring balance and a measuring cylinder.",
+    "governing_equation_latex": "\\rho = \\dfrac{W_{air}}{W_{air}-W_{water}}\\times\\rho_{water}",
+    "target_html_file": "labs/class9/density_archimedes.html",
+    "apparatus": [
+      {
+        "name": "Spring balance",
+        "specification": "0–5 N",
+        "least_count": "0.1 N"
+      },
+      {
+        "name": "Measuring cylinder",
+        "specification": "Borosilicate, 0–100 mL",
+        "least_count": "1 mL"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-02",
+    "class_level": 9,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Verify Ohm's law by studying the variation of current with potential difference across a resistor.",
+    "governing_equation_latex": "V = IR",
+    "target_html_file": "labs/class9/ohm_law_basic.html",
+    "apparatus": [
+      {
+        "name": "Ammeter",
+        "specification": "0–1 A DC",
+        "least_count": "0.05 A"
+      },
+      {
+        "name": "Voltmeter",
+        "specification": "0–5 V DC",
+        "least_count": "0.1 V"
+      },
+      {
+        "name": "Rheostat",
+        "specification": "0–20 Ω",
+        "least_count": "0.5 Ω"
+      },
+      {
+        "name": "Battery eliminator",
+        "specification": "0–12 V DC",
+        "least_count": "1 V"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_HEATING",
+        "symptom": "Resistance increases during the experiment",
+        "cause": "Continuous current heats the wire",
+        "remedy": "Pass current only momentarily while taking readings"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "State Ohm's law.",
+        "answer": "At constant temperature the current through a conductor is directly proportional to the potential difference across it, V = IR."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-03",
+    "class_level": 9,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Trace the path of a ray of light passing through a rectangular glass slab and measure the lateral displacement and angle of refraction.",
+    "governing_equation_latex": "\\dfrac{\\sin i}{\\sin r} = n",
+    "target_html_file": "labs/class9/refraction_glass_slab.html",
+    "apparatus": [
+      {
+        "name": "Glass slab",
+        "specification": "Rectangular, 6×4×2 cm",
+        "least_count": "—"
+      },
+      {
+        "name": "Plane mirror",
+        "specification": "Rectangular",
+        "least_count": "—"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "State Snell's law.",
+        "answer": "The ratio of the sine of the angle of incidence to the sine of the angle of refraction is constant for a given pair of media (n)."
+      },
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-04",
+    "class_level": 9,
+    "subject": "physics",
+    "archetype": "HARMONIC_OSCILLATOR",
+    "aim": "Verify the laws of reflection of sound using two tubes and a reflecting surface.",
+    "governing_equation_latex": "\\angle i = \\angle r",
+    "target_html_file": "labs/class9/sound_reflection.html",
+    "apparatus": [
+      {
+        "name": "Stopwatch",
+        "specification": "Digital",
+        "least_count": "0.1 s"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-05",
+    "class_level": 9,
+    "subject": "physics",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Establish the relation between the weight of a body and the buoyant force acting on it.",
+    "governing_equation_latex": "F_B = \\rho_{fluid}\\, g\\, V_{displaced}",
+    "target_html_file": "labs/class9/buoyancy_relation.html",
+    "apparatus": [
+      {
+        "name": "Spring balance",
+        "specification": "0–5 N",
+        "least_count": "0.1 N"
+      },
+      {
+        "name": "Measuring cylinder",
+        "specification": "Borosilicate, 0–100 mL",
+        "least_count": "1 mL"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      },
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-06",
+    "class_level": 9,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Prepare a true solution, a colloid and a suspension, and distinguish them by their properties.",
+    "governing_equation_latex": "\\text{Tyndall effect: colloids scatter light}",
+    "target_html_file": "labs/class9/solution_types.html",
+    "apparatus": [
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why do colloids scatter light?",
+        "answer": "Colloidal particles are large enough to scatter light, showing the Tyndall effect, unlike true solutions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-07",
+    "class_level": 9,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Separate the components of a mixture using sublimation and paper chromatography.",
+    "governing_equation_latex": "R_f = \\dfrac{distance\\ travelled\\ by\\ solute}{distance\\ travelled\\ by\\ solvent}",
+    "target_html_file": "labs/class9/mixture_separation.html",
+    "apparatus": [
+      {
+        "name": "Bunsen burner",
+        "specification": "LPG, with collar",
+        "least_count": "—"
+      },
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Watch glass",
+        "specification": "Borosilicate",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is the principle of chromatography?",
+        "answer": "Components of a mixture are separated by their different rates of adsorption and solubility as the solvent moves up the paper."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-08",
+    "class_level": 9,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the melting point of ice and the boiling point of water.",
+    "governing_equation_latex": "T_{melt} = 0\\,^\\circ C,\\quad T_{boil} = 100\\,^\\circ C\\ (\\text{at 1 atm})",
+    "target_html_file": "labs/class9/melting_boiling.html",
+    "apparatus": [
+      {
+        "name": "Thermometer",
+        "specification": "0–110 °C",
+        "least_count": "0.1 °C"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Burner",
+        "specification": "Spirit lamp / Bunsen",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_SUPERCOOLING",
+        "symptom": "Liquid fails to freeze at 0 °C",
+        "cause": "Supercooling of the melt",
+        "remedy": "Stir continuously and seed with a crystal"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is salt added to ice in a freezing mixture?",
+        "answer": "Salt lowers the melting point of ice, producing a temperature below 0 °C."
+      },
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-09",
+    "class_level": 9,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Study the action of acids and bases on indicators and test the pH of common solutions.",
+    "governing_equation_latex": "\\text{acid} + \\text{base} \\rightarrow \\text{salt} + \\text{water}",
+    "target_html_file": "labs/class9/acid_base_indicator.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      },
+      {
+        "name": "Litmus paper",
+        "specification": "Red and blue",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_FALSE_PPT",
+        "symptom": "White precipitate even when the radical is absent",
+        "cause": "Test not acidified; carbonate interference",
+        "remedy": "Acidify before adding BaCl2 / AgNO3"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What colour does blue litmus turn in an acid?",
+        "answer": "Blue litmus turns red in an acidic solution."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why should the reaction be allowed to complete before recording the observation?",
+        "answer": "An incomplete reaction gives a weak or partial observation and a misleading inference, so sufficient reagent and time must be allowed."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C09-10",
+    "class_level": 9,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Carry out the reaction of acids with metals and with metal carbonates and identify the gases evolved.",
+    "governing_equation_latex": "Zn + 2HCl \\rightarrow ZnCl_2 + H_2\\uparrow",
+    "target_html_file": "labs/class9/acid_metal_carbonate.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      },
+      {
+        "name": "Bunsen burner",
+        "specification": "LPG, with collar",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "How is hydrogen gas confirmed?",
+        "answer": "A burning splint near the mouth of the tube gives a pop sound, confirming hydrogen."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-01",
+    "class_level": 10,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Determine the equivalent resistance of a combination of resistors connected in series and in parallel.",
+    "governing_equation_latex": "R_s = R_1+R_2,\\quad \\dfrac{1}{R_p}=\\dfrac{1}{R_1}+\\dfrac{1}{R_2}",
+    "target_html_file": "labs/class10/resistance_combo.html",
+    "apparatus": [
+      {
+        "name": "Ammeter",
+        "specification": "0–1 A DC",
+        "least_count": "0.05 A"
+      },
+      {
+        "name": "Voltmeter",
+        "specification": "0–5 V DC",
+        "least_count": "0.1 V"
+      },
+      {
+        "name": "Resistance box",
+        "specification": "Plug type, 0.5–15 Ω",
+        "least_count": "0.05 Ω"
+      },
+      {
+        "name": "Battery eliminator",
+        "specification": "0–12 V DC",
+        "least_count": "1 V"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_HEATING",
+        "symptom": "Resistance increases during the experiment",
+        "cause": "Continuous current heats the wire",
+        "remedy": "Pass current only momentarily while taking readings"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "How does equivalent resistance change on adding resistors in parallel?",
+        "answer": "The equivalent resistance decreases because an extra path for current is provided."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-02",
+    "class_level": 10,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Determine the focal length of a convex lens by focusing a distant object and by the u–v method.",
+    "governing_equation_latex": "\\dfrac{1}{f}=\\dfrac{1}{v}-\\dfrac{1}{u}",
+    "target_html_file": "labs/class10/convex_lens_focal.html",
+    "apparatus": [
+      {
+        "name": "Optical bench",
+        "specification": "0–150 cm, graduated rail",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Convex lens",
+        "specification": "f ≈ 15 cm",
+        "least_count": "—"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      },
+      {
+        "fault_id": "F_NOT_AXIAL",
+        "symptom": "Fuzzy or doubled image",
+        "cause": "Object, lens and image not on one principal axis",
+        "remedy": "Adjust all uprights to the same height and axis"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why must the object be distant for a quick estimate of f?",
+        "answer": "Rays from a very distant object are nearly parallel, so they converge at the principal focus, giving f directly as the image distance."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-03",
+    "class_level": 10,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Study the nature and position of the image formed by a concave mirror for different object distances.",
+    "governing_equation_latex": "\\dfrac{1}{f}=\\dfrac{1}{v}+\\dfrac{1}{u}",
+    "target_html_file": "labs/class10/concave_mirror.html",
+    "apparatus": [
+      {
+        "name": "Concave mirror",
+        "specification": "f ≈ 15 cm",
+        "least_count": "—"
+      },
+      {
+        "name": "Optical bench",
+        "specification": "0–150 cm, graduated rail",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_NOT_AXIAL",
+        "symptom": "Fuzzy or doubled image",
+        "cause": "Object, lens and image not on one principal axis",
+        "remedy": "Adjust all uprights to the same height and axis"
+      },
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "When does a concave mirror form a virtual, magnified image?",
+        "answer": "When the object is placed between the pole and the principal focus."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-04",
+    "class_level": 10,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Trace the path of a ray of light through a triangular glass prism and measure the angle of deviation.",
+    "governing_equation_latex": "A + D = i_1 + i_2",
+    "target_html_file": "labs/class10/prism_refraction.html",
+    "apparatus": [
+      {
+        "name": "Glass prism",
+        "specification": "Equilateral 60°",
+        "least_count": "0.5°"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Define the angle of deviation.",
+        "answer": "It is the angle between the direction of the incident ray and the emergent ray."
+      },
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-05",
+    "class_level": 10,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Trace the magnetic field lines around a bar magnet using a plotting compass.",
+    "governing_equation_latex": "\\text{Field lines emerge from N pole and enter S pole}",
+    "target_html_file": "labs/class10/magnetic_field_lines.html",
+    "apparatus": [
+      {
+        "name": "Plane mirror",
+        "specification": "Rectangular",
+        "least_count": "—"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_EDDY",
+        "symptom": "Unstable magnetic deflection",
+        "cause": "Stray fields near the apparatus",
+        "remedy": "Move the apparatus away from magnetic material and re-zero"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why do magnetic field lines never intersect?",
+        "answer": "At any point the field has a unique direction; intersection would imply two directions, which is impossible."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-06",
+    "class_level": 10,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the pH of some common solutions using pH paper and a calibrated pH meter.",
+    "governing_equation_latex": "pH = -\\log_{10}[H^+]",
+    "target_html_file": "labs/class10/ph_of_samples.html",
+    "apparatus": [
+      {
+        "name": "pH meter",
+        "specification": "Digital, calibrated buffers",
+        "least_count": "0.01 pH"
+      },
+      {
+        "name": "pH paper",
+        "specification": "Universal range 1–14",
+        "least_count": "0.5 pH"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is the pH of a neutral solution at 25 °C?",
+        "answer": "A neutral solution has pH 7."
+      },
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-07",
+    "class_level": 10,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Study the various types of chemical reactions: combination, decomposition, displacement and double displacement.",
+    "governing_equation_latex": "A + B \\rightarrow AB,\\quad AB \\rightarrow A + B",
+    "target_html_file": "labs/class10/reaction_types.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Bunsen burner",
+        "specification": "LPG, with collar",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Give an example of a displacement reaction.",
+        "answer": "Iron displaces copper from copper sulphate solution: Fe + CuSO4 -> FeSO4 + Cu."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-08",
+    "class_level": 10,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Study the cleansing action of soap and the formation of micelles.",
+    "governing_equation_latex": "\\text{Micelle formation by sodium stearate ions}",
+    "target_html_file": "labs/class10/soap_micelle.html",
+    "apparatus": [
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why does soap not lather well in hard water?",
+        "answer": "Calcium and magnesium ions in hard water form insoluble scum with soap, preventing good lather."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-09",
+    "class_level": 10,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Study the properties of acids and bases by their reaction with metals, carbonates and the neutralisation reaction.",
+    "governing_equation_latex": "H^+ + OH^- \\rightarrow H_2O",
+    "target_html_file": "labs/class10/acid_base_properties.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      },
+      {
+        "name": "Litmus paper",
+        "specification": "Red and blue",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is neutralisation?",
+        "answer": "It is the reaction between an acid and a base to form a salt and water."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C10-10",
+    "class_level": 10,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Carry out the electrolysis of water and identify the gases liberated at the electrodes.",
+    "governing_equation_latex": "2H_2O \\rightarrow 2H_2 + O_2",
+    "target_html_file": "labs/class10/electrolysis.html",
+    "apparatus": [
+      {
+        "name": "Electrolysis cell",
+        "specification": "With electrodes and battery",
+        "least_count": "—"
+      },
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Battery eliminator",
+        "specification": "0–12 V DC",
+        "least_count": "1 V"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "In what ratio are hydrogen and oxygen evolved?",
+        "answer": "Hydrogen and oxygen are evolved in a 2:1 volume ratio by the electrolysis of water."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-01",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "HARMONIC_OSCILLATOR",
+    "aim": "Determine the acceleration due to gravity using a simple pendulum and plot L–T and L–T² graphs.",
+    "governing_equation_latex": "g = 4\\pi^2\\dfrac{L_{eff}}{T^2}",
+    "target_html_file": "labs/class11/physics/simple_pendulum.html",
+    "apparatus": [
+      {
+        "name": "Simple pendulum",
+        "specification": "Bob + cotton thread",
+        "least_count": "—"
+      },
+      {
+        "name": "Split cork clamp",
+        "specification": "Two-half cork",
+        "least_count": "—"
+      },
+      {
+        "name": "Stopwatch",
+        "specification": "Digital",
+        "least_count": "0.1 s"
+      },
+      {
+        "name": "Vernier calipers",
+        "specification": "Stainless steel, 0–15 cm",
+        "least_count": "0.01 cm"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LARGE_AMPLITUDE",
+        "symptom": "Measured g is too small",
+        "cause": "Amplitude exceeds the small-angle limit",
+        "remedy": "Restrict amplitude below 10°"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why should the amplitude be small?",
+        "answer": "The small-angle approximation sin θ ≈ θ is valid only for small amplitudes, so T is independent of amplitude."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-02",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "HARMONIC_OSCILLATOR",
+    "aim": "Verify the laws of a sonometer (laws of length, tension and frequency).",
+    "governing_equation_latex": "f = \\dfrac{1}{2l}\\sqrt{\\dfrac{T}{m}}",
+    "target_html_file": "labs/class11/physics/sonometer_laws.html",
+    "apparatus": [
+      {
+        "name": "Sonometer",
+        "specification": "Wooden box, 1 m wires",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Tuning forks",
+        "specification": "Set of known frequencies",
+        "least_count": "—"
+      },
+      {
+        "name": "Electronic balance",
+        "specification": "0–200 g",
+        "least_count": "0.001 g"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_NONUNIFORM",
+        "symptom": "Null point not reproducible along a region",
+        "cause": "Wire cross-section is non-uniform / scraped",
+        "remedy": "Replace or re-tension the wire and repeat"
+      },
+      {
+        "fault_id": "F_DAMPING",
+        "symptom": "Amplitude decays rapidly",
+        "cause": "Air resistance / friction at the support",
+        "remedy": "Use a small bob and minimise air currents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "State the law of length for a stretched string.",
+        "answer": "The fundamental frequency is inversely proportional to the vibrating length at constant tension and linear density."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-03",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "HARMONIC_OSCILLATOR",
+    "aim": "Determine the force constant of a helical spring from the load–extension graph.",
+    "governing_equation_latex": "k = \\dfrac{F}{x}",
+    "target_html_file": "labs/class11/physics/spring_constant.html",
+    "apparatus": [
+      {
+        "name": "Helical spring",
+        "specification": "With hanger and weights",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Electronic balance",
+        "specification": "0–200 g",
+        "least_count": "0.001 g"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What does the slope of the load–extension graph represent?",
+        "answer": "The slope of load against extension gives the spring constant k."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-04",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "HARMONIC_OSCILLATOR",
+    "aim": "Determine the velocity of sound in air using a resonance tube.",
+    "governing_equation_latex": "v = f\\, \\lambda = 2f(l_2-l_1)",
+    "target_html_file": "labs/class11/physics/resonance_tube.html",
+    "apparatus": [
+      {
+        "name": "Resonance tube",
+        "specification": "Glass tube with water reservoir",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Tuning forks",
+        "specification": "Set of known frequencies",
+        "least_count": "—"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_DAMPING",
+        "symptom": "Amplitude decays rapidly",
+        "cause": "Air resistance / friction at the support",
+        "remedy": "Use a small bob and minimise air currents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is the first resonance length more than λ/4?",
+        "answer": "Because of the end correction at the open end of the tube."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-05",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "HARMONIC_OSCILLATOR",
+    "aim": "Determine the coefficient of viscosity of a liquid by measuring the terminal velocity of a falling sphere (Stokes' method).",
+    "governing_equation_latex": "\\eta = \\dfrac{2}{9}\\dfrac{(\\rho-\\sigma)g r^2}{v}",
+    "target_html_file": "labs/class11/physics/viscosity_terminal.html",
+    "apparatus": [
+      {
+        "name": "Stokes' apparatus",
+        "specification": "Tall glass jar + stopwatch",
+        "least_count": "0.1 s"
+      },
+      {
+        "name": "Screw gauge",
+        "specification": "0–25 mm",
+        "least_count": "0.001 cm"
+      },
+      {
+        "name": "Stopwatch",
+        "specification": "Digital",
+        "least_count": "0.1 s"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_DAMPING",
+        "symptom": "Amplitude decays rapidly",
+        "cause": "Air resistance / friction at the support",
+        "remedy": "Use a small bob and minimise air currents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is terminal velocity measured over the lower part of the jar?",
+        "answer": "Only after some fall does the sphere attain terminal velocity (zero acceleration)."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-06",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the surface tension of water by the capillary-rise method.",
+    "governing_equation_latex": "T = \\dfrac{r h \\rho g}{2}",
+    "target_html_file": "labs/class11/physics/capillary_rise.html",
+    "apparatus": [
+      {
+        "name": "Capillary tube",
+        "specification": "Bore ≈ 0.5 mm",
+        "least_count": "—"
+      },
+      {
+        "name": "Travelling microscope",
+        "specification": "0–15 cm",
+        "least_count": "0.001 cm"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why does water rise in a capillary tube?",
+        "answer": "Surface tension causes the meniscus to pull the liquid up until it is balanced by the weight of the risen liquid."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-07",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Determine Young's modulus of the material of a wire using Searle's apparatus.",
+    "governing_equation_latex": "Y = \\dfrac{F L}{A \\, \\Delta L}",
+    "target_html_file": "labs/class11/physics/youngs_modulus.html",
+    "apparatus": [
+      {
+        "name": "Screw gauge",
+        "specification": "0–25 mm",
+        "least_count": "0.001 cm"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Electronic balance",
+        "specification": "0–200 g",
+        "least_count": "0.001 g"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_NONUNIFORM",
+        "symptom": "Null point not reproducible along a region",
+        "cause": "Wire cross-section is non-uniform / scraped",
+        "remedy": "Replace or re-tension the wire and repeat"
+      },
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "On what factors does Young's modulus depend?",
+        "answer": "It depends only on the material of the wire, not on its dimensions."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-08",
+    "class_level": 11,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Study the relationship between the force of limiting friction and the normal reaction and find the coefficient of friction.",
+    "governing_equation_latex": "F = \\mu N",
+    "target_html_file": "labs/class11/physics/friction.html",
+    "apparatus": [
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Electronic balance",
+        "specification": "0–200 g",
+        "least_count": "0.001 g"
+      },
+      {
+        "name": "Spring balance",
+        "specification": "0–5 N",
+        "least_count": "0.1 N"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Define the coefficient of friction.",
+        "answer": "It is the ratio of the limiting friction to the normal reaction between two surfaces in contact."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-09",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Study the variation of pH during the titration of a strong acid with a strong base.",
+    "governing_equation_latex": "pH = -\\log[H^+],\\quad pH_{eq}=7",
+    "target_html_file": "labs/class11/chemistry/ph_equilibrium.html",
+    "apparatus": [
+      {
+        "name": "pH meter",
+        "specification": "Digital, calibrated buffers",
+        "least_count": "0.01 pH"
+      },
+      {
+        "name": "Burette",
+        "specification": "50 mL, stopcock",
+        "least_count": "0.05 mL"
+      },
+      {
+        "name": "Pipette",
+        "specification": "20 mL, bulb type",
+        "least_count": "0.1 mL"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INDICATOR",
+        "symptom": "End-point colour faded or overshot",
+        "cause": "Too much/too little indicator",
+        "remedy": "Use the recommended amount of indicator"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why does the pH change sharply near the equivalence point?",
+        "answer": "A very small addition of titrant near the equivalence point changes the H+ concentration greatly, causing a sharp pH jump."
+      },
+      {
+        "question": "Why should the scale be read with the eye perpendicular to it?",
+        "answer": "To avoid parallax error; an inclined line of sight shifts the apparent reading from the true one."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-10",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Detect the functional groups present in an organic compound using dry tests.",
+    "governing_equation_latex": "\\text{Unsaturation test: } Br_2\\ water\\ decolourised",
+    "target_html_file": "labs/class11/chemistry/salt_analysis_dry.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Bunsen burner",
+        "specification": "LPG, with collar",
+        "least_count": "—"
+      },
+      {
+        "name": "Test-tube rack",
+        "specification": "Wooden, 12 holes",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is the flame test done on a nichrome wire?",
+        "answer": "Nichrome is inert and does not impart its own colour to the flame, so only the sample's colour is seen."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-11",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the enthalpy of neutralisation of a strong acid with a strong base using a calorimeter.",
+    "governing_equation_latex": "\\Delta H = -\\dfrac{m c \\Delta T}{n}",
+    "target_html_file": "labs/class11/chemistry/enthalpy_neutralisation.html",
+    "apparatus": [
+      {
+        "name": "Calorimeter",
+        "specification": "Copper, with stirrer",
+        "least_count": "0.1 °C"
+      },
+      {
+        "name": "Thermometer",
+        "specification": "0–110 °C",
+        "least_count": "0.1 °C"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is the enthalpy of neutralisation of a strong acid and strong base nearly constant?",
+        "answer": "It is essentially the enthalpy of formation of water from H+ and OH-, which is nearly the same for all strong acid–base pairs."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-12",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Study the effect of concentration and temperature on the rate of a chemical reaction.",
+    "governing_equation_latex": "\\text{Rate} \\propto [A]^n",
+    "target_html_file": "labs/class11/chemistry/reaction_rates.html",
+    "apparatus": [
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Thermometer",
+        "specification": "0–110 °C",
+        "least_count": "0.1 °C"
+      },
+      {
+        "name": "Stop-clock",
+        "specification": "Digital",
+        "least_count": "0.01 s"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "How does temperature affect the rate of reaction?",
+        "answer": "An increase in temperature increases the fraction of molecules with energy above the activation energy, so the rate increases."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-13",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the distribution (partition) coefficient of a solute between two immiscible solvents.",
+    "governing_equation_latex": "K_D = \\dfrac{[S]_{org}}{[S]_{aq}}",
+    "target_html_file": "labs/class11/chemistry/partition_coefficient.html",
+    "apparatus": [
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Burette",
+        "specification": "50 mL, stopcock",
+        "least_count": "0.05 mL"
+      },
+      {
+        "name": "Conical flask",
+        "specification": "250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What does a large partition coefficient indicate?",
+        "answer": "It indicates that the solute is much more soluble in the organic layer than in the aqueous layer."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-14",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Prepare a standard solution of oxalic acid and determine the strength of a given solution.",
+    "governing_equation_latex": "N_1V_1 = N_2V_2",
+    "target_html_file": "labs/class11/chemistry/standard_solution.html",
+    "apparatus": [
+      {
+        "name": "Volumetric flask",
+        "specification": "100 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Electronic balance",
+        "specification": "0–200 g",
+        "least_count": "0.001 g"
+      },
+      {
+        "name": "Pipette",
+        "specification": "20 mL, bulb type",
+        "least_count": "0.1 mL"
+      },
+      {
+        "name": "Burette",
+        "specification": "50 mL, stopcock",
+        "least_count": "0.05 mL"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INDICATOR",
+        "symptom": "End-point colour faded or overshot",
+        "cause": "Too much/too little indicator",
+        "remedy": "Use the recommended amount of indicator"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is a standard solution?",
+        "answer": "A solution of accurately known concentration, used to determine the concentration of another solution."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C11-15",
+    "class_level": 11,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Identify the functional groups of an organic compound using wet tests.",
+    "governing_equation_latex": "\\text{Carbonyl: } 2,4-DNP\\ test",
+    "target_html_file": "labs/class11/chemistry/functional_groups_wet.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Which reagent distinguishes an aldehyde from a ketone?",
+        "answer": "Fehling's or Tollens' reagent gives a positive test with an aldehyde but not with a ketone."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-01",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Determine the resistance of a given wire using a metre bridge and hence the resistivity of its material.",
+    "governing_equation_latex": "X = R\\dfrac{100-L}{L},\\quad \\rho = \\dfrac{X A}{l}",
+    "target_html_file": "labs/class12/physics/meter_bridge.html",
+    "apparatus": [
+      {
+        "name": "Metre bridge",
+        "specification": "100 cm uniform manganin wire",
+        "least_count": "1 cm"
+      },
+      {
+        "name": "Resistance box",
+        "specification": "Plug type, 0.5–15 Ω",
+        "least_count": "0.05 Ω"
+      },
+      {
+        "name": "Galvanometer",
+        "specification": "Center-zero, −30 to +30 µA",
+        "least_count": "1 µA"
+      },
+      {
+        "name": "Jockey",
+        "specification": "Brass, knife-edge",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_NONUNIFORM",
+        "symptom": "Null point not reproducible along a region",
+        "cause": "Wire cross-section is non-uniform / scraped",
+        "remedy": "Replace or re-tension the wire and repeat"
+      },
+      {
+        "fault_id": "F_END_ERROR",
+        "symptom": "Systematic shift in all values",
+        "cause": "End resistances at the wire terminals",
+        "remedy": "Apply end corrections at both ends"
+      },
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is the null point preferred near the middle of the wire?",
+        "answer": "There the percentage errors in both lengths are minimum and the bridge sensitivity is maximum."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-02",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Compare the electromotive forces of two primary cells using a potentiometer.",
+    "governing_equation_latex": "\\dfrac{E_1}{E_2} = \\dfrac{l_1}{l_2}",
+    "target_html_file": "labs/class12/physics/potentiometer_emf.html",
+    "apparatus": [
+      {
+        "name": "Potentiometer",
+        "specification": "10 m constantan wire, 10 wires",
+        "least_count": "1 cm"
+      },
+      {
+        "name": "Galvanometer",
+        "specification": "Center-zero, −30 to +30 µA",
+        "least_count": "1 µA"
+      },
+      {
+        "name": "Leclanche cell",
+        "specification": "1.5 V (fresh)",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_NONUNIFORM",
+        "symptom": "Null point not reproducible along a region",
+        "cause": "Wire cross-section is non-uniform / scraped",
+        "remedy": "Replace or re-tension the wire and repeat"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is a potentiometer called an ideal voltmeter?",
+        "answer": "At balance it draws no current from the cell, so it measures the true emf, unlike a voltmeter."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-03",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Determine the internal resistance of a primary cell using a potentiometer.",
+    "governing_equation_latex": "r = R\\left(\\dfrac{l_1-l_2}{l_2}\\right)",
+    "target_html_file": "labs/class12/physics/potentiometer_internal_r.html",
+    "apparatus": [
+      {
+        "name": "Potentiometer",
+        "specification": "10 m constantan wire, 10 wires",
+        "least_count": "1 cm"
+      },
+      {
+        "name": "Resistance box",
+        "specification": "Plug type, 0.5–15 Ω",
+        "least_count": "0.05 Ω"
+      },
+      {
+        "name": "Galvanometer",
+        "specification": "Center-zero, −30 to +30 µA",
+        "least_count": "1 µA"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_HEATING",
+        "symptom": "Resistance increases during the experiment",
+        "cause": "Continuous current heats the wire",
+        "remedy": "Pass current only momentarily while taking readings"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is internal resistance?",
+        "answer": "It is the resistance offered by the electrolyte and electrodes inside the cell to the flow of current."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-04",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Determine the focal length of a convex lens by plotting graphs between u and v and between 1/u and 1/v.",
+    "governing_equation_latex": "\\dfrac{1}{f}=\\dfrac{1}{v}-\\dfrac{1}{u}",
+    "target_html_file": "labs/class12/physics/convex_lens_uv.html",
+    "apparatus": [
+      {
+        "name": "Optical bench",
+        "specification": "0–150 cm, graduated rail",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Convex lens",
+        "specification": "f ≈ 15 cm",
+        "least_count": "—"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      },
+      {
+        "fault_id": "F_NOT_AXIAL",
+        "symptom": "Fuzzy or doubled image",
+        "cause": "Object, lens and image not on one principal axis",
+        "remedy": "Adjust all uprights to the same height and axis"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is the 1/u–1/v graph a straight line?",
+        "answer": "Because the lens formula is linear in 1/u and 1/v, so the graph is a straight line whose intercepts yield 1/f."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-05",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Determine the focal length of a convex mirror using a convex auxiliary lens.",
+    "governing_equation_latex": "\\dfrac{1}{f}=\\dfrac{1}{v}+\\dfrac{1}{u}",
+    "target_html_file": "labs/class12/physics/convex_mirror_aux.html",
+    "apparatus": [
+      {
+        "name": "Convex mirror",
+        "specification": "f ≈ 15 cm",
+        "least_count": "—"
+      },
+      {
+        "name": "Auxiliary convex lens",
+        "specification": "f ≈ 20 cm",
+        "least_count": "—"
+      },
+      {
+        "name": "Optical bench",
+        "specification": "0–150 cm, graduated rail",
+        "least_count": "0.1 cm"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_NOT_AXIAL",
+        "symptom": "Fuzzy or doubled image",
+        "cause": "Object, lens and image not on one principal axis",
+        "remedy": "Adjust all uprights to the same height and axis"
+      },
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is an auxiliary lens needed for a convex mirror?",
+        "answer": "A convex mirror always forms a virtual image, which cannot be caught on a screen; the auxiliary lens forms a real image that the mirror then acts upon."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-06",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "OPTICS_RAIL",
+    "aim": "Determine the angle of minimum deviation and the refractive index of the material of a prism.",
+    "governing_equation_latex": "n = \\dfrac{\\sin\\left(\\dfrac{A+D_m}{2}\\right)}{\\sin(A/2)}",
+    "target_html_file": "labs/class12/physics/prism_deviation.html",
+    "apparatus": [
+      {
+        "name": "Glass prism",
+        "specification": "Equilateral 60°",
+        "least_count": "0.5°"
+      },
+      {
+        "name": "Optical needles",
+        "specification": "Object and image needles",
+        "least_count": "—"
+      },
+      {
+        "name": "Metre scale",
+        "specification": "Wooden/steel, 0–100 cm",
+        "least_count": "0.1 cm"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      },
+      {
+        "fault_id": "F_INDEX_ERROR",
+        "symptom": "Object distances systematically wrong",
+        "cause": "Upright index not aligned with the scale zero",
+        "remedy": "Determine and apply the index correction"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is the angle of minimum deviation?",
+        "answer": "The smallest angle of deviation as the angle of incidence is varied, occurring when the ray passes symmetrically."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-07",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Draw the V–I characteristics of a P-N junction diode in forward and reverse bias.",
+    "governing_equation_latex": "I = I_0\\left(e^{V/\\eta V_T}-1\\right)",
+    "target_html_file": "labs/class12/physics/pn_diode_characteristics.html",
+    "apparatus": [
+      {
+        "name": "P-N junction diode",
+        "specification": "Silicon, 1N4007",
+        "least_count": "—"
+      },
+      {
+        "name": "Ammeter",
+        "specification": "0–1 A DC",
+        "least_count": "0.05 A"
+      },
+      {
+        "name": "Voltmeter",
+        "specification": "0–5 V DC",
+        "least_count": "0.1 V"
+      },
+      {
+        "name": "Breadboard",
+        "specification": "830 tie-points",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_HEATING",
+        "symptom": "Resistance increases during the experiment",
+        "cause": "Continuous current heats the wire",
+        "remedy": "Pass current only momentarily while taking readings"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why does a diode conduct only in forward bias?",
+        "answer": "In forward bias the depletion region narrows and the barrier potential is overcome; in reverse bias the depletion region widens and current is negligible."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-08",
+    "class_level": 12,
+    "subject": "physics",
+    "archetype": "1D_BRIDGE",
+    "aim": "Study the characteristics of a Zener diode and its use as a voltage regulator / rectifier.",
+    "governing_equation_latex": "V_{out}\\approx V_Z",
+    "target_html_file": "labs/class12/physics/zener_rectifier.html",
+    "apparatus": [
+      {
+        "name": "Zener diode",
+        "specification": "6.8 V",
+        "least_count": "—"
+      },
+      {
+        "name": "Digital multimeter",
+        "specification": "Volt/Ohm/mA",
+        "least_count": "0.01 V"
+      },
+      {
+        "name": "Breadboard",
+        "specification": "830 tie-points",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_LOOSE_CONTACT",
+        "symptom": "Unstable or flickering needle/dull null",
+        "cause": "Loose connections in the circuit",
+        "remedy": "Clean and tighten all terminals and plugs"
+      },
+      {
+        "fault_id": "F_HEATING",
+        "symptom": "Resistance increases during the experiment",
+        "cause": "Continuous current heats the wire",
+        "remedy": "Pass current only momentarily while taking readings"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "How does a Zener diode regulate voltage?",
+        "answer": "Beyond the breakdown voltage the Zener diode maintains a nearly constant voltage despite current changes, regulating the output."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-09",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the molarity and strength of a given KMnO4 solution by titrating it against standard 0.05 M Mohr's salt solution.",
+    "governing_equation_latex": "M_1V_1 = \\dfrac{2}{10}M_2V_2",
+    "target_html_file": "labs/class12/chemistry/titration_mohr_salt.html",
+    "apparatus": [
+      {
+        "name": "Burette",
+        "specification": "50 mL, stopcock",
+        "least_count": "0.05 mL"
+      },
+      {
+        "name": "Pipette",
+        "specification": "20 mL, bulb type",
+        "least_count": "0.1 mL"
+      },
+      {
+        "name": "Conical flask",
+        "specification": "250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Burette stand",
+        "specification": "Iron, with clamp",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_NO_ACID",
+        "symptom": "Brown precipitate instead of a pink end-point",
+        "cause": "Dilute H2SO4 omitted, KMnO4 reduced only to MnO2",
+        "remedy": "Acidify the solution with dilute H2SO4 and repeat"
+      },
+      {
+        "fault_id": "F_OVERTITRATION",
+        "symptom": "Solution turns dark purple",
+        "cause": "Excess titrant added past the end-point",
+        "remedy": "Refill and titrate drop-wise near the end-point"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why does KMnO4 act as a self-indicator?",
+        "answer": "Its own deep purple colour disappears as it is reduced to colourless Mn2+, and the first excess drop gives a permanent pink end-point."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-10",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the molarity and strength of a NaOH solution by titrating against a standard oxalic acid solution.",
+    "governing_equation_latex": "N_1V_1 = N_2V_2",
+    "target_html_file": "labs/class12/chemistry/titration_oxalic_acid.html",
+    "apparatus": [
+      {
+        "name": "Burette",
+        "specification": "50 mL, stopcock",
+        "least_count": "0.05 mL"
+      },
+      {
+        "name": "Pipette",
+        "specification": "20 mL, bulb type",
+        "least_count": "0.1 mL"
+      },
+      {
+        "name": "Conical flask",
+        "specification": "250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INDICATOR",
+        "symptom": "End-point colour faded or overshot",
+        "cause": "Too much/too little indicator",
+        "remedy": "Use the recommended amount of indicator"
+      },
+      {
+        "fault_id": "F_PARALLAX",
+        "symptom": "Reading fluctuates with eye position",
+        "cause": "Line of sight not perpendicular to the scale",
+        "remedy": "Keep the eye level with the meniscus/pointer and repeat the reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is phenolphthalein suitable for this titration?",
+        "answer": "Its colour change (colourless to pink) occurs in the alkaline range, matching the sharp pH change at the equivalence point."
+      },
+      {
+        "question": "Define least count.",
+        "answer": "It is the smallest measurement an instrument can read, equal to one main-scale division divided by the number of vernier/head-scale divisions."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-11",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Identify one cation and one anion in a given unknown inorganic salt by systematic qualitative analysis.",
+    "governing_equation_latex": "\\text{Group separation of basic radicals}",
+    "target_html_file": "labs/class12/chemistry/qualitative_salt_analysis.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Test-tube rack",
+        "specification": "Wooden, 12 holes",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      },
+      {
+        "name": "Bunsen burner",
+        "specification": "LPG, with collar",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_FALSE_PPT",
+        "symptom": "White precipitate even when the radical is absent",
+        "cause": "Test not acidified; carbonate interference",
+        "remedy": "Acidify before adding BaCl2 / AgNO3"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "Why is the solution acidified before the BaCl2 and AgNO3 tests?",
+        "answer": "Acidification removes carbonate interference that would otherwise give a false white precipitate."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-12",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Identify the functional group present in a given organic compound by wet tests.",
+    "governing_equation_latex": "R-CHO + 2Cu^{2+} \\rightarrow R-COOH + Cu_2O",
+    "target_html_file": "labs/class12/chemistry/functional_group_analysis.html",
+    "apparatus": [
+      {
+        "name": "Test tubes",
+        "specification": "Borosilicate, 15 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Droppers",
+        "specification": "Glass, graduated",
+        "least_count": "—"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What does a positive Tollens' test indicate?",
+        "answer": "A silver mirror indicates the presence of an aldehyde group."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-13",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Prepare a sample of acetanilide (or aspirin) from the given starting material.",
+    "governing_equation_latex": "C_6H_5NH_2 + (CH_3CO)_2O \\rightarrow C_6H_5NHCOCH_3",
+    "target_html_file": "labs/class12/chemistry/preparation_aspirin.html",
+    "apparatus": [
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Bunsen burner",
+        "specification": "LPG, with collar",
+        "least_count": "—"
+      },
+      {
+        "name": "Electronic balance",
+        "specification": "0–200 g",
+        "least_count": "0.001 g"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      },
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "What is the role of the catalyst in this preparation?",
+        "answer": "It increases the rate of the reaction without being consumed, allowing the product to form efficiently at a lower temperature."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-14",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "VOLUMETRIC_GLASSWARE",
+    "aim": "Determine the concentration of a coloured species in solution using a colorimeter (Beer–Lambert law).",
+    "governing_equation_latex": "A = \\varepsilon c l",
+    "target_html_file": "labs/class12/chemistry/colorimetry.html",
+    "apparatus": [
+      {
+        "name": "Colorimeter",
+        "specification": "LED light source + filter",
+        "least_count": "0.01 abs"
+      },
+      {
+        "name": "Cuvettes",
+        "specification": "Matched optical glass",
+        "least_count": "—"
+      },
+      {
+        "name": "Volumetric flask",
+        "specification": "100 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_ZERO_ERROR",
+        "symptom": "All readings offset by a fixed amount",
+        "cause": "Instrument has an uncorrected zero error",
+        "remedy": "Determine the zero error and apply the correction to every reading"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "State the Beer–Lambert law.",
+        "answer": "The absorbance of a solution is directly proportional to the concentration of the coloured species and the path length."
+      },
+      {
+        "question": "Why is a graph plotted instead of relying on a single reading?",
+        "answer": "A graph uses many readings, averages out random errors, and lets the slope/intercept be found, improving accuracy."
+      },
+      {
+        "question": "State one important precaution for this experiment.",
+        "answer": "Ensure the apparatus is free from zero/index error and all readings are taken without parallax."
+      }
+    ]
+  },
+  {
+    "experiment_id": "P-C12-15",
+    "class_level": 12,
+    "subject": "chemistry",
+    "archetype": "CHEMICAL_FSM",
+    "aim": "Study the kinetics of the reaction between sodium thiosulphate and hydrochloric acid and determine the order of reaction.",
+    "governing_equation_latex": "\\text{Rate} = k[Na_2S_2O_3]^n",
+    "target_html_file": "labs/class12/chemistry/kinetics.html",
+    "apparatus": [
+      {
+        "name": "Conical flask",
+        "specification": "250 mL",
+        "least_count": "—"
+      },
+      {
+        "name": "Stop-clock",
+        "specification": "Digital",
+        "least_count": "0.01 s"
+      },
+      {
+        "name": "Beakers",
+        "specification": "50/100/250 mL",
+        "least_count": "—"
+      }
+    ],
+    "triage_faults": [
+      {
+        "fault_id": "F_CONTAMINATION",
+        "symptom": "Unexpected colour or smell",
+        "cause": "Dirty apparatus or impure reagent",
+        "remedy": "Wash apparatus and use fresh reagents"
+      },
+      {
+        "fault_id": "F_INCOMPLETE",
+        "symptom": "Weak or partial observation",
+        "cause": "Insufficient reagent or time",
+        "remedy": "Add reagent in excess and allow the reaction to complete"
+      }
+    ],
+    "viva_bank": [
+      {
+        "question": "How is the rate measured in this experiment?",
+        "answer": "The time for the cross (mark) to become invisible is measured; the reciprocal of this time gives the relative rate."
+      },
+      {
+        "question": "State the principle of this experiment.",
+        "answer": "The physical law governing the experiment is applied to the measured quantities to compute the required result."
+      },
+      {
+        "question": "Why are repeated readings taken?",
+        "answer": "Repeated readings reduce the effect of random errors and their mean approaches the true value."
+      }
+    ]
+  }
+]
