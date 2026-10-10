@@ -514,6 +514,7 @@ function osPhotonFlow(c, pts, n, color, size) {
     segs.push(len); total += len;
   }
   if (!total) return;
+  if (!isFinite(size) || !(size > 0)) return; /* OS-DIAG-TRAP: skip non-finite radius */
   c.save();
   /* OS-PERF: photon dots paint with shadowBlur 0 (glow kept only on hero rays). */
   c.fillStyle = color; c.shadowBlur = 0;
@@ -529,6 +530,7 @@ function osPhotonFlow(c, pts, n, color, size) {
       }
       acc += segs[s];
     }
+    if (!isFinite(x) || !isFinite(y)) continue; /* OS-DIAG-TRAP: skip non-finite dot */
     c.beginPath(); c.arc(x, y, size, 0, Math.PI * 2); c.fill();
   }
   c.restore();
@@ -1097,11 +1099,13 @@ function draw() {
   const cyv = activeY(S);
   if (isNum(cyv)) {
     const mx = px(S[xc.id]), my = py(cyv);
+    if (isFinite(mx) && isFinite(my)) { /* OS-DIAG-TRAP: skip non-finite marker */
     ctx.fillStyle = "rgba(232,179,75,.25)"; ctx.beginPath(); ctx.arc(mx, my, 14, 0, Math.PI * 2); ctx.fill();
     ctx.save();
     ctx.shadowColor = "rgba(232,179,75,.8)"; ctx.shadowBlur = window.__osNoGlow ? 0 : 8;
     ctx.fillStyle = "#e8b34b"; ctx.beginPath(); ctx.arc(mx, my, 6, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
+    }
   }
   // labels live in the prerendered static layer (see buildStageStatic).
 
@@ -1273,6 +1277,21 @@ try{if(typeof drawScene==="function"){var a=drawScene;drawScene=wrap(a);}
 if(typeof draw==="function"){var b=draw;draw=wrap(b);}}catch(e){}
 })();
 </script>
+<script>/* OS-DIAG-TRAP (presentation-only diagnostics, removable, no deps). */
+(function(){
+if(window.__osDiagTrap)return;window.__osDiagTrap=true;
+var toasts=0,calls=0,done=0,errs=[];
+function show(m){if(toasts>=3)return;toasts++;m=String(m).slice(0,160);
+try{if(window.OSToast){window.OSToast.show(m,"warn");return;}}catch(e){}
+try{var d=document.createElement("div");d.style.cssText="position:fixed;bottom:12px;right:12px;z-index:9999;background:#3a1d1d;color:#ffd7d7;padding:8px 12px;border-radius:8px;font:12px sans-serif;max-width:60vw";d.textContent=m;document.body.appendChild(d);setTimeout(function(){if(d.remove)d.remove();},4000);}catch(e){}}
+function upd(){try{var el=document.getElementById("engineChip")||document.getElementById("liveChip");if(el)el.title="frames "+done+"/"+calls+(errs.length?" err:"+errs[errs.length-1].slice(0,60):"");}catch(e){}}
+function note(m){errs.push(String(m));if(errs.length>3)errs.shift();show(m);upd();}
+window.addEventListener("error",function(e){note("Error: "+(e.message||"error")+" @"+(e.lineno||"?")+":"+(e.colno||"?"));});
+window.addEventListener("unhandledrejection",function(e){var r=e.reason;note("Rejection: "+((r&&r.message)||r||"error"));});
+window.__osFrameStats=function(){return{calls:calls,ok:done,errors:errs.slice(-3)};};
+function wrapNm(nm){try{var f=window[nm];if(typeof f!=="function"||f.__osDiag)return;var g=function(){calls++;try{var r=f.apply(this,arguments);done++;upd();return r;}catch(e){note("Frame "+nm+": "+(e.message||e));throw e;}};g.__osDiag=true;window[nm]=g;}catch(e){}}
+wrapNm("drawScene");wrapNm("draw");upd(); /* chains over watchdog wrapper when present */
+})();</script>
 <script>window.addEventListener("DOMContentLoaded",function(){try{var el=document.querySelector("[data-os-quiz]");if(el&&window.OSQuiz&&!el.getAttribute("data-os-quiz-done")){var id=(typeof CONFIG!=="undefined"&&CONFIG&&CONFIG.experimentId)?CONFIG.experimentId:"";window.OSQuiz.renderInto(el,id);}}catch(e){}});</script>
 <script>window.addEventListener("DOMContentLoaded",function(){try{if(window.OSProcedure&&window.OSProcedure.initFromBank)window.OSProcedure.initFromBank();}catch(e){}});</script>
 <script>/* OS-REPORT-WIRING: generic printable-report hook (idempotent). */
