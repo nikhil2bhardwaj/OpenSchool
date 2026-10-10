@@ -755,6 +755,12 @@ window.addEventListener("DOMContentLoaded",function(){
       }
     } catch (e) { /* presentation-only: never break the lab */ }
   }
+  function osReadoutTabs() {
+    var ros = document.querySelectorAll(".os-readout .row b, .os-stat b");
+    for (var j = 0; j < ros.length; j++) {
+      if (ros[j].style) { ros[j].style.fontVariantNumeric = "tabular-nums"; }
+    }
+  }
   function osPolishStatic() {
     var cvs = document.querySelectorAll("canvas");
     for (var i = 0; i < cvs.length; i++) {
@@ -788,17 +794,14 @@ window.addEventListener("DOMContentLoaded",function(){
     function tick() {
       bubbleT++;
       frames++;
-      if (frames % 20 === 0) { /* low-frequency accent refresh over a fresh base repaint */
-        try { if (osBaseRepaint()) { osPolishStatic(); } } catch (e) { /* ignore */ }
-      }
       if (frames < 1200) { requestAnimationFrame(tick); }
     }
     requestAnimationFrame(tick);
   }
   function boot() {
-    osPolishStatic();
+    osReadoutTabs();
     try {
-      window.addEventListener("resize", function () { osPolishStatic(); });
+      window.addEventListener("resize", function () { osReadoutTabs(); });
     } catch (e) { /* ignore */ }
     osStartLoop();
   }
