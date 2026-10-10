@@ -315,16 +315,23 @@ const ctx = canvas.getContext("2d");
 var OS_REDUCED = (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) || false;
 var bubbleT = 0; /* deterministic frame counter (NOT Date.now) */
 function osDpr() { return Math.min(2, window.devicePixelRatio || 1); }
-function osFitCanvas(cv) {
-  var dpr = osDpr();
-  var lw = parseInt(cv.getAttribute("width"), 10) || 720;
-  var lh = parseInt(cv.getAttribute("height"), 10) || 440;
-  var bw = Math.round(lw * dpr), bh = Math.round(lh * dpr);
-  if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
-  var c2 = cv.getContext("2d");
-  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
-  return { W: lw, H: lh };
-}
+var osLoopOn = false;
+var osLastDpr = 0;
+function osFitCanvas(cv) {
+  /* DPR-aware fit that only rewrites the backing store when DPR actually
+     changes (zoom/monitor switch). Never mutates per-frame: steady state =
+     zero writes, so the store cannot drift while sliders move. */
+  var dpr = osDpr();
+  var lw = parseInt(cv.getAttribute("width"), 10) || 720;
+  var lh = parseInt(cv.getAttribute("height"), 10) || 440;
+  if (dpr !== osLastDpr) {
+    osLastDpr = dpr;
+    cv.width = Math.round(lw * dpr); cv.height = Math.round(lh * dpr);
+  }
+  var c2 = cv.getContext("2d");
+  c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { W: lw, H: lh };
+}
 function osPhotonFlow(c, pts, n, color, size) {
   if (OS_REDUCED) return; /* reduced-motion: static frame, no travelling dots */
   var segs = [], total = 0, i, k, s;
