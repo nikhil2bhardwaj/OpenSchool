@@ -706,3 +706,265 @@ html { color-scheme: dark; }
   .os-skeleton::after, .os-card::before { display: none; }
   .os-pop, .os-check, .os-check svg circle, .os-check svg path { animation: none !important; }
 }
+
+/* ==========================================================================
+   OS-FLUID-MOTION: ultimate fluid system tokens + utilities for motion.js.
+   Zero CDN. GSAP (vendored) enhances; this CSS is the guaranteed fallback.
+   Motion-spec tables (durations / easings / 1/3-rule) live here AND in
+   assets/js/motion.js so CSS-only pages stay in sync.
+   Durations: micro 120-220ms | enter 250-450ms | exit 150-250ms |
+              stagger 35-70ms | counter ~900ms | toast in 280ms/out 180ms.
+   Easings:   entrances decelerate (--os-ease-enter), exits accelerate
+              (--os-ease-exit), press springs (--os-ease-press). No linear.
+   1/3-rule:  JS caps stagger cascades at ~0.5s; CSS delays use the same
+              --os-stagger step and --i index so both paths match.
+   transform/opacity ONLY. No layout/paint properties are animated.
+   ========================================================================== */
+:root {
+  --os-dur-exit: 180ms;
+  --os-dur-press: 120ms;
+  --os-dur-counter: 900ms;
+  --os-dur-toast-in: 280ms;
+  --os-dur-toast-out: 180ms;
+  --os-ease-press: cubic-bezier(0.34, 1.56, 0.64, 1); /* spring-ish, exits fast */
+  --os-cascade-max: 500ms; /* 1/3 of the 1.5s page-enter budget */
+}
+
+/* Scroll-reveal primitive (JS: OSMotion.reveal). Hidden pre-reveal, shown
+   on .is-in (IO) or .os-enter-done (instant fallback). */
+.os-reveal { opacity: 0; transform: translateY(14px); }
+.os-reveal.is-in, .os-reveal.os-enter-done {
+  opacity: 1; transform: none;
+  transition: opacity var(--os-dur-enter) var(--os-ease-enter),
+    transform var(--os-dur-enter) var(--os-ease-enter);
+  transition-delay: calc(var(--i, 0) * var(--os-stagger));
+}
+
+/* Animated counters: tabular figures so digits never reflow (JS: counters). */
+.os-counter, [data-os-count] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Press physics fallback (JS: press/release animates scale .97 via gsap). */
+.os-btn.is-pressed, .os-tab.is-pressed, .os-filter-pill.is-pressed {
+  transform: translateY(1px) scale(0.97);
+  transition: transform var(--os-dur-press) var(--os-ease-exit);
+}
+
+/* Toasts (JS: OSMotion.toast). Stack is fixed bottom-centre, above grain. */
+.os-toast-stack {
+  position: fixed; left: 50%; bottom: 22px; z-index: 1300;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: 8px; align-items: center;
+  pointer-events: none; max-width: min(420px, 92vw);
+}
+.os-toast {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--os-panel-2); color: var(--os-text);
+  border: 1px solid var(--os-line); border-radius: 10px;
+  padding: 10px 14px; font-size: 13px; font-weight: 600;
+  box-shadow: var(--os-shadow-soft);
+  animation: os-toast-in var(--os-dur-toast-in) var(--os-ease-enter);
+}
+.os-toast-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--os-accent); flex: none; }
+.os-toast-ok .os-toast-dot, .os-toast-success .os-toast-dot { background: var(--os-ok); box-shadow: 0 0 8px rgba(56, 224, 161, .8); }
+.os-toast-error .os-toast-dot, .os-toast-danger .os-toast-dot { background: var(--os-danger); box-shadow: 0 0 8px rgba(255, 93, 108, .8); }
+.os-toast-ok, .os-toast-success { border-color: rgba(56, 224, 161, .5); }
+.os-toast-error, .os-toast-danger { border-color: rgba(255, 93, 108, .5); }
+.os-toast-msg { line-height: 1.4; }
+@keyframes os-toast-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Kill-switch: everything visible, nothing animated. */
+  .os-reveal { opacity: 1; transform: none; }
+  .os-reveal.is-in, .os-reveal.os-enter-done { transition: none; }
+  .os-btn.is-pressed, .os-tab.is-pressed, .os-filter-pill.is-pressed { transform: none; transition: none; }
+  .os-toast { animation: none; }
+}
+
+/* ==========================================================================
+   OS-FLUID-SHELL: ultimate fluid shell pass (CSS-only hooks for motion.js).
+   Zero CDN. All motion is transform/opacity. GSAP enhances; CSS is fallback.
+   Hooks motion.js targets (do not rename):
+     tabs:      .os-tabs[data-os-tablist] > .os-tab-indicator (#tabIndicator)
+                vars --os-tab-left / --os-tab-width, [data-os-indicator-ready]
+     readout:   .os-readout .row b[data-os-rolling] / .os-rolling + .os-roll-in
+     faders:    .os-range-wrap[data-os-fader] > .os-range-bubble[data-os-bubble]
+                + .os-ticks, var --os-fill (0-100%)
+     ledger:    .os-table-wrap.os-obs[data-os-ledger], tr.os-cascade (--i)
+     actionbar: .os-actionbar[data-os-actionbar] + [data-os-proxy]
+     theory:    details.os-disclosure[data-os-disclosure], [data-os-collapsible]
+     toasts:   .os-toasts#osToasts (.os-toast-stack alias), .os-toast(.ok/.warn/.danger)
+     tabs a11y: .os-tabs[data-os-tablist], .os-tab[aria-selected]
+   ========================================================================== */
+
+/* ---- Morphing tab indicator: sliding brass rule following active tab ---- */
+.os-tabs { position: relative; }
+.os-tabs[data-os-tablist] { scroll-margin-top: 70px; }
+.os-tab-indicator {
+  position: absolute; bottom: -1px; left: 0; top: auto;
+  height: 3px; width: 0;
+  left: var(--os-tab-left, 0); width: var(--os-tab-width, 0);
+  background: linear-gradient(90deg, var(--os-accent-deep), var(--os-accent), var(--os-accent-pale));
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 12px var(--os-accent-glow);
+  opacity: 0; pointer-events: none;
+  transition: left var(--os-dur-enter) var(--os-ease-enter),
+    width var(--os-dur-enter) var(--os-ease-enter),
+    opacity var(--os-dur-micro) var(--os-ease-enter);
+}
+.os-tabs[data-os-indicator-ready] .os-tab-indicator { opacity: 1; }
+.os-tabs[data-os-tablist]:focus-within { box-shadow: 0 1px 0 var(--os-accent-soft); }
+.os-tab { position: relative; z-index: 1; }
+.os-tab[aria-selected="true"] { color: var(--os-accent-pale); }
+.os-tab:focus-visible { outline: 3px solid var(--os-accent); outline-offset: -3px; box-shadow: 0 0 0 5px var(--os-accent-soft); }
+
+/* ---- Instrument readout with rolling digits ---- */
+.os-readout.os-instrument .row b,
+.os-readout .row b[data-os-rolling],
+.os-readout .row b.os-rolling {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  min-width: 3.5ch; text-align: right;
+}
+@keyframes os-roll-in {
+  from { opacity: 0; transform: translateY(55%); filter: blur(1px); }
+  to { opacity: 1; transform: translateY(0); filter: none; }
+}
+.os-readout .row b.os-roll-in { animation: os-roll-in var(--os-dur-micro) var(--os-ease-enter); }
+
+/* ---- Fader controls with tick marks + value bubbles ---- */
+.os-range-wrap { position: relative; padding-top: 24px; }
+.os-range-wrap > input[type="range"].os-range { width: 100%; }
+.os-range-bubble {
+  position: absolute; top: 0; left: var(--os-fill, 50%);
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, var(--os-accent-pale), var(--os-accent));
+  color: var(--os-accent-ink);
+  font-family: var(--os-mono); font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 6px; white-space: nowrap; line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4);
+  pointer-events: none;
+  transition: left var(--os-dur-micro) var(--os-ease-enter);
+}
+.os-range-bubble::after {
+  content: ""; position: absolute; left: 50%; bottom: -4px;
+  width: 8px; height: 8px; transform: translateX(-50%) rotate(45deg);
+  background: var(--os-accent); border-radius: 1px;
+}
+.os-ticks {
+  height: 6px; margin-top: 5px; border-radius: 2px; opacity: .65;
+  background: repeating-linear-gradient(90deg, var(--os-line) 0 1px, transparent 1px 10%);
+}
+.os-control-block.os-fader input[type="range"].os-range { --os-fill: 50%; }
+
+/* ---- Observation table as ledger: zebra + sticky head + row cascade ---- */
+.os-table-wrap.os-obs[data-os-ledger] { border-color: var(--os-line); }
+.os-table-wrap.os-obs table.os-table thead th {
+  position: sticky; top: 0; z-index: 2;
+  box-shadow: 0 2px 0 var(--os-accent-deep);
+}
+table.os-table tbody tr:nth-child(even) td { background: rgba(232,179,75,.045); }
+table.os-table tbody tr:hover td { background: rgba(232,179,75,.10); }
+table.os-table tbody tr:last-child td:first-child { box-shadow: inset 2px 0 0 var(--os-accent); }
+@keyframes os-row-cascade {
+  from { opacity: 0; transform: translateY(-7px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+#obsTable tbody tr.os-cascade {
+  animation: os-row-cascade var(--os-dur-enter) var(--os-ease-enter backwards);
+  animation-delay: calc(var(--i, 0) * 40ms);
+}
+
+/* ---- Sticky mobile action bar (Record/Save reachable) ---- */
+.os-actionbar { display: none; }
+@media (max-width: 980px) {
+  .os-actionbar[data-os-actionbar] {
+    display: flex; gap: 8px; align-items: stretch;
+    position: sticky; bottom: 0; z-index: 60;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(12,20,19,.92);
+    border-top: 1px solid var(--os-line);
+    backdrop-filter: blur(10px);
+  }
+  .os-actionbar[data-os-actionbar] .os-btn { flex: 1 1 0; min-height: 44px; }
+}
+
+/* ---- Collapsible theory (progressive disclosure) ---- */
+details.os-disclosure[data-os-disclosure] {
+  border: 1px solid var(--os-line-soft); border-radius: var(--os-radius-sm);
+  background: rgba(11,18,32,.4); margin-top: 10px;
+}
+details.os-disclosure[data-os-disclosure] > summary {
+  cursor: pointer; padding: 10px 12px; font-weight: 700; font-size: 13px;
+  list-style: none; display: flex; gap: 8px; align-items: center; color: var(--os-text);
+}
+details.os-disclosure[data-os-disclosure] > summary::-webkit-details-marker { display: none; }
+details.os-disclosure[data-os-disclosure] > summary::before {
+  content: "+"; flex: none; width: 20px; height: 20px; border-radius: 6px;
+  display: grid; place-items: center;
+  background: var(--os-accent-faint); border: 1px solid var(--os-line); color: var(--os-accent);
+  font-weight: 900; line-height: 1;
+}
+details.os-disclosure[data-os-disclosure][open] > summary::before { content: "\2013"; }
+details.os-disclosure[data-os-disclosure] > summary:focus-visible { outline: 3px solid var(--os-accent); outline-offset: 2px; }
+.os-disclosure-body { padding: 0 12px 12px; }
+[data-os-collapsible] { scroll-margin-top: 70px; }
+.os-collapsible { display: grid; grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows var(--os-dur-enter) var(--os-ease-enter), opacity var(--os-dur-micro) var(--os-ease-enter); }
+.os-collapsible > .os-collapsible-inner { overflow: hidden; min-height: 0; }
+.os-collapsible.is-collapsed { grid-template-rows: 0fr; opacity: 0; }
+
+/* ---- Toast system: bottom-right stack replacing window.alert ---- */
+.os-toasts {
+  position: fixed; right: 16px; bottom: 16px; z-index: 1300;
+  display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+  max-width: min(360px, calc(100vw - 32px));
+}
+.os-toasts .os-toast, .os-toast-stack .os-toast { pointer-events: auto; max-width: 100%; }
+.os-toast { border-left: 4px solid var(--os-accent); text-align: left; }
+.os-toast.ok, .os-toast-success { border-left-color: var(--os-ok); }
+.os-toast.warn { border-color: rgba(255,204,85,.5); border-left-color: var(--os-warn); }
+.os-toast.danger, .os-toast-error { border-left-color: var(--os-danger); }
+.os-toast-close {
+  appearance: none; background: transparent; border: 1px solid var(--os-line);
+  color: var(--os-text-muted); border-radius: 6px; cursor: pointer;
+  font-size: 12px; line-height: 1; padding: 3px 7px; flex: none; font-family: inherit;
+}
+.os-toast-close:hover { color: var(--os-text); border-color: var(--os-accent); }
+.os-toast.is-leaving { opacity: 0; transform: translateY(6px) scale(.98); transition: opacity var(--os-dur-toast-out) var(--os-ease-exit), transform var(--os-dur-toast-out) var(--os-ease-exit); }
+@media (max-width: 980px) {
+  .os-toasts { left: 16px; right: 16px; bottom: calc(72px + env(safe-area-inset-bottom)); align-items: stretch; }
+}
+
+/* ---- Print stylesheet keeps reports clean ---- */
+@media print {
+  .os-topbar, .os-actionbar, .os-toasts, .os-toast-stack, .os-btn,
+  .os-tabs, .os-filters, .no-print,
+  [data-os-tts-btn], [data-os-bookmark-btn], [data-os-lang-toggle],
+  .os-range-wrap .os-range-bubble, .os-ticks { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  body::after { display: none !important; }
+  .os-app { display: block; }
+  .os-wrap { padding: 0; max-width: none; }
+  .os-lab-grid { display: block; }
+  .os-panel { border: 1px solid #999; box-shadow: none; break-inside: avoid; margin-bottom: 12px; }
+  .os-tabpanel { display: block !important; border-top: 1px solid #ccc; padding: 10px 0; }
+  .os-table-wrap { overflow: visible; max-height: none; }
+  table.os-table { background: #fff; color: #000; }
+  table.os-table th, table.os-table td { border-color: #666; }
+  .os-stage { break-inside: avoid; }
+  .os-stage canvas, canvas { max-width: 100%; }
+  a { color: #000; text-decoration: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .os-tab-indicator, .os-range-bubble { transition: none; }
+  .os-readout .row b.os-roll-in, #obsTable tbody tr.os-cascade,
+  .os-toast, .os-toast.is-leaving { animation: none !important; }
+  .os-collapsible { transition: none; }
+}

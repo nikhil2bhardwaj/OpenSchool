@@ -65,26 +65,36 @@
       </section>
     </div>
 
-    <section class="os-panel" style="margin-top:18px">
-      <div class="os-tabs os-tabs-anim" role="tablist" aria-label="Lab information tabs" id="tabs">
-        <button class="os-tab active" data-tab="theory" role="tab" aria-selected="true" data-i18n="tabs.theory">Theory &amp; Principle</button>
-        <button class="os-tab" data-tab="errors" role="tab" aria-selected="false" data-i18n="tabs.errors">Precautions &amp; Errors</button>
-        <button class="os-tab" data-tab="viva" role="tab" aria-selected="false" data-i18n="tabs.viva">Viva-Voce Arena</button>
-        <button class="os-tab" data-tab="procedure" role="tab" aria-selected="false" data-i18n="tabs.procedure">Procedure</button>
-        <button class="os-tab" data-tab="quiz" role="tab" aria-selected="false" data-i18n="tabs.quiz">Quiz</button>
+    
+    <!-- OS-ACTIONBAR: sticky mobile quick actions (proxies, no duplicate ids) -->
+    <div class="os-actionbar" data-os-actionbar role="toolbar" aria-label="Quick actions">
+      <button class="os-btn primary" type="button" data-os-proxy="btnRecord">Record Reading</button>
+      <button class="os-btn success" type="button" data-os-proxy="btnSave">Save to Notebook</button>
+      <button class="os-btn" type="button" data-os-proxy="btnReport">Print Report</button>
+    </div>
+
+<section class="os-panel" style="margin-top:18px">
+      <div class="os-tabs os-tabs-anim" role="tablist" aria-label="Lab information tabs" id="tabs" data-os-tablist>
+        <button class="os-tab active" data-tab="theory" role="tab" aria-selected="true" data-i18n="tabs.theory" tabindex="0" aria-controls="panel-theory" id="tab-theory">Theory &amp; Principle</button>
+        <button class="os-tab" data-tab="errors" role="tab" aria-selected="false" data-i18n="tabs.errors" tabindex="-1" aria-controls="panel-errors" id="tab-errors">Precautions &amp; Errors</button>
+        <button class="os-tab" data-tab="viva" role="tab" aria-selected="false" data-i18n="tabs.viva" tabindex="-1" aria-controls="panel-viva" id="tab-viva">Viva-Voce Arena</button>
+        <button class="os-tab" data-tab="procedure" role="tab" aria-selected="false" data-i18n="tabs.procedure" aria-controls="panel-procedure" id="tab-procedure" tabindex="-1">Procedure</button>
+        <button class="os-tab" data-tab="quiz" role="tab" aria-selected="false" data-i18n="tabs.quiz" aria-controls="panel-quiz" id="tab-quiz" tabindex="-1">Quiz</button>
+      
+        <span class="os-tab-indicator" id="tabIndicator" aria-hidden="true"></span>
       </div>
-      <div role="tabpanel" tabindex="0" class="os-tabpanel active" data-panel="theory">
+      <div role="tabpanel" tabindex="0" class="os-tabpanel active" data-panel="theory" data-os-collapsible id="panel-theory" aria-labelledby="tab-theory">
         <h3>Theory</h3>
         <button class="os-btn sm ghost" type="button" data-os-tts-btn data-os-tts-label="Theory">🔊 Read aloud</button>
         <p class="os-muted">Carry out the reaction of acids with metals and with metal carbonates and identify the gases evolved.</p>
         <div class="os-eq">Zn + 2HCl \rightarrow ZnCl_2 + H_2\uparrow</div>
       </div>
-      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="errors">
+      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="errors" id="panel-errors" aria-labelledby="tab-errors">
         <h3>Precautions &amp; Standard Errors</h3>
         <ul class="os-muted"><li>Read all scales with the eye perpendicular to the scale to avoid parallax error.</li><li>Check the apparatus for zero error before starting and apply a correction if present.</li><li>Take at least five readings spread across the range and use their mean.</li><li>Keep the apparatus clean, dry and free from contamination between observations.</li><li>Note the least count of every instrument and record readings to the correct number of decimals.</li></ul>
         <div class="os-callout warn"><h4>Troubleshooting</h4><ul><li><b>F_INCOMPLETE:</b> Weak or partial observation — <i>Insufficient reagent or time</i>. Remedy: Add reagent in excess and allow the reaction to complete.</li><li><b>F_CONTAMINATION:</b> Unexpected colour or smell — <i>Dirty apparatus or impure reagent</i>. Remedy: Wash apparatus and use fresh reagents.</li></ul></div>
       </div>
-      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="viva">
+      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="viva" id="panel-viva" aria-labelledby="tab-viva">
         <div class="os-row between">
           <h3 style="margin:0">Viva-Voce Arena</h3>
           <div class="os-row">
@@ -110,11 +120,11 @@
         </div>
       </div>
 
-      <div class="os-tabpanel" data-panel="procedure" role="tabpanel" tabindex="0" aria-label="Procedure">
+      <div class="os-tabpanel" data-panel="procedure" role="tabpanel" tabindex="0" aria-label="Procedure" id="panel-procedure" aria-labelledby="tab-procedure">
         <h3>Procedure</h3>
         <div data-os-procedure></div>
       </div>
-      <div class="os-tabpanel" data-panel="quiz" role="tabpanel" tabindex="0" aria-label="Quiz">
+      <div class="os-tabpanel" data-panel="quiz" role="tabpanel" tabindex="0" aria-label="Quiz" id="panel-quiz" aria-labelledby="tab-quiz">
         <h3>Quiz</h3>
         <button class="os-btn sm ghost" type="button" data-os-bookmark-btn aria-pressed="false">☆ Bookmark</button>
         <div data-os-quiz></div>
@@ -388,5 +398,57 @@ window.addEventListener("DOMContentLoaded",function(){
 });</script>
 <script>/* OS-I18N-CHROME: re-render dynamic chrome on language toggle (guarded, idempotent). */
 (function(){function rr(){try{if(typeof renderHead==="function"&&document.getElementById("obsHead"))renderHead();}catch(e){}try{if(typeof renderTable==="function"&&document.getElementById("obsTable"))renderTable();}catch(e){}try{if(typeof recompute==="function")recompute();}catch(e){}}if(window.__osI18nChromeWired)return;window.__osI18nChromeWired=true;document.addEventListener("os-lang-change",rr);})();</script>
+
+<!-- OS-FLUID-SHELL hooks: toast stack + alert routing + proxy/fader/indicator targets.
+     CSS lives in lab-theme.css; motion.js sibling drives animation. Idempotent. -->
+<div class="os-toasts os-toast-stack" id="osToasts" role="status" aria-live="polite" aria-atomic="false"></div>
+<script>/* OS-TOAST: toast system replacing window.alert (guarded, idempotent). */
+(function(){
+  if(window.OSToast&&window.OSToast.__osFluid)return;
+  function host(){
+    var h=document.getElementById("osToasts");
+    if(h)return h;
+    h=document.createElement("div");
+    h.className="os-toasts os-toast-stack";h.id="osToasts";
+    h.setAttribute("role","status");h.setAttribute("aria-live","polite");h.setAttribute("aria-atomic","false");
+    document.body.appendChild(h);return h;
+  }
+  function show(msg,type){
+    try{
+      var h=host();
+      var t=document.createElement("div");
+      var kind=(type==="ok"||type==="success")?"ok":(type==="danger"||type==="error")?"danger":(type==="warn"?"warn":"");
+      t.className=("os-toast "+kind).trim();
+      var dot=document.createElement("span");dot.className="os-toast-dot";dot.setAttribute("aria-hidden","true");
+      var m=document.createElement("span");m.className="os-toast-msg";m.textContent=String(msg==null?"":msg);
+      var x=document.createElement("button");x.className="os-toast-close";x.type="button";x.textContent="×";x.setAttribute("aria-label","Dismiss");
+      x.addEventListener("click",function(){dismiss(t);});
+      t.appendChild(dot);t.appendChild(m);t.appendChild(x);
+      h.appendChild(t);
+      while(h.children.length>4)h.removeChild(h.firstChild);
+      setTimeout(function(){dismiss(t);},4200);
+      return t;
+    }catch(e){try{window.__osNativeAlert(String(msg));}catch(_){}return null;}
+  }
+  function dismiss(t){
+    if(!t||!t.parentNode||t.classList.contains("is-leaving"))return;
+    try{
+      t.classList.add("is-leaving");
+      setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},200);
+    }catch(e){if(t.parentNode)t.parentNode.removeChild(t);}
+  }
+  window.OSToast={show:show,dismiss:dismiss,__osFluid:true};
+  if(!window.__osNativeAlert){
+    try{window.__osNativeAlert=window.alert;}catch(e){}
+    try{window.alert=function(m){return show(m,"warn");};}catch(e){}
+  }
+  /* Sticky action-bar proxies: [data-os-proxy] clicks forward to #id buttons. */
+  document.addEventListener("click",function(ev){
+    var p=ev.target&&ev.target.closest?ev.target.closest("[data-os-proxy]"):null;
+    if(!p)return;
+    var target=document.getElementById(p.getAttribute("data-os-proxy"));
+    if(target&&target!==p&&typeof target.click==="function"){ev.preventDefault();target.click();}
+  });
+})();</script>
 </body>
 </html>

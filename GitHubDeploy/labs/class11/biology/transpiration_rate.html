@@ -38,8 +38,8 @@
           <div class="os-stage os-spotlight">
             <canvas role="img" aria-label="Interactive experiment simulation canvas. Use the on-page controls to change the plotted scene." id="stage" width="720" height="440"></canvas>
             <div class="os-readout os-instrument" id="readout">
-              <div class="row"><span>Water uptake (mm/min)</span><b id="roX">0.00</b></div>
-              <div class="row"><span>Bubble speed (px/frame)</span><b id="roY">0.00</b></div>
+              <div class="row"><span>Water uptake (mm/min)</span><b id="roX" data-os-rolling class="os-rolling">0.00</b></div>
+              <div class="row"><span>Bubble speed (px/frame)</span><b id="roY" data-os-rolling class="os-rolling">0.00</b></div>
             </div>
           </div>
 
@@ -47,11 +47,11 @@
             <div class="os-control-title">Light intensity &amp; wind speed</div>
             <div class="os-field">
               <label for="lightRange">Light intensity — <span class="os-mono" id="lightVal">50</span> %</label>
-              <input type="range" class="os-range" id="lightRange" min="0" max="100" step="1" value="50" />
+              <div class="os-range-wrap" data-os-fader><span class="os-range-bubble" data-os-bubble aria-hidden="true"></span><input type="range" class="os-range" id="lightRange" min="0" max="100" step="1" value="50" /><span class="os-ticks" aria-hidden="true"></span></div>
             </div>
             <div class="os-field">
               <label for="windRange">Wind speed — <span class="os-mono" id="windVal">1.0</span> m/s</label>
-              <input type="range" class="os-range" id="windRange" min="0" max="5" step="0.1" value="1" />
+              <div class="os-range-wrap" data-os-fader><span class="os-range-bubble" data-os-bubble aria-hidden="true"></span><input type="range" class="os-range" id="windRange" min="0" max="5" step="0.1" value="1" /><span class="os-ticks" aria-hidden="true"></span></div>
             </div>
             <div class="os-row">
               <label class="os-toggle"><input type="checkbox" id="faultToggle" /> Inject experimental fault (air leak)</label>
@@ -78,7 +78,7 @@
           <span class="os-chip" id="trialCount">0 trials</span>
         </header>
         <div class="os-body os-controls">
-          <div class="os-table-wrap os-obs">
+          <div class="os-table-wrap os-obs" data-os-ledger>
             <table class="os-table" id="obsTable">
               <thead>
                 <tr><th>#</th><th>Light %</th><th>Wind m/s</th><th>Uptake mm/min</th><th></th></tr>
@@ -104,17 +104,27 @@
       </section>
     </div>
 
-    <!-- ============================ BOTTOM TABS ============================ -->
+    
+    <!-- OS-ACTIONBAR: sticky mobile quick actions (proxies, no duplicate ids) -->
+    <div class="os-actionbar" data-os-actionbar role="toolbar" aria-label="Quick actions">
+      <button class="os-btn primary" type="button" data-os-proxy="btnRecord">Record Reading</button>
+      <button class="os-btn success" type="button" data-os-proxy="btnSave">Save to Notebook</button>
+      <button class="os-btn" type="button" data-os-proxy="btnReport">Print Report</button>
+    </div>
+
+<!-- ============================ BOTTOM TABS ============================ -->
     <section class="os-panel" style="margin-top:18px">
-      <div class="os-tabs os-tabs-anim" role="tablist" aria-label="Lab information tabs" id="tabs">
-        <button class="os-tab active" data-tab="theory" role="tab" aria-selected="true" data-i18n="tabs.theory">Theory &amp; Diagram</button>
-        <button class="os-tab" data-tab="errors" role="tab" aria-selected="false" data-i18n="tabs.errors">Precautions &amp; Errors</button>
-        <button class="os-tab" data-tab="viva" role="tab" aria-selected="false" data-i18n="tabs.viva">Viva-Voce Arena</button>
-        <button class="os-tab" data-tab="procedure" role="tab" aria-selected="false" data-i18n="tabs.procedure">Procedure</button>
-        <button class="os-tab" data-tab="quiz" role="tab" aria-selected="false" data-i18n="tabs.quiz">Quiz</button>
+      <div class="os-tabs os-tabs-anim" role="tablist" aria-label="Lab information tabs" id="tabs" data-os-tablist>
+        <button class="os-tab active" data-tab="theory" role="tab" aria-selected="true" data-i18n="tabs.theory" tabindex="0" aria-controls="panel-theory" id="tab-theory">Theory &amp; Diagram</button>
+        <button class="os-tab" data-tab="errors" role="tab" aria-selected="false" data-i18n="tabs.errors" tabindex="-1" aria-controls="panel-errors" id="tab-errors">Precautions &amp; Errors</button>
+        <button class="os-tab" data-tab="viva" role="tab" aria-selected="false" data-i18n="tabs.viva" tabindex="-1" aria-controls="panel-viva" id="tab-viva">Viva-Voce Arena</button>
+        <button class="os-tab" data-tab="procedure" role="tab" aria-selected="false" data-i18n="tabs.procedure" aria-controls="panel-procedure" id="tab-procedure" tabindex="-1">Procedure</button>
+        <button class="os-tab" data-tab="quiz" role="tab" aria-selected="false" data-i18n="tabs.quiz" aria-controls="panel-quiz" id="tab-quiz" tabindex="-1">Quiz</button>
+      
+        <span class="os-tab-indicator" id="tabIndicator" aria-hidden="true"></span>
       </div>
 
-      <div role="tabpanel" tabindex="0" class="os-tabpanel active" data-panel="theory">
+      <div role="tabpanel" tabindex="0" class="os-tabpanel active" data-panel="theory" data-os-collapsible id="panel-theory" aria-labelledby="tab-theory">
         <h3>Theory</h3>
         <button class="os-btn sm ghost" type="button" data-os-tts-btn data-os-tts-label="Theory">🔊 Read aloud</button>
         <p class="os-muted">A Ganong potometer measures water uptake by a leafy shoot, approximately equal to the
@@ -124,7 +134,7 @@
         <p class="os-muted">L = light %, W = wind m/s. Rate = distance travelled by bubble / time.</p>
       </div>
 
-      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="errors">
+      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="errors" id="panel-errors" aria-labelledby="tab-errors">
         <h3>Precautions &amp; Standard Errors</h3>
         <ul class="os-muted">
           <li>Cut the shoot under water and keep all joints airtight with grease.</li>
@@ -135,7 +145,7 @@
         <div class="os-callout warn" id="triageBox"><h4>Triage</h4><span>Toggle “Inject experimental fault” to simulate an air leak: uptake falls 30% and the bubble jitters.</span></div>
       </div>
 
-      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="viva">
+      <div role="tabpanel" tabindex="0" class="os-tabpanel" data-panel="viva" id="panel-viva" aria-labelledby="tab-viva">
         <div class="os-row between">
           <h3 style="margin:0">Viva-Voce Arena</h3>
           <div class="os-row">
@@ -176,11 +186,11 @@
         </div>
       </div>
 
-      <div class="os-tabpanel" data-panel="procedure" role="tabpanel" tabindex="0" aria-label="Procedure">
+      <div class="os-tabpanel" data-panel="procedure" role="tabpanel" tabindex="0" aria-label="Procedure" id="panel-procedure" aria-labelledby="tab-procedure">
         <h3>Procedure</h3>
         <div data-os-procedure></div>
       </div>
-      <div class="os-tabpanel" data-panel="quiz" role="tabpanel" tabindex="0" aria-label="Quiz">
+      <div class="os-tabpanel" data-panel="quiz" role="tabpanel" tabindex="0" aria-label="Quiz" id="panel-quiz" aria-labelledby="tab-quiz">
         <h3>Quiz</h3>
         <button class="os-btn sm ghost" type="button" data-os-bookmark-btn aria-pressed="false">☆ Bookmark</button>
         <div data-os-quiz></div>
@@ -598,5 +608,57 @@ window.addEventListener("DOMContentLoaded",function(){
 });</script>
 <script>/* OS-I18N-CHROME: re-render dynamic chrome on language toggle (guarded, idempotent). */
 (function(){function rr(){try{if(typeof renderHead==="function"&&document.getElementById("obsHead"))renderHead();}catch(e){}try{if(typeof renderTable==="function"&&document.getElementById("obsTable"))renderTable();}catch(e){}try{if(typeof recompute==="function")recompute();}catch(e){}}if(window.__osI18nChromeWired)return;window.__osI18nChromeWired=true;document.addEventListener("os-lang-change",rr);})();</script>
+
+<!-- OS-FLUID-SHELL hooks: toast stack + alert routing + proxy/fader/indicator targets.
+     CSS lives in lab-theme.css; motion.js sibling drives animation. Idempotent. -->
+<div class="os-toasts os-toast-stack" id="osToasts" role="status" aria-live="polite" aria-atomic="false"></div>
+<script>/* OS-TOAST: toast system replacing window.alert (guarded, idempotent). */
+(function(){
+  if(window.OSToast&&window.OSToast.__osFluid)return;
+  function host(){
+    var h=document.getElementById("osToasts");
+    if(h)return h;
+    h=document.createElement("div");
+    h.className="os-toasts os-toast-stack";h.id="osToasts";
+    h.setAttribute("role","status");h.setAttribute("aria-live","polite");h.setAttribute("aria-atomic","false");
+    document.body.appendChild(h);return h;
+  }
+  function show(msg,type){
+    try{
+      var h=host();
+      var t=document.createElement("div");
+      var kind=(type==="ok"||type==="success")?"ok":(type==="danger"||type==="error")?"danger":(type==="warn"?"warn":"");
+      t.className=("os-toast "+kind).trim();
+      var dot=document.createElement("span");dot.className="os-toast-dot";dot.setAttribute("aria-hidden","true");
+      var m=document.createElement("span");m.className="os-toast-msg";m.textContent=String(msg==null?"":msg);
+      var x=document.createElement("button");x.className="os-toast-close";x.type="button";x.textContent="×";x.setAttribute("aria-label","Dismiss");
+      x.addEventListener("click",function(){dismiss(t);});
+      t.appendChild(dot);t.appendChild(m);t.appendChild(x);
+      h.appendChild(t);
+      while(h.children.length>4)h.removeChild(h.firstChild);
+      setTimeout(function(){dismiss(t);},4200);
+      return t;
+    }catch(e){try{window.__osNativeAlert(String(msg));}catch(_){}return null;}
+  }
+  function dismiss(t){
+    if(!t||!t.parentNode||t.classList.contains("is-leaving"))return;
+    try{
+      t.classList.add("is-leaving");
+      setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},200);
+    }catch(e){if(t.parentNode)t.parentNode.removeChild(t);}
+  }
+  window.OSToast={show:show,dismiss:dismiss,__osFluid:true};
+  if(!window.__osNativeAlert){
+    try{window.__osNativeAlert=window.alert;}catch(e){}
+    try{window.alert=function(m){return show(m,"warn");};}catch(e){}
+  }
+  /* Sticky action-bar proxies: [data-os-proxy] clicks forward to #id buttons. */
+  document.addEventListener("click",function(ev){
+    var p=ev.target&&ev.target.closest?ev.target.closest("[data-os-proxy]"):null;
+    if(!p)return;
+    var target=document.getElementById(p.getAttribute("data-os-proxy"));
+    if(target&&target!==p&&typeof target.click==="function"){ev.preventDefault();target.click();}
+  });
+})();</script>
 </body>
 </html>
