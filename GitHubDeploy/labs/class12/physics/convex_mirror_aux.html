@@ -446,8 +446,18 @@ const SCENES = {
     hi.addColorStop(0, "rgba(255,255,255,.55)"); hi.addColorStop(1, "rgba(255,255,255,0)");
     c.fillStyle = hi; c.fillRect(40, ay + 4, W - 80, 3);
     c.restore();
-    /* schematic scale: object upright at x=120 marks S.u, so px/cm is known */
-    const pxPerCm = (isFinite(S.u) && S.u > 0) ? ((W / 2 - 120) / S.u) : 2;
+    /* fixed schematic scale from control domain (never from live S.u) */
+    const __xc = (typeof SPEC !== "undefined" && SPEC.controls) ? SPEC.controls.filter(function (cc) { return cc.id === SPEC.xControl; })[0] : null;
+    let __xMax = (__xc && isFinite(__xc.max)) ? __xc.max : NaN;
+    if (!isFinite(__xMax)) {
+      if (typeof SPEC !== "undefined" && SPEC.controls) SPEC.controls.forEach(function (cc) { if (isFinite(cc.max) && (!isFinite(__xMax) || cc.max > __xMax)) __xMax = cc.max; });
+      if (!isFinite(__xMax)) { for (const __k in S) { if (isFinite(S[__k]) && (!isFinite(__xMax) || S[__k] > __xMax)) __xMax = S[__k]; } }
+      if (!isFinite(__xMax) || __xMax <= 0) __xMax = 80;
+    }
+    const pxPerCm = (W / 2 - 120) / __xMax;
+    /* moving object: at u=xMax it sits at 120 exactly as before; toward mirror as u decreases */
+    let objectX = 120 + (__xMax - (isFinite(S.u) ? S.u : __xMax)) * pxPerCm;
+    objectX = Math.max(100, Math.min(W / 2 - 30, objectX)); /* W/2-30 === cx-30, cx defined below */
     c.save(); c.textAlign = "center";
     for (let cm = 0; cm * pxPerCm <= W - 80; cm += 2) {
       const major = cm % 10 === 0;
@@ -532,28 +542,28 @@ const SCENES = {
       apText(c, sc.element === "convex_mirror" ? "convex mirror" : "concave mirror", cx, ay + 84, "#8fd0ff", "12px Segoe UI", "center");
     }
     /* rider shadows + stands */
-    osRiderShadow(c, 120, ay + 24, 24); osRiderShadow(c, cx, ay + 24, 26);
-    c.fillStyle = "#7a5228"; c.fillRect(108, ay + 4, 24, 9);
-    c.fillStyle = "#2a1608"; c.fillRect(106, ay + 13, 28, 5);
+    osRiderShadow(c, objectX, ay + 24, 24); osRiderShadow(c, cx, ay + 24, 26);
+    c.fillStyle = "#7a5228"; c.fillRect(objectX - 12, ay + 4, 24, 9);
+    c.fillStyle = "#2a1608"; c.fillRect(objectX - 14, ay + 13, 28, 5);
     c.fillStyle = "#7a5228"; c.fillRect(cx - 12, ay + 4, 24, 9);
     c.fillStyle = "#1a2740"; c.fillRect(cx - 14, ay + 13, 28, 5);
     /* object arrow with glow (same geometry as before) */
     c.save();
     c.strokeStyle = "#ff8a8a"; c.lineWidth = 2.5;
     c.shadowColor = "rgba(255,138,138,.7)"; c.shadowBlur = 6;
-    c.beginPath(); c.moveTo(120, ay); c.lineTo(120, ay - 42); c.stroke();
+    c.beginPath(); c.moveTo(objectX, ay); c.lineTo(objectX, ay - 42); c.stroke();
     c.restore();
-    c.fillStyle = "#ff8a8a"; c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(114, ay - 30); c.lineTo(126, ay - 30); c.closePath(); c.fill();
-    apText(c, "object  u = " + (S.u != null ? S.u : "—") + " cm", 120, ay + 20, "#ff8a8a", "11px Segoe UI", "center");
+    c.fillStyle = "#ff8a8a"; c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(objectX - 6, ay - 30); c.lineTo(objectX + 6, ay - 30); c.closePath(); c.fill();
+    apText(c, "object  u = " + (S.u != null ? S.u : "—") + " cm", objectX, ay + 20, "#ff8a8a", "11px Segoe UI", "center");
     /* rays with glow + deterministic photon flow */
     c.save();
     c.strokeStyle = "rgba(232,179,75,.9)"; c.lineWidth = 1.6;
     c.shadowColor = "rgba(232,179,75,.55)"; c.shadowBlur = 5;
-    c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(cx, ay); c.lineTo(W - 60, ay + 34); c.stroke();
-    c.beginPath(); c.moveTo(120, ay - 42); c.lineTo(W - 60, ay + 34); c.stroke();
+    c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(cx, ay); c.lineTo(W - 60, ay + 34); c.stroke();
+    c.beginPath(); c.moveTo(objectX, ay - 42); c.lineTo(W - 60, ay + 34); c.stroke();
     c.restore();
-    osPhotonFlow(c, [[120, ay - 42], [cx, ay], [W - 60, ay + 34]], 6, "rgba(255,220,150,.95)", 2.2);
-    osPhotonFlow(c, [[120, ay - 42], [W - 60, ay + 34]], 4, "rgba(180,220,255,.9)", 2.0);
+    osPhotonFlow(c, [[objectX, ay - 42], [cx, ay], [W - 60, ay + 34]], 6, "rgba(255,220,150,.95)", 2.2);
+    osPhotonFlow(c, [[objectX, ay - 42], [W - 60, ay + 34]], 4, "rgba(180,220,255,.9)", 2.0);
     /* focal markers on the schematic scale (lens / mirrors with known f) */
     if ((sc.element === "lens" || sc.element === "concave_mirror" || sc.element === "convex_mirror") && isFinite(S.f) && S.f > 0) {
       const fx = pxPerCm * S.f;
