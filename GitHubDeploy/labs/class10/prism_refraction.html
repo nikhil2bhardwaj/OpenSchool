@@ -459,7 +459,7 @@ const SCENES = {
     let objectX = 120 + (__xMax - (isFinite(S.u) ? S.u : __xMax)) * pxPerCm;
     objectX = Math.max(100, Math.min(W / 2 - 30, objectX)); /* W/2-30 === cx-30, cx defined below */
     c.save(); c.textAlign = "center";
-    for (let cm = 0; cm * pxPerCm <= W - 80; cm += 2) {
+    for (let cm = 0; cm * pxPerCm <= W - 80 && cm <= __xMax; cm += 2) {
       const major = cm % 10 === 0;
       const tx = 120 + cm * pxPerCm;
       if (tx > W - 40) break;
