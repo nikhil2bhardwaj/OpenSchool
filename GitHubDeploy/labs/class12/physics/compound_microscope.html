@@ -425,13 +425,12 @@ function draw() {
   ctx.beginPath(); ctx.moveTo(20, axisY); ctx.lineTo(w - 20, axisY); ctx.stroke();
   ctx.setLineDash([]);
 
-  // geometry: object left, objective lens, intermediate image, eyepiece, final image right
+  // geometry: FIXED layout — x-positions and base heights never move with sliders.
+  // Only a mild ±20% bounded accent (monotonic tanh, no min()/max() clamps).
   const xObj = 70, xO = 220, xI = 430, xE = 530, xF = 660;
-  // arrow heights scaled deterministically from magnifications, clamped for display
   const hObj = 34;
-  let hI = Math.min(150, Math.abs(Mo) * hObj * 0.55 + 20);
-  let hF = Math.min(170, Math.abs(M) * 2.2 + 30);
-  if (hF < hI + 24) hF = Math.min(170, hI + 40);
+  const hI = 110 * (1 + 0.2 * Math.tanh((Math.abs(Mo) - 8) / 8));
+  const hF = 140 * (1 + 0.2 * Math.tanh((Math.abs(M) - 40) / 40));
 
   arrow(xObj, axisY, hObj, "#e8b34b", "Object");
   lens(xO, axisY - 130, axisY + 130, "Objective");
