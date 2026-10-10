@@ -224,7 +224,7 @@ const SPEC = {"controls":[{"id":"u","label":"Object distance u","min":20,"max":1
 const S = {};
 SPEC.controls.forEach(function (c) { S[c.id] = c.value; });
 let faultOn = false;
-let bubbleT = 0;
+let bubbleT = 0; /* OS-STATIC-PHOTONS: paint index, +1 per repaint (no time, no rAF loop) */
 
 function yFunc(expr, st) { return new Function("s", "return (" + expr + ")").call(null, st); }
 function clone(o) { const r = {}; for (const k in o) r[k] = o[k]; return r; }
@@ -1001,8 +1001,9 @@ const SCENES = {
 };
 
 function drawScene() {
-  /* OS-PERF: reduced-motion freeze — no time advance, static photons/markers. */
-  if (!OS_REDUCED) bubbleT += 0.016;
+  /* OS-STATIC-PHOTONS: event-driven only (initial paint + osRequestDraw repaints).
+     No rAF loop. bubbleT is a paint counter, fixed within a paint. */
+  if (!OS_REDUCED) bubbleT += 1;
   const fitA = osFitCanvas(appCanvas);
   const W = fitA.W, H = fitA.H;
   const sc = SPEC.scene || { name: "generic" };
