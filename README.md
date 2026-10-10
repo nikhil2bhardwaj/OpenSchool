@@ -5,7 +5,7 @@ Class 9–12 practical curriculum. **78 experiments** (Physics, Chemistry, Biolo
 that run entirely in the browser — no build step, no bundler, no server, no
 internet. Copy it to a USB stick and it works.
 
-Live mirror: `https://nikhil2bhardwaj.github.io/OpenSchool/`
+Live mirror: https://nikhil2bhardwaj.github.io/OpenSchool/
 Online (CDN) sibling: `https://github.com/nikhil2bhardwaj/OpenSchool-online`
 
 ## What it is
