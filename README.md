@@ -6,7 +6,7 @@ that run entirely in the browser — no build step, no bundler, no server, no
 internet. Copy it to a USB stick and it works.
 
 Live mirror: https://nikhil2bhardwaj.github.io/OpenSchool/
-Online (CDN) sibling: `https://github.com/nikhil2bhardwaj/OpenSchool-online`
+Online (CDN) sibling: https://github.com/nikhil2bhardwaj/OpenSchool-online
 
 ## What it is
 
